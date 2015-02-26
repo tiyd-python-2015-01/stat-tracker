@@ -5,8 +5,10 @@ from flask.ext.script import Manager, Shell, Server
 from flask.ext.migrate import MigrateCommand
 from flask.ext.script.commands import ShowUrls, Clean
 
-from stat-tracker import create_app, db
+from stat_tracker import create_app, db
 
+HERE = os.path.abspath(os.path.dirname(__file__))
+TEST_PATH = os.path.join(HERE, 'tests')
 
 app = create_app()
 manager = Manager(app)
@@ -21,7 +23,6 @@ def make_shell_context():
     """ Creates a python REPL with several default imports
         in the context of the app
     """
-
     return dict(app=app, db=db)
 
 

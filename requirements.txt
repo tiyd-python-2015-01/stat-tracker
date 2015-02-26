@@ -27,3 +27,21 @@ webtest
 
 # Management script
 Flask-Script
+
+# Debug toolbar
+Flask-DebugToolbar==0.9.1
+
+## Login and users
+Flask-Login==0.2.11
+Flask-Bcrypt==0.6.2
+
+## Config
+flask-appconfig==0.9.1
+
+## Heroku
+gunicorn==19.2.1
+psycopg2==2.6
+
+## Stats
+numpy
+matplotlib
