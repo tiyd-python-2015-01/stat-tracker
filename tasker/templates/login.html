@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <form method="POST" action="{{ url_for("usersb.login") }}">
+        {{ form.hidden_tag() }}
+        <div class="row">
+          <div class="large-12 columns">
+            {{ form.email.label }} {{ form.email(placeholder='yourname@email.com',size=20) }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+            {{ form.password.label }} {{ form.password(size=20) }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+          <input class ="button tiny" type="submit" value="Login">
+        </div>
+      </div>
+    </form>
+{% endblock %}

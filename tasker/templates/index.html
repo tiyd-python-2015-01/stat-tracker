@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block body %}
+<!--
+#{% if current_user.is_authenticated() %}
+# <div class="row">
+#  <div class=" small-12 columns">
+#   <h4>Your tasks</h4>
+#  </div>
+# </div>>-->
+ <!--<ul class="pagination">
+  {% for link in links %}
+    <div class="row">
+     <div class=" small-12 columns">
+      <strong> {{link.title}}:</strong>
+        <a href="/urly/{{ link.short }}" target="_blank">
+           /urly/{{ link.short }}</a>
+        {% if link.description %}
+          <br>{{ link.description }}
+        {% endif %}
+     </div>
+    </div>
+    <div class ="small-12 columns">
+     <div class="row">
+      <div class="right">
+       <ul>
+        <li><a class ="submitlink" href="{{ url_for("linksb.delete_link", id=link.id) }}">   Delete Link</a></li>
+        <li><a class = "submitlink" href="{{ url_for("linksb.update_link", id=link.id) }}">   Update Link</a></li>
+        <li><a class = "submitlink" href="{{url_for("linksb.link_clicks", id=link.id)}}">Click Data</a></li>
+       </ul>
+      </div>
+     </div>
+    </div>
+    <div class="row">
+     <hr>
+    </div>
+  {% endfor %}
+</ul>-->
+<!--{% else %}-->
+ <div class="row">
+  <div class=" small-12 small-centered columns">
+
+   <ul class="example-orbit" data-orbit>
+    <img src="{{ url_for('static', filename='tasker.jpg') }}" alt="slide 1" />
+  </div>
+ </div>
+ <div class="row">
+  <div class="small-1 columns"></div>
+  <div class="small-11 columns"><h2> Tasker</h2></div>
+ </div>
+<!--{% endif %}-->
+{% endblock %}

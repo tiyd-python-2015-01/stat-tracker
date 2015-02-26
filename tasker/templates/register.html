@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <form method="POST" action="{{ url_for("usersb.register") }}">
+        {{ form.hidden_tag() }}
+        <div class="row">
+          <div class="large-12 columns">
+            {{ form.name.label }} {{ form.name(size=20) }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+            {{ form.email.label }} {{ form.email(size=20,placeholder='yourname@email.com') }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+            {{ form.password.label }} {{ form.password(size=20) }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+            {{ form.password_verification.label }} {{ form.password_verification(size=20) }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+          <input class ="button tiny" type="submit" value="Register">
+        </div>
+      </div>
+    </form>
+{% endblock %}
