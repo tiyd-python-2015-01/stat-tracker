@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{% if get_flashed_messages() %}
+    {% for message in get_flashed_messages() %}
+    <div data-alert class="alert-box">
+      {{ message }}
+    </div>
+    {% endfor %}
+{% endif %}
+
+<div class='row'>
+  <form method="POST" action="{{ url_for("users.register") }}">
+    {{ form.hidden_tag() }}
+    <div class="large-8 columns">
+      <fieldset>
+        <legend>Login</legend>
+
+          {% if get_flashed_messages() %}
+              {% for message in get_flashed_messages() %}
+              <div data-alert class="alert-box">
+                {{ message }}
+              </div>
+              {% endfor %}
+          {% endif %}
+
+        <label>{{ form.email.label }}
+          <input name='email' type="text" placeholder="Your Email Address" />
+        </label>
+        <label>{{ form.name.label }}
+          <input name='name' type="text" placeholder="Your Name" />
+        </label>
+        <label>{{ form.password.label }}
+          <input name='password' type="text" placeholder="Pick A Password" />
+        </label>
+        <label>{{ form.password_verification.label }}
+          <input name='password_verification' type="text" placeholder="Your Password Again" />
+        </label>
+
+        <button type="submit" class='button tiny' value='Register'>Register</button>
+      </fieldset>
+    </div>
+  </form>
+</div>
+{% endblock %}

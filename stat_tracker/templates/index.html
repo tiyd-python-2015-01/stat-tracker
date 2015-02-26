@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <div class='row'>
+      <form  method='GET' action="{{ url_for("users.dashboard") }}">
+        <div class="large-8 columns">
+        <fieldset>
+          <legend>Most Recent Bookmarks</legend>
+
+          {% for bookmark in bookmarks %}
+          {% if bookmark.bookmark.title %}
+          <div class="row">
+            <div class="large-8 columns">
+              <ul class="vcard">
+                <li>Name: {{ bookmark.bookmark.title }}</li>
+                {% if bookmark.bookmark.description %}
+                <li>Description: {{ bookmark.bookmark.description }}</li>
+                {% endif %}
+                <li>Long URL: <a href="{{ bookmark.bookmark.url }}">{{ bookmark.bookmark.url }}</a></li>
+                <li>Short URL: <a href="/b/{{ bookmark.bookmark.short_url }}">{{ bookmark.bookmark.short_url }}</a></li>
+                <li>Click Count: {{ bookmark.clicks }}</li>
+              </ul>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+          </fieldset>
+        </div>
+      </form>
+    </div>
+
+{% endblock %}
