@@ -18,3 +18,7 @@ class RegisterForm(Form):
                     EqualTo('password_verification',
                             message='Passwords must match')])
     password_verification = PasswordField('Repeat password')
+
+class BasicActivityForm(Form):
+    activity = StringField('Activity', validators=[DataRequired()])
+

@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask
+
 from .extensions import db, migrate, debug_toolbar, bcrypt, login_manager, config
 from . import models
 from .views.users import users
