@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<form method="POST" action="{{ url_for("users.login") }}">
+  {{ form.hidden_tag() }}
+  <div>
+    {{ form.email.label }} {{ form.email(size=20) }}
+  </div>
+  <div>
+    {{ form.password.label }} {{ form.password(size=20) }}
+  </div>
+  <input type="submit" value="Login">
+</form>
+<br>
+<div>
+  <a href="{{ url_for('users.register') }}">Not Registered?  Click here.</a>
+</div>
+{% endblock %}

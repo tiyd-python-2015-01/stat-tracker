@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div>
+  {% if current_user.is_authenticated() %}
+  Welcome {{ current_user.name }}
+</div>
+
+<div>
+  <a href="{{ url_for('users.logout')}}">Logout</a>
+</div>
+{% endif %}
+
+{% if not current_user.is_authenticated() %}
+<div>
+  <a href="{{ url_for('users.register') }}">Register</a>
+</div>
+<div>
+  <a href="{{ url_for('users.login') }}">Login</a>
+</div>
+{% endif %}
+
+
+
+
+
+
+{% endblock %}
