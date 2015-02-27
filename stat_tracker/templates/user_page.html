@@ -1,0 +1,38 @@
+<!doctype html>
+{% extends "layout.html" %}
+{% block body %}
+<br></br>
+<h1>User Page</h1>
+<h3>User Page</h3>
+<h2>Enter a new activity to track.</h2>
+<br></br>
+<form method="POST" action="{{ url_for('stats.user_page') }}">
+  {{ form.hidden_tag() }}
+  <div>
+    {{form.title.label }} {{ form.title(size=20) }}
+    {{ form.unit.label }} {{ form.unit(size=30) }}
+  </div>
+  <input class="submit" type="submit" value="Create!">
+  </form>
+
+
+<h3>Your Activities</h3>
+{% for activity in activities %}
+    <div class="user_activity" >
+      <b>{{ activity.title }} </b>
+
+      <form action="{{ url_for('stats.delete_activity') }}"
+        method=post class=delete->
+      <input class = "button" type=hidden value=
+          "{{ activity.id }}"name="activity_to_delete"></input>
+      <input class="button" type=submit value  = "delete" input/>
+      </form>
+      
+      <form action = {{ url_for('stats.view_activity', id = activity.id) }}>
+      <input class="button" type=submit value="View Activity" input/>
+      </form>
+
+    </div>
+
+{% endfor %}
+{% endblock %}

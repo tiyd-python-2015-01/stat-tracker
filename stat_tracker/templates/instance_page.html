@@ -1,0 +1,26 @@
+<!doctype html>
+{% extends "layout.html" %}
+{% block body %}
+<br></br>
+<h1>Stats on Your Activity</h1>
+<h3>{{activity.title}}</h3>
+<h2>Update Activity</h2>
+<br></br
+<form  method="POST" action={{ url_for('stats.user_page', id = activity.id) }}>
+  {{ form.hidden_tag() }}
+  <div>
+    {{form.date.label }} {{ form.date(size=20) }}
+    {{ form.freq.label }} {{ form.freq(size=10) }}
+  </div>
+  <input class="submit_link" type="submit" value="add!">
+</form>
+
+
+<h3>data</h3>
+
+{% for instance in instances %}
+    <div class="activity_instance" >
+      <b>{{ instance.date }} : {{ instance.freq }} </b>
+    </div>
+{% endfor %}
+{% endblock %}
