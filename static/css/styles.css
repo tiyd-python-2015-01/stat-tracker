@@ -1,0 +1,44 @@
+.top-bar-section li a:not(.button):hover {
+    background: #acc9dc !important;
+}
+
+fieldset {
+border: 5px solid #27515d;
+width: 100%;
+background: #85afcc;
+padding: 6px;
+}
+
+fieldset legend {
+background: #6cadc1;
+padding: 6px;
+font-weight: bold;
+}
+
+input[type=submit]:hover { background: #27515d; }
+
+input[type=submit] { background: #85afcc; }
+
+input[type=text] { background: #bbd3e2; }
+
+input[type=text]:focus { background: #bbd3e2; }
+
+input[type=email] { background: #bbd3e2; }
+
+input[type=email]:focus { background: #bbd3e2; }
+
+input[type=password] { background: #bbd3e2; }
+
+input[type=password]:focus { background: #bbd3e2; }
+
+
+.generic { font-family: sans-serif; font-size: 120%; }
+
+.caption {
+  margin: 20px auto;display:block;
+  text-align: center;
+}
+
+img {
+   margin: 0px auto;display:block
+}

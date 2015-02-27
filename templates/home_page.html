@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="large-12 columns">
+  <fieldset>
+    <h1 align='center'> Monitored Stats </h1>
+  </fieldset>
+    {% for a in activities %}
+      <fieldset>
+        <div class='generic'>Total {{ a.name }}: {{ a.activity_stat_total }} </div><br>
+        <a class='button tiny radius info' href='{{url_for('activities.edit_activity', id=a.id) }}'>Edit</a>
+        <a class='button tiny radius info' href='{{url_for('activities.delete_activity', id=a.id) }}'>Delete</a>
+        <a class='button tiny radius info' href='{{url_for('activities.add_stat', id=a.id) }}'>Add</a>
+
+      </fieldset>
+    {% endfor %}
+</div>
+
+{% endblock %}
