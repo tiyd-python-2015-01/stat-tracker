@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<p></p>
+
+    <form method="POST" action="{{ url_for("user.login") }}">
+        {{ form.hidden_tag() }}
+        <div class="center row">
+            <div class="small-12 medium-8 large-6 center columns">
+               {{ form.email.label }} {{ form.email(size=20) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-12 medium-8 large-6 center columns">
+               {{ form.password.label }} {{ form.password(size=20) }}
+                <input class="round button" type="submit" value="Login">
+            </div>
+            <div class="small-12 medium-12 large-6 center columns">
+                <img src="http://zeendo.com/info/wp-content/uploads/2013/07/tmobile-usage-statistic.png" alt="cool statistics guy"/>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

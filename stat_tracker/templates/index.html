@@ -2,4 +2,19 @@
 
 {% block body %}
 
+  {% if not current_user.is_authenticated() %}
+
+    <div class="row">
+        <div class="center small-12 columns">
+            <ul class="center" data-orbit>
+              <li class="center">
+                <img src="http://assets-s3.mensjournal.com/img/essential/working-out-hungry-burns-more-fat/618_348_working-out-hungry-burns-more-fat.jpg" alt="slide 1" />
+              </li>
+            </ul>
+        </div>
+    </div>
+
+    {% else %}
+    {% endif %}
+
 {% endblock %}

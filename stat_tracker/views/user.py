@@ -5,7 +5,7 @@ from ..extensions import db
 from ..forms import LoginForm, RegistrationForm
 from ..models import User
 
-user_blueprint = Blueprint('user', __name__,
+user = Blueprint('user', __name__,
                            template_folder='templates')
 
 def flash_errors(form, category="warning"):
@@ -23,7 +23,7 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user)
             flash("Logged in successfully.")
-            return redirect(request.args.get("next") or url_for("link_blueprint.index"))
+            return redirect(request.args.get("next") or url_for("stats.index"))
         else:
             flash("That email or password is not correct.")
 
@@ -46,7 +46,7 @@ def register():
             db.session.commit()
             login_user(user)
             flash("You have been registered and logged in.")
-            return redirect(url_for("index"))
+            return redirect(url_for("stats.index"))
     else:
         flash_errors(form)
 
@@ -58,4 +58,4 @@ def register():
 def logout():
     logout_user()
     flash("You have been logged out")
-    return redirect(url_for('index'))
+    return redirect(url_for('stats.index'))
