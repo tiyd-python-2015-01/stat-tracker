@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <form method="POST" action="{{ update_url }}">
+        {{ form.hidden_tag() }}
+        <div>
+            <br>{{ form.yes_no.label }} {{ form.yes_no }}
+            <br>{{ form.date.label }} {{ form.date(size=30) }}
+        </div>
+        <input type="submit" value="update activity" class="btn-block">
+    </form>
+{% endblock %}

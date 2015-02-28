@@ -1,7 +1,8 @@
+from flask.ext.wtf.recaptcha import validators
 from flask_wtf import Form
-from wtforms import StringField, PasswordField
-from wtforms.fields.html5 import EmailField
-from wtforms.validators import DataRequired, Email, EqualTo
+from wtforms import StringField, PasswordField, IntegerField, SelectField
+from wtforms.fields.html5 import EmailField, DateField
+from wtforms.validators import DataRequired, Email, EqualTo, Optional
 
 
 class LoginForm(Form):
@@ -19,8 +20,36 @@ class RegisterForm(Form):
                             message='Passwords must match')])
     password_verification = PasswordField('Repeat password')
 
-class BasicActivityForm(Form):
-    activity = StringField('Activity', validators=[DataRequired()])
-    unit = StringField('Activity', validators=[DataRequired()])
-        
+
+class ActivityForm(Form):
+    name = StringField('What Activity would you like to track?', validators=[DataRequired()])
+    type = SelectField("Activity type", choices=[('clicker', "Clicker"), ('yes_no', "Seinfeld"), ('scale', "Scale")])
+    unit = StringField('Unit')
+
+
+class ClickerForm(Form):
+    occurrences = IntegerField('Occurrences', validators=[DataRequired()])
+    date = DateField('DatePicker', format='%Y-%m-%d')
+
+
+class ScaleForm(Form):
+    scale = SelectField('How would you rate this activity?', choices=[(1, 'Bad'), (2, 'Not great'),
+                                                                      (3, 'Okay'), (4, "Good"), (5, "Awesome")],
+                        coerce=int)
+    date = DateField("Date", validators=[DataRequired()])
+
+class SeinfeldForm(Form):
+    yes_no = SelectField("Did you do it today?", choices=[(0, "No"), (1, "Yes")], coerce=int)
+    date = DateField("Date", validators=[DataRequired()])
+
+
+class UpdateForm(Form):
+    occurrences = IntegerField('Occurrences')
+    scale = SelectField('How would you rate this activity?', choices=[(1, 'Bad'), (2, 'Not great'),
+                                                                      (3, 'Okay'), (4, "Good"), (5, "Awesome")],
+                        coerce=int)
+    yes_no = SelectField("Did you do it today?", choices=[(0, "No"), (1, "Yes")], coerce=int,
+                         validators=[Optional()])
+    date = DateField('DatePicker', format='%Y-%m-%d')
+
 

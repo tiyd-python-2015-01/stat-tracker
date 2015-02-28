@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <form method="POST" action="{{ update_url }}">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.scale.label }}
+            {{ form.scale }}
+            {{ form.date.label }}
+            {{ form.date(size=30, class="datepicker") }}
+        </div>
+        <input type="submit" value="update activity" class="btn-block">
+    </form>
+{% endblock %}

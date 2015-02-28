@@ -1,69 +1,34 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title></title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
-</head>
-<body>
-<div class="container">
-
-      <!-- Static navbar -->
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{{ url_for('users.index') }}">Statful</a>
-          </div>
-          <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              {% if current_user.is_authenticated() %}
-                  <li><a>{{ current_user.name }}</a></li>
-              <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
-                  {% else %}
-                  <li><a href="{{ url_for('users.login') }}">Login</a></li>
-              <li><a href="{{ url_for('users.register') }}">Register</a></li>
-                {% endif %}
-
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div><!--/.container-fluid -->
-      </nav>
-<div id="wrapper">
-     {% block header %}
-        <header>
-        </header>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='basic.css') }}">
+    <div class="page">
+    <h1><a href="{{ url_for('users.index') }}">Statful</a></h1>
+        {% block header %}
+            <div class="metanav">
+        {% if current_user.is_authenticated() %}
+            <a href="{{ url_for('stats.show_activities') }}">Show Activity</a>
+            <a href="{{ url_for('stats.create_activity') }}">Create Activity</a>
+            <a href="{{ url_for('users.logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('users.login') }}">Login</a>
+            <a href="{{ url_for('users.register') }}">Register</a>
+            {% endif %}
+        {% endblock %}
+        </div>
+    <body>
+    {% block body %}{% endblock %}
+        {% block footer %}
+        {% endblock %}
         {% for message in get_flashed_messages() %}
             <div class="flash">
                 {{ message }}
             </div>
+
         {% endfor %}
-    {% endblock %}
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <h1>Navbar example</h1>
-        <p>This example is a quick exercise to illustrate how the default, static navbar and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-        </p>
+    </div>
+<script type="text/javascript" src="{{ url_for('static', filename=' js/foundation.js') }}"></script>
 
-
-
-    {% block body %}{% endblock %}
-</div>
-    {% block footer %}
-      <footer>
-      </footer>
-    {% endblock %}
-</div>
-<script type="text/javascript" src="{{ url_for('static', filename='bootstrap.min.js') }}"></script></body>
-</html>
-
+</body>
