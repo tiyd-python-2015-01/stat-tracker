@@ -38,23 +38,26 @@ class User(db.Model, UserMixin):
 class Activity(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     activity = db.Column(db.String(255), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    record_id = db.relationship('RecordByDay', backref='activity', uselist=False)
-    yes_id = db.relationship('YesNo', backref='activity', uselist=False)
+    type = db.Column(db.String(255), nullable=False)
+    unit = db.Column(db.String(255))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    stat_id = db.relationship('Stat', backref='activity')
 
 
-class RecordByDay(db.Model):
+class Stat(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    day = db.Column(db.DateTime)
     occurrences = db.Column(db.Integer)
-    activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
+    performed = db.Column(db.Integer)
+    rating = db.Column(db.Integer)
+    when = db.Column(db.DateTime)
+    activity_id = db.Column(db.Integer, db.ForeignKey('activity.id', ondelete='CASCADE'), nullable=False)
 
 
-class YesNo(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    yes_no = db.Column(db.Boolean, nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
-    activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
+
+
+
+
+
 
 
 

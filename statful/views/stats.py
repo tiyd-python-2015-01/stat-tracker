@@ -15,12 +15,12 @@ def flash_errors(form, category="warning"):
         for error in errors:
             flash("{0} - {1}".format(getattr(form, field).label.text, error), category)
 
-#
-# @login_required
-# @stats.route('/make_basic')
-# def make_basic():
-#     form = BasicActivityForm
-#     if form.validate_on_submit():
+
+@login_required
+@stats.route('/make_basic')
+def make_basic():
+    form = BasicActivityForm
+    if form.validate_on_submit():
 
 
 

@@ -21,4 +21,6 @@ class RegisterForm(Form):
 
 class BasicActivityForm(Form):
     activity = StringField('Activity', validators=[DataRequired()])
+    unit = StringField('Activity', validators=[DataRequired()])
+        
 

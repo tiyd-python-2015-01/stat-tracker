@@ -28,7 +28,7 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user)
             flash("Logged in successfully.")
-            return redirect(request.args.get('next') or url_for("links.index"))
+            return redirect(request.args.get('next') or url_for("users.index"))
         else:
             flash("That user name or password is not correct.")
     flash_errors(form)
@@ -51,7 +51,7 @@ def register():
             db.session.commit()
             login_user(user)
             flash("You have been registered and logged in.")
-            return redirect(url_for("links.index"))
+            return redirect(url_for("users.index"))
     else:
         flash_errors(form)
 
@@ -64,4 +64,4 @@ def logout():
     logout_user()
     flash("You have been logged out")
 
-    return redirect(url_for('links.index'))
+    return redirect(url_for('users.index'))
