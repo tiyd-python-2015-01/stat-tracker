@@ -1,49 +1,48 @@
 {% extends "layout.html" %}
 {% block body %}
+
+{% if current_user.is_authenticated() %}
  <div class="row">
   <div class=" small-12 columns">
     <h4>All Tasks</h4>
   </div>
  </div>
- <ul class="pagination">
+
  {% for task in tasks %}
   <div class="row">
    <div class=" small-10 columns">
-    <strong> {{task.t_name}}:</strong>
+    <strong> {{task.t_name}}:</strong>  {{task.t_units}}
    </div>
   </div>
   <div class="row">
-   <hr>
-  </div>
- {% endfor %}
- </ul>
-{% endblock %}
-
-<!--
-       <ul>
-        <li><a class ="submitlink" href="{{ url_for("linksb.delete_link", id=link.id) }}">   Delete Link</a></li>
-        <li><a class = "submitlink" href="{{ url_for("linksb.update_link", id=link.id) }}">   Update Link</a></li>
-        <li><a class = "submitlink" href="{{url_for("linksb.link_clicks", id=link.id)}}">Click Data</a></li>
-       </ul>
+   <div class ="small-12 columns">
+      <div class="right">
+        <ul>
+         <li><a class ="submitlink" href="{{ url_for("tasksb.show_task", id=task.id) }}"> See Details</a></li>
+         <li><a class ="submitlink" href="{{ url_for("tasksb.delete_task", id=task.id) }}">   Delete Task</a></li>
+         <li><a class = "submitlink" href="{{ url_for("tasksb.update_task", id=task.id) }}">   Update Task</a></li>
+        </ul>
       </div>
-     </div>
     </div>
-    <div class="row">
-     <hr>
-    </div>
-  {% endfor %}
-</ul>-->
-<!--
- <div class="row">
-  <div class=" small-12 small-centered columns">
-
-   <ul class="example-orbit" data-orbit>
-    <img src="{{ url_for('static', filename='tasker.jpg') }}" alt="slide 1" />
   </div>
- </div>
+
  <div class="row">
-  <div class="small-1 columns"></div>
-  <div class="small-11 columns"><h2> Tasker</h2></div>
+  <hr>
  </div>
+ {% endfor %}
+
+{% else %}
+
+<div class="row">
+ <div class=" small-12 small-centered columns">
+
+  <ul class="example-orbit" data-orbit>
+   <img src="{{ url_for('static', filename='tasker.jpg') }}" alt="slide 1" />
+ </div>
+</div>
+<div class="row">
+ <div class="small-1 columns"></div>
+ <div class="small-11 columns"><h2> Tasker</h2></div>
+</div>
 {% endif %}
-{% endblock %}-->
+{% endblock %}
