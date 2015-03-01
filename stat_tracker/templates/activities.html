@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+  {% if not current_user.is_authenticated() %}
+    <center>
+      <u><h2>Login/Register</h2></u>
+      <br>
+      <div>If already registered, please Log In.</div>
+      <br>
+      <form action="/login">
+        <input type="submit" value="Log In"  class="button round">
+      </form>
+      <br>
+      <div>If you are a new user, Continue to Register.</div>
+      <br>
+      <form action="/register">
+        <input type="submit" value="Register"  class="button round">
+      </form>
+    </center>
+
+
+  {% else %}
+
+      <center><h3>What would like to like to start tracking?</h3></center>
+      <table>
+      <form method="POST" action="{{ url_for("activity.act") }}">
+        {{ form.hidden_tag() }}
+          <div class="row">
+            <div>
+              {{ form.title.label }} {{ form.title(size=50) }}
+            </div>
+          <br>
+          <div>
+              {{ form.value.label }} {{ form.value(size=50) }}
+          </div>
+          <br>
+          <div>
+              {{ form.description.label }} {{ form.description(size=50) }}
+          </div>
+          <div>
+              {{ form.recorded_at.label }} {{ form.recorded_at(size=20) }}
+          </div>
+          <br>
+
+          <br>
+          <input type="submit" value="Submit" class="button round">
+          <br><br><br>
+        </div>
+      </form>
+
+        <div class = "row">
+        <strong><h4><u>Tracked Activities</u></h4></strong>
+        <br>
+          <div>
+                <li>checkpoint1</li>
+                {{current_user.user_activity}}
+                {% for activity in current_user.user_activity %}
+                <li>checkpoint2</li>
+                <li>{{ activity.title }}</li>
+                <li>{{ activity.description}}</li>
+                <!-- <li><a href="{{url_for('links.goto_link', id=link.id) }}">Link</a></li> -->
+                <a class='button tiny alert' href='{{url_for("activity.delete_activity", id=Activity.id) }}'>Delete Link</a>
+                <!-- <a class='button tiny' href={{ url_for("links.link_data", id=link.id )}}>Link Data</a>
+                <br><br> -->
+                {% endfor %}
+            </div>
+          </div>
+      </table>
+  {% endif %}
+
+{% endblock %}

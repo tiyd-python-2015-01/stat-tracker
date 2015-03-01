@@ -1,0 +1,66 @@
+/* CSS Document */
+
+.offscreen {
+  position: absolute;
+  top: -30em;
+  left: -300em;
+}
+
+div#hmenu {
+   position:
+   margin: 0;
+   padding: .3em 0 .3em 0;
+   background: #99CCFF;
+   width: 100%;
+   text-align: center;
+}
+
+div#hmenu ul {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+
+}
+
+div#hmenu ul li {
+   margin: 0;
+   padding: 0;
+   display: inline;
+}
+
+div#hmenu ul a:link{
+   margin: 0;
+   padding: .3em .4em .3em .4em;
+   text-decoration: none;
+   font-weight: bold;
+   font-size: medium;
+   color: #4C6680;
+}
+
+div#hmenu ul a:visited{
+   margin: 0;
+   padding: .3em .4em .3em .4em;
+   text-decoration: none;
+   font-weight: bold;
+   font-size: medium;
+   color: #4C6680;
+}
+
+div#hmenu ul a:active{
+   margin: 0;
+   padding: .3em .4em .3em .4em;
+   text-decoration: none;
+   font-weight: bold;
+   font-size: medium;
+   color: #4C6680;
+}
+
+div#hmenu ul a:hover{
+   margin: 0;
+   padding: .3em .4em .3em .4em;
+   text-decoration: none;
+   font-weight: bold;
+   font-size: medium;
+   color: #000066;
+   background-color: #D6EBFF;
+}
