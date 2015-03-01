@@ -5,8 +5,8 @@
 <h1>Stats on Your Activity</h1>
 <h3>{{activity.title}}</h3>
 <h2>Update Activity</h2>
-<br></br
-<form  method="POST" action={{ url_for('stats.user_page', id = activity.id) }}>
+<br></br>
+<form  method="POST" action={{ url_for('stats.view_activity', id = activity.id) }}>
   {{ form.hidden_tag() }}
   <div>
     {{form.date.label }} {{ form.date(size=20) }}
@@ -18,9 +18,20 @@
 
 <h3>data</h3>
 
+<table>
 {% for instance in instances %}
-    <div class="activity_instance" >
-      <b>{{ instance.date }} : {{ instance.freq }} </b>
-    </div>
+
+  <th> Date </th>
+  <th>{{ activity.unit}}</th>
+
+  <tr>
+    <td>{{ instance.date }} </td>
+    <td> {{ instance.freq }} </td>
+    <td><form action = {{url_for("stats.edit_instance", id = instance.id)}}>
+        <input class="button" type=submit value="edit" input/>
+      </form> </td>
+  </tr>
+
 {% endfor %}
+</table>
 {% endblock %}

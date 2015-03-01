@@ -27,7 +27,7 @@
           "{{ activity.id }}"name="activity_to_delete"></input>
       <input class="button" type=submit value  = "delete" input/>
       </form>
-      
+
       <form action = {{ url_for('stats.view_activity', id = activity.id) }}>
       <input class="button" type=submit value="View Activity" input/>
       </form>

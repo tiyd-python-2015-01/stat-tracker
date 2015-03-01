@@ -39,28 +39,51 @@ def user_page():
 
 @stats.route("/delete", methods = ["GET", "POST"])
 def delete_activity():
-    activity = Activity.query.filter_by(id = request.form \
-                                       ['activity_to_delete']).first()
+    activity_id = request.form['activity_to_delete']
+    activity = Activity.query.filter_by(id = activity_id).first()
+    instances = Instance.query.filter_by(activity_id = activity_id).all()
+    for instance in instances:
+        db.session.delete(instance)
+
     db.session.delete(activity)
     db.session.commit()
     flash("Activity deleted")
     return redirect(url_for("stats.user_page"))
 
+
 @stats.route("/user_page/<int:id>", methods = ["GET", "POST"])
 def view_activity(id):
     activity = Activity.query.filter_by(id = id).first()
-    instances = Instance.query.filter_by(activity_id = id)
+    instances = Instance.query.filter_by(activity_id = id).all()
     form = InstanceForm()
 
     if form.validate_on_submit():
-        instance = Intstance(user = current_user,
-                             activity_id = id,
-                             date = form.date.data,
-                             freq = form.freq.data)
+        instance = Instance(user = current_user,
+                            activity_id = id,
+                            date = form.date.data,
+                            freq = form.freq.data)
         db.session.add(instance)
         db.session.commit()
         flash("Instance Added!")
-        return redirect(url_for("stats.view_activity"))
+        return redirect(url_for("stats.view_activity", id = id))
 
     return render_template("instance_page.html", form = form, instances = instances,
                            activity = activity)
+
+
+@stats.route("/user_page/instance/<int:id>", methods=["GET", "POST"])
+@login_required
+def edit_instance(id):
+    instance = Instance.query.get(id)
+    form = InstanceForm(obj=instance)
+    if form.validate_on_submit():
+        form.populate_obj(instance)
+        db.session.add(instance)
+        db.session.commit()
+        flash("Activity instance has been updated.")
+        return redirect(url_for("stats.view_activity", id = instance.activity.id))
+
+    return render_template("edit_instance.html",
+                           form=form,
+                           post_url=url_for("stats.edit_instance", id=instance.id),
+                           button="Update Instance")

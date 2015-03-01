@@ -46,4 +46,4 @@ class Instance(db.Model):
     freq = db.Column(db.Integer)
 
     user = db.relationship('User')
-    activitiy = db.relationship('Activity')
+    activity = db.relationship('Activity')
