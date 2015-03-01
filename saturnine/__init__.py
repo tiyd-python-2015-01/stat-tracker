@@ -26,5 +26,8 @@ def create_app():
     config.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
+    bcrypt.init_app(app)
+    login_manager.init_app(app)
+    login_manager.login_view = "users.login"
 
     return app

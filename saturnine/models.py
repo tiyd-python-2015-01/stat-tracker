@@ -28,3 +28,4 @@ class Activity(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user = db.Column(db.Integer, db.ForeignKey('user.id'))
     name = db.Column(db.String(255))
+    
