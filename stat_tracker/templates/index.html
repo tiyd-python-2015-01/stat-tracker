@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row">
+    <div class="large-3 columns"></div>
+    <div class="large-6  large-centered columns">
+        <h2>Your current activities:</h2>
+    </div>
+    <div class="large-3 columns"></div>
+</div>
+{% for activity in activities.items %}
+    <div class="row">
+        <div class="large-2 large-centered columns"><a href="{{ url_for('stats.update_activity', activity_id=activity.id) }}">{{ activity.title }}</a></div>
+        <!--<div class="large-3 columns"><button class="tiny" onclick="location.href='{{ url_for('stats.edit_activity', activity_id=activity.id)}}'">Edit</button>-->
+        <!--<button class="tiny" onclick="location.href='{{ url_for('stats.delete_activity', activity_id=activity.id)}}'">Delete</button>-->
+        <!--<button class="tiny" onclick="location.href='{{ url_for('stats.activity_data', activity_id=activity.id)}}'">Data</button></div>-->
+    </div>
+{% endfor %}
+<div class="row">
+    <div class="large-5 large-centered columns">
+        {% if activities.prev_num > 0 %}
+            <button class="tiny" onclick="location.href='{{ url_for('stats.user_activities', page=activities.prev_num)}}'">Previous</button>
+        {% endif %}
+        {% if activities.next_num <= activities.pages %}
+            <button class="tiny" onclick="location.href='{{ url_for('stats.user_activities', page=activities.next_num)}}'">Next</button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

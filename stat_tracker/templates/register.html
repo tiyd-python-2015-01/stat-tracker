@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="row">
+        <div class="large-5 large-centered columns">
+            <h2>Account Registration</h2>
+        </div>
+    </div>
+    <form method=POST action="{{ url_for('users.create_user') }}">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="large-1 large-offset-3 columns">{{ form.name.label }}</div>
+            <div class="large-6 columns">{{ form.name(size=20) }}</div>
+            <div class="large-2 columns"></div>
+        </div>
+        <div class="row">
+            <div class="large-1 large-offset-3 columns">{{ form.email.label }}</div>
+            <div class="large-6 columns">{{ form.email(size=20)}}</div>
+            <div class="large-2 columns"></div>
+        </div>
+        <div class="row">
+            <div class="large-1 large-offset-3 columns">{{ form.password.label }}</div>
+            <div class="large-6 columns">{{ form.password(size=20)}}</div>
+            <div class="large-2 columns"></div>
+        </div>
+        <div class="row">
+            <div class="large-2 large-offset-2 columns">{{ form.password_verification.label }}</div>
+            <div class="large-6 columns">{{ form.password_verification(size=20) }}</div>
+            <div class="large-2 columns"></div>
+        </div>
+        <div class="row">
+            <div class="large-1 large-centered columns">
+                <input type=submit value=Register>
+            </div>
+        </div>
+    </form>
+{% endblock %}

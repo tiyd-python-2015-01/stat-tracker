@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="row">
+        <div class="large-2 large-centered columns"><h2>Login:</h2></div>
+    </div>
+    <form method=POST action="{{ url_for('users.login') }}">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="large-1 large-offset-3 columns">{{ form.email.label }}</div>
+            <div class="large-6 columns">{{ form.email(size=15)}}</div>
+            <div class="large-2 columns"></div>
+        </div>
+        <div class="row">
+            <div class="large-1 large-offset-3 columns">{{ form.password.label }}</div>
+            <div class="large-6 columns">{{ form.password(size=15)}}</div>
+            <div class="large-2 columns"></div>
+        </div>
+        <div class="row">
+            <div class="large-1 large-centered columns">
+                <input type=submit value="Log In">
+            </div>
+        </div>
+    </form>
+{% endblock %}
