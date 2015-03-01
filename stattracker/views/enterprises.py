@@ -76,10 +76,29 @@ def edit_stats(id):
         flash("The link has been updated.")
         return redirect(url_for("users.index"))
 
-    return render_template("add_stats.html",
+    return render_template("edit_stats.html",
                            form=form,
                            enterprise=enterprise,
-                           post_url= url_for('enterprises.add_stats', id=enterprise.id))
+                           post_url= url_for('enterprises.edit_stats', id=stat.id))
+
+# @app.route('/edit/<small_link>', methods=["GET", "POST"])
+# @login_required
+# def edit_link(small_link):
+#     note_link = Link.query.filter(Link.short_link == small_link).first()
+#     form = CreateLinkForm(obj=note_link)
+#     if form.validate_on_submit():
+#         form.populate_obj(note_link)
+#         db.session.commit()
+#         flash("Your edits have been made.")
+#         return redirect(url_for('show_links'))
+#     else:
+#         flash_errors(form)
+#
+#     return render_template("edit_link.html", form=form,
+#                            update_url=url_for('edit_link',
+#                                               small_link=note_link.short_link))
+
+
 
 @enterprises.route("/delete/<int:id>", methods = ["GET", "POST"])
 def delete_stats(id):

@@ -11,7 +11,7 @@ users = Blueprint("users", __name__)
 def index():
     if current_user.is_authenticated():
         enterprise_list = Enterprise.query.filter_by(user = current_user).all()
-        return render_template("index.html", enterprise_list=enterprise_list)
+        return render_template("index.html", enterprise_list=reversed(enterprise_list))
     else:
         return render_template("index.html")
 
