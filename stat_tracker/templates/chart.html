@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <div class='row'>
+        <div class="large-8 columns">
+          <h1>{{ chart_activity.name }} Activity Trend</h1>
+
+          <form  method='POST' action="{{ url_for("items.chart", int_id= chart_activity.id ) }}">
+          <div class="row">
+            <div class="small-3 columns">
+              Start Date
+              <input name='start_date' type="date"/>
+            </div>
+            <div class="small-3 columns">
+              End Date
+              <input name='end_date' type="date"/>
+            </div>
+            <div class="small-3 columns">
+              <button type="submit" class='button tiny'>Change Dates</button>
+            </div>
+          </div>
+
+          <fieldset>
+            <legend>Logged Activity Per Day</legend>
+            <iframe width="800" height="550" frameborder="0" seamless="seamless" scrolling="no" src="{{ chart_url }}.embed?width=800&height=550"></iframe>
+          </fieldset>
+
+          <a href='/dashboard'><button type="submit" class='button tiny'>Back To Dashboard</button></a>
+
+      </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <div class='row'>
+
+        <div class="large-8 columns">
+          <fieldset>
+            {% if edited_object %}
+            <legend>Edit Your Activity</legend>
+            {% else %}
+            <legend>Create An Activity</legend>
+            {% endif %}
+
+              {% if get_flashed_messages() %}
+                  {% for message in get_flashed_messages() %}
+                  <div data-alert class="alert-box">
+                    {{ message }}
+                  </div>
+                  {% endfor %}
+              {% endif %}
+
+            {% if edited_object %}
+              <form  method='POST' id="activity" action="{{ url_for("items.edit_activity", int_id=edited_object.id ) }}">
+            {% else %}
+              <form  method='POST' id="activity" action="{{ url_for("items.add_activity") }}">
+            {% endif %}
+
+                {{ form.hidden_tag() }}
+            <label>{{ form.name.label }}
+              {% if edited_object %}
+              <input name='name' type="text" value="{{ edited_object.name }}" />
+              {% else %}
+              <input name='name' type="text" placeholder='What is the name of the activity?' />
+              {% endif %}
+            </label>
+            <label>{{ form.goal.label }}
+              {% if edited_object %}
+              <input name='goal' type="text" value="{{ edited_object.goal }}" />
+              {% else %}
+              <input name='goal' type="text" placeholder='What is the goal of doing this activity?' />
+              {% endif %}
+            </label>
+            <label>{{ form.description.label }}
+              {% if edited_object %}
+              <input name='description' type="text" value="{{ edited_object.description }}" />
+              {% else %}
+              <input name='description' type="text" placeholder='Add a description of your activity' />
+              {% endif %}
+            </label>
+            {% if edited_object %}
+            <button type="submit" class='button tiny'>Update This Activity</button>
+            {% else %}
+            <button type="submit" class='button tiny'>Create Activity</button>
+            {% endif %}
+          </fieldset>
+        </div>
+      </form>
+    </div>
+
+{% endblock %}

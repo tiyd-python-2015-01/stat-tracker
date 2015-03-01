@@ -3,23 +3,26 @@
 {% block body %}
 
     <div class='row'>
-      <form  method='GET' action="{{ url_for("users.dashboard") }}">
+      <form  method='GET' action="{{ url_for("items.index") }}">
         <div class="large-8 columns">
         <fieldset>
-          <legend>Most Recent Bookmarks</legend>
+          <legend>Most Recent Activities</legend>
 
-          {% for bookmark in bookmarks %}
-          {% if bookmark.bookmark.title %}
+          {% for activity in recent_activities %}
+          {% if activity.name %}
           <div class="row">
             <div class="large-8 columns">
               <ul class="vcard">
-                <li>Name: {{ bookmark.bookmark.title }}</li>
-                {% if bookmark.bookmark.description %}
-                <li>Description: {{ bookmark.bookmark.description }}</li>
+                <li>Name: {{ activity.name }}</li>
+
+                {% if activity.goal %}
+                <li>Goal: {{ activity.goal }}</li>
                 {% endif %}
-                <li>Long URL: <a href="{{ bookmark.bookmark.url }}">{{ bookmark.bookmark.url }}</a></li>
-                <li>Short URL: <a href="/b/{{ bookmark.bookmark.short_url }}">{{ bookmark.bookmark.short_url }}</a></li>
-                <li>Click Count: {{ bookmark.clicks }}</li>
+
+                {% if activity.description %}
+                <li>Description: {{ activity.description }}</li>
+                {% endif %}
+
               </ul>
             </div>
           </div>

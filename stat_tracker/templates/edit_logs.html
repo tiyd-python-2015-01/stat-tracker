@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class='row'>
+  <div class="large-8 columns">
+    <h1>Activity Logs</h1>
+    <fieldset>
+    <legend>Most Recent Logs</legend>
+
+    {% if get_flashed_messages() %}
+        {% for message in get_flashed_messages() %}
+        <div data-alert class="alert-box">
+          {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <form id='log' method='POST' action="{{ url_for("items.edit_log", int_id=edited_object.id ) }}">
+      {{ form.hidden_tag() }}
+      <table>
+        <thead>
+          <tr>
+            <th><label>{{ form.item_id.label }}</label></th>
+            <th><label>{{ form.logged_at.label }}</label></th>
+            <th><label>{{ form.value.label }}</label></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ edited_object.item.name }}</td>
+            <td><input name='logged_at' type="text" value="{{ edited_object.logged_at }}" /></td>
+            <td><input name='value' type="text" value="{{ edited_object.value }}" /></td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="submit" class='button tiny'>Update This Log</button>
+    </fieldset>
+  </div>
+</div>
+
+{% endblock %}

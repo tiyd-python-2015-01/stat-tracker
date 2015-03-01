@@ -3,8 +3,8 @@ import json
 from flask import Blueprint, jsonify, request, abort, url_for
 from flask.ext.login import login_user
 
-from ..models import Bookmark, User, BookmarkUser
-from ..forms import AddBookmark
+from ..models import User, Item, Action
+from ..forms import LoginForm, RegistrationForm
 from ..extensions import login_manager, db
 
 
@@ -21,11 +21,11 @@ def unauthorized(request):
 
 @login_manager.request_loader
 def authorize_user(request):
-    # Authorization: Basic email:password
-    api_key = request.headers.get('Authorization')
-    if api_key:
-        api_key = api_key.replace('Basic ', '', 1)
-        email, password = api_key.split(":")
+    authorization = request.authorization
+    if authorization:
+        email = authorization['email']
+        password = authorization['password']
+
         user = User.query.filter_by(email=email).first()
         if user.check_password(password):
             return user

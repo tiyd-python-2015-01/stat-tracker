@@ -1,13 +1,6 @@
 {% extends "layout.html" %}
 
 {% block body %}
-{% if get_flashed_messages() %}
-    {% for message in get_flashed_messages() %}
-    <div data-alert class="alert-box">
-      {{ message }}
-    </div>
-    {% endfor %}
-{% endif %}
 
 <div class='row'>
   <form method="POST" action="{{ url_for("users.register") }}">

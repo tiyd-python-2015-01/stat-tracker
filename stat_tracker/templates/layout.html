@@ -1,27 +1,61 @@
-
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title></title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}"> -->
+    <title>Track Your Info</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
   </head>
   <body>
     <div id="wrapper">
+
       {% block header %}
-      <header>
-        <h1>Hello World!</h1>
-      </header>
+      {% if current_user.is_active() %}
+      <nav class="top-bar" data-topbar role="navigation">
+        <section class="top-bar-section">
+          <!-- Right Nav Section -->
+          <ul class="right">
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+          <!-- Left Nav Section -->
+          <ul class="left">
+            <li class="active"><a href="/dashboard">Dashboard</a></li>
+            <li class="active"><a href='/dashboard/add_activity'>Create Activity</a></li>
+            <li class="active"><a href='/dashboard/view_logs'>View logs</a></li>
+          </ul>
+        </section>
+      </nav>
+      {% else %}
+
+      <nav class="top-bar" data-topbar role="navigation">
+        <section class="top-bar-section">
+          <!-- Right Nav Section -->
+          <ul class="right">
+            <li class='active'><a href="/login">Login</a></li>
+            <li class='active'><a href="/register">Register</a></li>
+          </ul>
+          <!-- Left Nav Section -->
+          <ul class="left">
+            <li class="active"><a href="/dashboard">StatTrack</a>
+          </ul>
+        </section>
+      </nav>
+
+      {% endif %}
       {% endblock %}
+
 
       {% block body %}{% endblock %}
 
       {% block footer %}
-      <footer>
-        Copyright (c) 2013
-      </footer>
+      <div class="row">
+        <div class="large-8 columns">
+          <footer>
+            Copyright (c) 2015
+          </footer>
+      </div>
+      </div>
+
       {% endblock %}
     </div>
 
@@ -29,4 +63,3 @@
     <script type="text/javascript" href="{{ url_for('static', filename='main.js') }}"></script>
   </body>
 </html>
-

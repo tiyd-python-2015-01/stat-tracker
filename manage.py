@@ -5,9 +5,9 @@ from flask.ext.script import Manager, Shell, Server
 from flask.ext.migrate import MigrateCommand
 from flask.ext.script.commands import ShowUrls, Clean
 
-from urlybird.app import create_app, db, models
-from urlybird.generate_seed_data import create_user, create_bookmarks, create_specified_user
-from urlybird.generate_seed_data import user_to_bookmark, click_creation
+from stat_tracker.app import create_app, db, models
+from stat_tracker.generate_seed_data import create_specified_user, \
+                                            create_items, create_action
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 TEST_PATH = os.path.join(HERE, 'tests')
@@ -37,23 +37,16 @@ def test():
     return exit_code
 
 @manager.command
-def seed(num_users=3):
+def seed():
     """Seed database."""
-    total_bookmarks = 10*num_users
-    create_bookmarks(total_bookmarks)
-    create_user(0)
-    for counter in range(1, num_users+1):
-        create_user()
-        user_to_bookmark(user_id=counter, bookmark_user_num=10,
-                         bookmark_count=total_bookmarks)
-    clicks_added = click_creation(user_count=num_users)
+    action_num = 27
+    user = create_specified_user('zackjcooper@gmail.com', 'password', 'Zack')
+    created_item_list = create_items(num=5, user_id=user.id)
+    for item in created_item_list:
+        create_action(item.id, num=action_num)
+    action_count = len(created_item_list) * action_num
+    print('Items: {} Actions: {}'.format(len(created_item_list), action_count))
 
-    create_specified_user('zackjcooper@gmail.com', 'password', 'Zack')
-    user_to_bookmark(user_id=4, bookmark_user_num=10,
-                     bookmark_count=total_bookmarks)
-    print('Users: {} Bookmarks: {} Clicks: {}'.format(num_users,
-                                                     total_bookmarks,
-                                                     clicks_added))
 
 if __name__ == '__main__':
     manager.run()

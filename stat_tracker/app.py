@@ -12,8 +12,9 @@ from .extensions import (
 
 from . import models
 from .views.users import users
-from .views.bookmarks import bookmarks
+from .views.items import items
 from .views.api import api
+
 
 SQLALCHEMY_DATABASE_URI = "postgres://localhost/stat_tracker"
 DEBUG = True
@@ -24,7 +25,7 @@ def create_app():
     app = Flask('stat_tracker')
     app.config.from_object(__name__)
     app.register_blueprint(users)
-    app.register_blueprint(bookmarks)
+    app.register_blueprint(items)
     app.register_blueprint(api, url_prefix="/api/v1")
 
     config.init_app(app)

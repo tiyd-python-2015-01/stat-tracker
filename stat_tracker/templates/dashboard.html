@@ -1,81 +1,86 @@
 {% extends "layout.html" %}
 
 {% block body %}
+  <div class='row'>
+    {{ form.hidden_tag() }}
+    <div class="small-8 columns">
+      <fieldset>
+        <legend>Log Your Progress</legend>
 
-    <div class='row'>
-      <form  method='GET' action="{{ url_for("users.dashboard") }}">
-        {{ form.hidden_tag() }}
-        <div class="large-8 columns">
-        <fieldset>
-          <legend>{{user}}'s Bookmarks</legend>
+        {% if get_flashed_messages() %}
+          {% for message in get_flashed_messages() %}
+            <div data-alert class="alert-box">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
 
-          {% if get_flashed_messages() %}
-            {% if 'removed' in get_flashed_messages() %}
-              {% for message in get_flashed_messages() %}
-                <div data-alert class="alert-box">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endif %}
-
-
+        <form  method='POST' action="{{ url_for("items.add_log") }}">
           <div class="row">
-            <div class="large-8 columns">
-              {% for bookmark in bookmarks %}
-              {% if bookmark.bookmark.title %}
-              <ul class="vcard" >
-                <li>Name: {{ bookmark.bookmark.title }} </li>
-                {% if bookmark.bookmark.description %}
-                <li>Description: {{ bookmark.bookmark.description }}</li>
-                {% endif %}
-                <li>Long URL: <a href="{{ bookmark.bookmark.url }}">{{ bookmark.bookmark.url }}</a></li>
-                <li>Short URL: <a href="/b/{{ bookmark.bookmark.short_url }}">{{ bookmark.bookmark.short_url }}</a></li>
-                <li>Click Count: {{ bookmark.clicks }}</li>
-                  <a href='/dashboard/r/{{ bookmark.id }}'><img width='15' src='/static/delete.png'></a>
-                  <a href='/dashboard/e/{{ bookmark.id }}'><img width='15' src='/static/edit.png'></a>
-                  <a href='/dashboard/c/{{ bookmark.id }}'><img width='15' src='/static/chart.png'></a>
-                </form>
-              </ul>
-              {% endif %}
-              {% endfor %}
+            <div class="small-3 columns">
+              <label>{{ form.item_id.label }}</label>
+            </div>
+            <div class="small-9 columns">
+              <select id="item_id" name="item_id">
+                <option default> Select an Activity </option>{% for name in form.item_id %}
+                <option value='{{ name }}' hidden value=''>{{ name }}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
 
-          </fieldset>
-        </div>
-      </form>
+          <div class="row">
+            <div class="small-3 columns">
+              <label>{{ form.value.label }}</label>
+            </div>
+            <div class="small-9 columns">
+              <input name='value' type="integer" placeholder="Completion value" />
+            </div>
+          </div> <br>
+
+          <div class="row">
+            <div class="small-3 columns">
+              <label>{{ form.logged_at.label }}</label>
+            </div>
+            <div class="small-9 columns">
+              <input name='logged_at' type="date"/>
+            </div>
+          </div>
+
+          <button type="submit" class='button tiny'>Log This Activity</button>
+        </form>
+      </fieldset>
     </div>
+  </div>
 
 
-    <div class='row'>
-      <form  method='POST' id="add_bookmark" action="{{ url_for("bookmarks.add_bookmark") }}">
-        {{ form.hidden_tag() }}
-        <div class="large-8 columns">
-          <fieldset>
-            <legend>Add A Bookmark</legend>
-
-              {% if get_flashed_messages() %}
-                  {% for message in get_flashed_messages() %}
-                  <div data-alert class="alert-box">
-                    {{ message }}
-                  </div>
-                  {% endfor %}
+  <div class='row'>
+    <div class="small-8 columns">
+      <fieldset>
+        <legend>Your Current Activities</legend>
+        <div class="row">
+          <div class="small-8 columns">
+            {% for activity in current_activities %}
+            {% if activity.name %}
+            <ul class="vcard" >
+              <li>Name: {{ activity.name }} </li>
+              {% if activity.description %}
+              <li>Description: {{ activity.description }}</li>
               {% endif %}
-
-            <label>{{ form.title.label }}
-              <input name='title' type="text" placeholder="Name of your link" />
-            </label>
-            <label>{{ form.description.label }}
-              <input name='description' type="text" placeholder="Brief description of your bookmark" />
-            </label>
-            <label>{{ form.url.label }}
-              <input name='url' type="text" placeholder="Long URL" />
-            </label>
-            <button type="submit" class='button tiny'>Add This Bookmark</button>
-          </fieldset>
+              {% if activity.goal %}
+              <li>Goal: {{ activity.goal }}</li>
+              {% endif %}
+                <a href='/dashboard/activity/delete/{{ activity.id }}'><img width='15' src='/static/delete.png'></a>
+                <a href='/dashboard/activity/edit/{{ activity.id }}'><img width='15' src='/static/edit.png'></a>
+                <a href='/dashboard/activity/chart/{{ activity.id }}'><img width='15' src='/static/chart.png'></a>
+              </form>
+            </ul>
+            {% endif %}
+            {% endfor %}
+          </div>
         </div>
-      </form>
+      </fieldset>
     </div>
+  </div>
 
 {% endblock %}
