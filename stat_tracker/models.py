@@ -33,6 +33,7 @@ class Activity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     owner = db.Column(db.Integer, db.ForeignKey(User.id))
+    activity_type = db.Column(db.String(255), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):

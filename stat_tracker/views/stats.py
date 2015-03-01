@@ -4,7 +4,7 @@ from flask.ext.login import login_required, current_user
 from datetime import datetime
 from io import BytesIO
 import matplotlib.pyplot as plt
-from ..forms import ActivityForm
+from ..forms import ActivityForm, UpdateForm
 from ..models import Activity, Stat
 from ..extensions import db, flash_errors
 
@@ -34,8 +34,9 @@ def add():
     form = ActivityForm()
     if form.validate_on_submit():
         submission = Activity(title=form.title.data,
-                              date=datetime.utcnow(),
-                              owner=current_user.id)
+                              date=datetime.today(),
+                              owner=current_user.id,
+                              activity_type=form.activity_type.data)
         db.session.add(submission)
         db.session.commit()
         flash("Activity successfully added!")
@@ -57,11 +58,33 @@ def delete_activity(activity_id):
     return redirect(url_for("stats.index"))
 
 
-@stats.route("/update/<int:activity_id>")
+@stats.route("/update/<int:activity_id>", methods=["GET", "POST"])
 @login_required
 def update_activity(activity_id):
     activity = Activity.query.get_or_404(activity_id)
     stats = Stat.query.filter_by(activity=activity_id).all()
+    form = UpdateForm()
+    if form.validate_on_submit():
+        if stats and stats[-1].date.date() == datetime.today().date():
+            updated_stat = Stat.query.get_or_404(stats[-1].id)
+            updated_stat.value = form.value.data
+            db.session.commit()
+            flash("Updated value for today.")
+            return render_template("update.html", activity=activity,
+                                   stats=stats, form=form)
+        else:
+            new_stat = Stat(activity=activity.id,
+                            value=form.value.data,
+                            date=datetime.today())
+            db.session.add(new_stat)
+            db.session.commit()
+            flash("New value added for today.")
+            return render_template("update.html", activity=activity,
+                                   stats=stats, form=form)
+    flash_errors(form)
+    return render_template("update.html", activity=activity, stats=stats,
+                           form=form)
+
 
 
 
@@ -70,3 +93,9 @@ def update_activity(activity_id):
 def activity_data(activity_id):
     activity = Activity.query.get_or_404(activity_id)
     return render_template("activity_data.html", activity=activity)
+
+
+@stats.route("/edit/<int:activity_id>")
+@login_required
+def edit_activity(activity_id):
+    pass

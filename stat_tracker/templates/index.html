@@ -9,10 +9,7 @@
 </div>
 {% for activity in activities.items %}
     <div class="row">
-        <div class="large-2 large-centered columns"><a href="{{ url_for('stats.update_activity', activity_id=activity.id) }}">{{ activity.title }}</a></div>
-        <!--<div class="large-3 columns"><button class="tiny" onclick="location.href='{{ url_for('stats.edit_activity', activity_id=activity.id)}}'">Edit</button>-->
-        <!--<button class="tiny" onclick="location.href='{{ url_for('stats.delete_activity', activity_id=activity.id)}}'">Delete</button>-->
-        <!--<button class="tiny" onclick="location.href='{{ url_for('stats.activity_data', activity_id=activity.id)}}'">Data</button></div>-->
+        <div class="large-3 large-centered columns"><a href="{{ url_for('stats.update_activity', activity_id=activity.id) }}">{{ activity.title }}</a></div>
     </div>
 {% endfor %}
 <div class="row">

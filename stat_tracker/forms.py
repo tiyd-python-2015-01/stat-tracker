@@ -1,5 +1,6 @@
-from flask_wtf import Form
-from wtforms import StringField, PasswordField, TextField
+from flask.ext.wtf import Form
+from wtforms import (StringField, PasswordField, TextField,
+                     RadioField, DecimalField, validators)
 from wtforms.fields.html5 import EmailField, URLField
 from wtforms.validators import DataRequired, Email, EqualTo, url
 
@@ -20,4 +21,13 @@ class RegistrationForm(Form):
 
 
 class ActivityForm(Form):
-    title = StringField('Activity', validators=[DataRequired()])
+    title = StringField('Activity', validators=[DataRequired(),
+                                                validators.Length(max=255)])
+    activity_type = RadioField('Track Method', choices=[
+        ('numeric', 'Numeric'), ('once', 'Once-a-day'),
+        ('clicker', 'Clicker')])
+
+
+class UpdateForm(Form):
+    value = DecimalField("Today's value", validators=[DataRequired()],
+                                                      places=2)
