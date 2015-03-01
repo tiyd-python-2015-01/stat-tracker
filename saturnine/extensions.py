@@ -10,3 +10,6 @@ migrate = Migrate()
 # Change this to HerokuConfig if using Heroku.
 from flask.ext.appconfig import AppConfig
 config = AppConfig()
+
+from flask.ext.bcrypt import Bcrypt
+bcrypt = Bcrypt()
