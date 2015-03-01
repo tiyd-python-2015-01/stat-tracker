@@ -79,12 +79,12 @@ def update_task(id):
     user_id=require_authorization()
     body = request.get_data(as_text=True)
     data = json.loads(body)
-    task = Task.query.get(id)
     form = TaskForm(data, formdata=None, csrf_enabled=False)
-    if form.validate_on_submit():
+    task = Task.query.get(id)
+    if task:
         task.t_name = form.name.data
         task.t_type = form.t_type.data
-        task.t_units = form.units.data     
+        task.t_units = form.units.data
         db.session.commit()
         return (json.dumps(task.to_dict()), 201, {"Location": url_for(".task", id=task.id)})
     else:
