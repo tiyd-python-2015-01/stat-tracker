@@ -1,20 +1,71 @@
 {% extends "layout.html" %}
 
 {% block body %}
+    <script type="text/javascript">
+    x = 0;
+    </script>
 
-  {% if not current_user.is_authenticated() %}
-
-    <div class="row">
-        <div class="center small-12 columns">
-            <ul class="center" data-orbit>
-              <li class="center">
-                <img src="http://assets-s3.mensjournal.com/img/essential/working-out-hungry-burns-more-fat/618_348_working-out-hungry-burns-more-fat.jpg" alt="slide 1" />
-              </li>
-            </ul>
-        </div>
+  {% if current_user.is_authenticated() %}
+  <div class="row">
+    <div class="small-12 columns">
+      <center><div class="label-success"><h1>{{ current_user.name }}'s stats</h1></div></center>
     </div>
+  </div>
+      {% for activity in current_user.activities %}
+  <div class="row">
+    <div class="small-12 medium-12 large-12 columns">
+          <h2>{{ activity.name }}</h2>
+    </div>
+  </div>
+      <div class="row">
+        <div class="small-6 medium-6 large-6 columns">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>{{ activity.unit }}</th>
+                </tr>
+            </thead>
+        {% for stat in activity.stats[:20] %}
+            <tbody>
+              <tr>
+                <td><a href='/stats/{{ stat.id }}/edit'>{{ stat.date.date() }}</a></td>
+                <td>{{ stat.value }}</td>
+              </tr>
+            </tbody>
+        {% endfor %}
+        </table>
+      </div>
+      <div class="center small-6 medium-6 large-6 columns">
+        <div class="activity{{ activity.id }}"></div>
+      </div>
+    </div>
+    <script type="text/javascript">
 
-    {% else %}
-    {% endif %}
+        var dataset = {{ data[activity.id-1] | tojson }};
+        var min = Math.min.apply(null, dataset);
+        d3.select(".activity{{ activity.id }}").selectAll("p")
+        .data(dataset)
+        .enter()
+        .append("div")
+        .attr("class", "bar")
+        .style("height", function(d) {
+        var barHeight = d - min * 5;
+        return barHeight + 'px';
+                });
+
+    </script>
+  {% endfor %}
+
+
+  {% else %}
+
+      <div class="row">
+        <div class="center small-12 columns">
+            <img src="http://assets-s3.mensjournal.com/img/essential/working-out-hungry-burns-more-fat/618_348_working-out-hungry-burns-more-fat.jpg" alt="slide 1" />
+        </div>
+      </div>
+
+  {% endif %}
 
 {% endblock %}
