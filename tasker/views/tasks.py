@@ -67,7 +67,9 @@ def delete_task(id):
 @login_required
 def update_task(id):
     task = Task.query.get(id)
-    form = TaskForm(obj=task)
+    form = TaskForm(name=task.t_name,
+                    t_type=task.t_type,
+                    units=task.t_units)
     if form.validate_on_submit():
         form.populate_obj(task)
         db.session.commit()
@@ -77,7 +79,7 @@ def update_task(id):
                             form=form, b_label="Update")
 
 
-@tasksb.route('/task/<int:id>/stats', methods=["GET", "POST"])
+@tasksb.route('/task/<int:id>/stats', methods=["GET", "POST", "PUT"])
 @login_required
 def add_daily_value(id):
     form = TrackingForm()
@@ -88,7 +90,7 @@ def add_daily_value(id):
         if stat:
             stat.tr_value = value_read
         else:
-            stat = Tracking(id, date_read, value_read)
+            stat = Tracking(current_user.id, id, date_read, value_read)
         db.session.add(stat)
         db.session.commit()
         return redirect(url_for("tasksb.show_task",id=id))
