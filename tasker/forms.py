@@ -28,3 +28,6 @@ class TaskForm(Form):
 class TrackingForm(Form):
     tr_date = DateField('Date', validators =[DataRequired()])
     tr_value = IntegerField("Today's Value", validators=[DataRequired()])
+
+class DeleteTrackingForm(Form):
+    tr_date = DateField('Date', validators =[DataRequired()])

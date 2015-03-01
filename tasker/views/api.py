@@ -5,9 +5,10 @@ from flask import Blueprint, jsonify, request, abort, url_for
 from flask.ext.login import login_user
 
 from ..models import User, Task, Tracking
-from ..forms import TaskForm, TrackingForm
+from ..forms import TaskForm, TrackingForm, DeleteTrackingForm
 from ..extensions import login_manager, db
 
+from sqlalchemy.sql import and_
 
 api = Blueprint("api", __name__)
 
@@ -79,9 +80,11 @@ def update_task(id):
     body = request.get_data(as_text=True)
     data = json.loads(body)
     task = Task.query.get(id)
-    form = TaskForm(obj=task, formdata=None, csrf_enabled=False)
+    form = TaskForm(data, formdata=None, csrf_enabled=False)
     if form.validate_on_submit():
-        form.populate_obj(task)
+        task.t_name = form.name.data
+        task.t_type = form.t_type.data
+        task.t_units = form.units.data     
         db.session.commit()
         return (json.dumps(task.to_dict()), 201, {"Location": url_for(".task", id=task.id)})
     else:
@@ -97,7 +100,7 @@ def delete_task(id):
         return jsonify({'result': True})
     else:
         abort(404)
-        
+
 
 @api.route("/activities/<int:id>", methods=["GET", "PUT", "DELETE"])
 def task(id):
@@ -108,3 +111,57 @@ def task(id):
     stats = Tracking.query.filter_by(tr_task_id=id).order_by(Tracking.tr_date.desc())
     pairs = [stat.to_dict() for stat in stats]
     return jsonify({"activity": task.to_dict(),"values":pairs})
+
+
+def add_stat(id):
+    user_id=require_authorization()
+    body = request.get_data(as_text=True)
+    data = json.loads(body)
+    form = TrackingForm(data=data, formdata=None, csrf_enabled=False)
+    if form.validate():
+        stat = Tracking(user_id, id, form.tr_date.data,form.tr_value.data)
+        db.session.add(stat)
+        db.session.commit()
+        return jsonify({"stat":stat.to_dict()})
+    else:
+        return json_response(400, form.errors)
+
+
+def delete_stat(id):
+    user_id=require_authorization()
+    body = request.get_data(as_text=True)
+    data = json.loads(body)
+    form = DeleteTrackingForm(data=data, formdata=None, csrf_enabled=False)
+    stat = Tracking.query.filter(and_(Tracking.tr_task_id==id, Tracking.tr_date==form.tr_date.data)).first()
+    if stat:
+        db.session.delete(stat)
+        db.session.commit()
+        return jsonify({'result': True})
+    else:
+        abort(404)
+
+
+def update_stat(id):
+        user_id=require_authorization()
+        body = request.get_data(as_text=True)
+        data = json.loads(body)
+        form = TrackingForm(data=data, formdata=None, csrf_enabled=False)
+        stat = Tracking.query.filter(and_(Tracking.tr_task_id==id, Tracking.tr_date==form.tr_date.data)).first()
+        if stat:
+            stat.tr_date = form.tr_date.data
+            stat.tr_value = form.tr_value.data
+            db.session.add(stat)
+            db.session.commit()
+            return jsonify({"stat":stat.to_dict()})
+        else:
+            abort(404)
+
+
+@api.route("/activities/<int:id>/stats", methods=["POST", "PUT", "DELETE"])
+def stat(id):
+    if request.method == "PUT":
+        return update_stat(id)
+    elif request.method == "DELETE":
+        return delete_stat(id)
+    elif request.method == "POST":
+        return add_stat(id)
