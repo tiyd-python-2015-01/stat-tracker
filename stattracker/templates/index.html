@@ -2,15 +2,6 @@
 
 {% block body %}
 
-<div>
-  {% if current_user.is_authenticated() %}
-  Welcome {{ current_user.name }}
-</div>
-
-<div>
-  <a href="{{ url_for('users.logout')}}">Logout</a>
-</div>
-{% endif %}
 
 {% if not current_user.is_authenticated() %}
 <div>
@@ -23,7 +14,47 @@
 
 
 
+  {% if current_user.is_authenticated() %}
+<div>
+  Welcome {{ current_user.name }}
+</div>
 
+<div>
+  <a href="{{ url_for('users.logout')}}">Logout</a>
+</div>
+
+<div>
+  <br>
+  <a href ="{{ url_for('enterprises.create_enterprise') }}"><button type="button">Add an enterprise!</button></a>
+</div>
+
+<div>
+  <h1>Your Enterprises</h1>
+</div>
+
+{% for enterprise in enterprise_list %}
+
+<div>
+  {{ enterprise.ent_name }}
+</div>
+
+<div>
+  <a href = "{{ url_for('enterprises.add_stats', id=enterprise.id) }}"><button type="button"> Add Data </button></a>
+</div>
+<div>
+  <a href = "{{ url_for('enterprises.view_stats', ent_id=enterprise.id) }}"><button type="button"> View Data </button></a>
+</div>
+<div>
+  <a href = "{{ url_for('enterprises.edit_page', id=enterprise.id) }}"><button type="button"> Edit Data </button></a>
+</div>
+<div>
+  <br>
+</div>
+{% endfor %}
+
+
+
+{% endif %}
 
 
 {% endblock %}

@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+<div>
+  <h1>{{ enterprise.ent_name }}</h1>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th> Date </th>
+      <th> {{ enterprise.ent_unit }} </th>
+      <th> Edit </th>
+      <th> Delete </th>
+    </tr>
+  </thead>
+  {% for stat in enterprise.stats[:30] %}
+
+  <tr>
+    <td> {{ stat.recorded_at.date() }} </td>
+    <td> {{ stat.value }} </td>
+    <td> <a href= "{{ url_for('enterprises.edit_stats', id=stat.id) }}">Edit</a>
+    <td> <a href= "{{ url_for('enterprises.delete_stats', id=stat.id) }}">Delete</a>
+  </tr>
+</table>
+{% endfor %}
+
+<div>
+  <br>
+  <br>
+</div>
+<div>
+
+</div>
+
+{% endblock %}

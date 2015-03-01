@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, FloatField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, Email, EqualTo, URL
 
@@ -18,3 +18,10 @@ class RegistrationForm(Form):
                     EqualTo('password_verification',
                             message="Passwords must match")])
     password_verification = PasswordField('Repeat password')
+
+class EnterpriseForm(Form):
+    ent_name = StringField('Name', validators=[DataRequired()])
+    ent_unit = StringField("Unit Name", validators=[DataRequired()])
+
+class StatForm(Form):
+    value = FloatField('Value')

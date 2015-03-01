@@ -31,3 +31,23 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return "<User {}>".format(self.email)
+
+
+class Enterprise(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ent_name = db.Column(db.String(255), nullable=False)
+    ent_unit = db.Column(db.String(255))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User',
+        backref=db.backref('enterprises', lazy='dynamic'))
+
+    def __repr__(self):
+        return "<Enterprise: {}>".format(self.ent_name)
+
+class Stat(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    value = db.Column(db.Float, nullable=False)
+    recorded_at = db.Column(db.DateTime, nullable=False)
+    enterprise_id = db.Column(db.Integer, db.ForeignKey('enterprise.id'))
+    enterprise = db.relationship('Enterprise',
+        backref=db.backref('stats', lazy='dynamic'))

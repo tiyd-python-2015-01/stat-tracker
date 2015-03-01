@@ -3,13 +3,17 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 
 from ..extensions import db
 from ..forms import LoginForm, RegistrationForm
-from ..models import User
+from ..models import User, Enterprise
 
 users = Blueprint("users", __name__)
 
 @users.route("/")
 def index():
-    return render_template("index.html")
+    if current_user.is_authenticated():
+        enterprise_list = Enterprise.query.filter_by(user = current_user).all()
+        return render_template("index.html", enterprise_list=enterprise_list)
+    else:
+        return render_template("index.html")
 
 
 def flash_errors(form, category="warning"):

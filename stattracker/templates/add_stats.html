@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<br>
+<br>
+
+<h3>{{ enterprise.ent_name }}</h3>
+
+<form method="POST" action="{{ post_url }}">
+  {{ form.hidden_tag() }}
+  <div>
+    {{ enterprise.ent_unit }} {{ form.value(size=40) }}
+
+  </div>
+  <div>
+    <input type="submit" value="Create">
+  </form>
+
+
+  {% for message in get_flashed_messages() %}
+  <div class="flash">
+    {{ message }}
+  </div>
+  {% endfor %}
+  <div>
+    <br>
+    <br>
+    <a href ="{{ url_for('users.index')}}">Nevermind, return to the index.</a>
+  </div>
+  {% endblock %}

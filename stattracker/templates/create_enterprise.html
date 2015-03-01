@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<br>
+<br>
+<form method="POST" action="{{ url_for('enterprises.create_enterprise') }}">
+  {{ form.hidden_tag() }}
+  <div>
+    {{ form.ent_name.label }} {{ form.ent_name(size=40) }}
+
+  </div>
+  <div>
+    {{ form.ent_unit.label }} {{ form.ent_unit(size=40) }}
+  </div>
+  <div>
+    <input type="submit" value="Create">
+  </form>
+  {% for message in get_flashed_messages() %}
+  <div class="flash">
+    {{ message }}
+  </div>
+  {% endfor %}
+  <div>
+    <br>
+    <br>
+    <a href ="{{ url_for('users.index')}}">Nevermind, return to the index.</a>
+  </div>
+  {% endblock %}
