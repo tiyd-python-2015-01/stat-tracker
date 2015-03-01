@@ -39,8 +39,8 @@ def show_task(id):
 def add_task():
     form = TaskForm()
     if form.validate_on_submit():
-        new_task = Task(form.name.data,
-                        form.units.data,
+        new_task = Task(form.t_name.data,
+                        form.t_units.data,
                         form.t_type.data,
                         current_user.id
                         )
@@ -67,9 +67,9 @@ def delete_task(id):
 @login_required
 def update_task(id):
     task = Task.query.get(id)
-    form = TaskForm(name=task.t_name,
+    form = TaskForm(t_name=task.t_name,
                     t_type=task.t_type,
-                    units=task.t_units)
+                    t_units=task.t_units)
     if form.validate_on_submit():
         form.populate_obj(task)
         db.session.commit()

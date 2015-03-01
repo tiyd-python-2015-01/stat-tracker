@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, SelectField
 from wtforms.fields.html5 import EmailField, URLField, IntegerField, DateField
 from wtforms.validators import DataRequired, Email, EqualTo
 
@@ -22,7 +22,13 @@ class RegistrationForm(Form):
 
 class TaskForm(Form):
     t_name = StringField('Task Name', validators=[DataRequired()])
-    t_type = IntegerField('Task Type', validators=[DataRequired()])
+#    t_type = IntegerField('Task Type', validators=[DataRequired()])
+    t_type = SelectField('Task Type',
+                         choices=[(1, 'Input a Daily Value'),
+                                  (2, 'Click button to add 1 to value'),
+                                  (3, 'Time Goal'),
+                                  (4, 'Yes/No'),
+                                  (5, 'Scale')])
     t_units = StringField('Units', validators=[DataRequired()])
 
 class TrackingForm(Form):

@@ -9,3 +9,6 @@ curl -v -H "Authorization: Basic ana@ana.com:ana" -X POST -d '{"tr_date":"2014/0
 curl -v -H "Authorization: Basic ana@ana.com:ana" -X DELETE -d '{"tr_date":"2014/01/01"}' http://127.0.0.1:5000/tasker/api/v1/activities/1/stats
 
 curl -v -H "Authorization: Basic ana@ana.com:ana" -X PUT -d '{"tr_date":"2015/02/27", "tr_value":20}' http://127.0.0.1:5000/tasker/api/v1/activities/1/stats
+
+
+curl -v -H "Authorization: Basic ana@ana.com:ana" -X PUT -d '{"t_name":"calories consumption","t_type":1,"t_units":"calories"}' http://127.0.0.1:5000/tasker/api/v1/activities/1

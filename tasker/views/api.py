@@ -79,13 +79,7 @@ def update_task(id):
     user_id=require_authorization()
     body = request.get_data(as_text=True)
     data = json.loads(body)
-    print('************')
-    print(data)
     form = TaskForm(data=data, formdata=None, csrf_enabled=False)
-    print('************')
-    print(form.t_name.data)
-    print(form.t_type.data)
-    print(form.t_units.data)
     task = Task.query.get(id)
     if task:
         task.t_name = form.t_name.data
