@@ -1,7 +1,6 @@
 from flask import Blueprint, flash, render_template, redirect, url_for, request
 from flask.ext.login import login_required, current_user
 from ..forms import ActivityForm, StatForm
-from datetime import date
 
 from ..extensions import db
 from ..models import Activity, Stat
@@ -75,11 +74,17 @@ def edit_stat(id):
         db.session.commit()
         flash("Stat Attack has updated your stat!")
     return render_template("edit.html", form=form,
-                                         button="edit",
-                                         activity=activity,
-                                         post_url=url_for("stats.edit_stat", id=stat.id))
+                                        button="edit",
+                                        activity=activity,
+                                        post_url=url_for("stats.edit_stat", id=stat.id))
 
 
-
+@stats.route("/stats/<int:id>/chart", methods=['GET', 'POST'])
+@login_required
+def stat_chart(id):
+    activity = Activity.query.get(id)
+    data = [stat.value for stat in activity.stats]
+    return render_template("specificStats.html", activity=activity,
+                                                 data=data)
 
 

@@ -1,9 +1,6 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    <script type="text/javascript">
-    x = 0;
-    </script>
 
   {% if current_user.is_authenticated() %}
   <div class="row">
@@ -14,7 +11,7 @@
       {% for activity in current_user.activities %}
   <div class="row">
     <div class="small-12 medium-12 large-12 columns">
-          <h2>{{ activity.name }}</h2>
+          <h2><a href={{ url_for("stats.stat_chart", id=activity.id) }}>{{ activity.name }}</a></h2>
     </div>
   </div>
       <div class="row">
@@ -44,13 +41,14 @@
 
         var dataset = {{ data[activity.id-1] | tojson }};
         var min = Math.min.apply(null, dataset);
+        var max = Math.max.apply(null, dataset);
         d3.select(".activity{{ activity.id }}").selectAll("p")
         .data(dataset)
         .enter()
         .append("div")
         .attr("class", "bar")
         .style("height", function(d) {
-        var barHeight = d - min * 5;
+        var barHeight = (d - min + 1) / (max-min) * 100;
         return barHeight + 'px';
                 });
 
