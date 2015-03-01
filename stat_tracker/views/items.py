@@ -146,7 +146,9 @@ def chart(int_id):
         start_date = datetime.now().date() - timedelta(days=30)
         end_date = datetime.now().date()
     chart_activity = Item.query.filter_by(id=int_id).first()
-    activities = Action.query.filter(Action.logged_at.between(start_date, end_date)).filter_by(item_id=int_id).order_by(Action.logged_at.desc()).all()
+    activities = Action.query.filter(Action.logged_at.between(start_date, \
+                 end_date)).filter_by(item_id=int_id).order_by(\
+                 Action.logged_at.desc()).all()
     dates = [activity.logged_at for activity in activities]
     values = [activity.value for activity in activities]
     chart_url = create_chart(dates, values)

@@ -62,7 +62,7 @@ class Action(db.Model):
         return {"id": self.id,
                 "item_id": self.item_id,
                 "value": self.value,
-                "datetime": self.datetime}
+                "logged_at": str(self.logged_at)}
 
     def __repr__(self):
         return "<item_id {} | datetime {}>".format(self.item_id, self.datetime)
