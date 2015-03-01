@@ -26,7 +26,7 @@ def returns_json(f):
             return jsonify(retval)
     return decorated_function
 
-@api.route('/activities', methods=['GET', 'POST'])
+@api.route('/activities/', methods=['GET', 'POST'])
 @returns_json
 def get_activities():
     if request.method == 'POST':
@@ -48,14 +48,24 @@ def create_activity():
             activity = Activity(**form.data)
             db.session.add(activity)
             db.session.commit()
-            return (activity, 200)
+            return (activity.to_dict(), 200)
 
-@api.route('/activities/<int:id>')
+@api.route('/activities/<int:id>/')
 @returns_json
 def get_activity(id):
     activity = Activity.query.get(id)
     data = activity.to_dict()
     return {'activities': data}
+
+@api.route('/activities/<int:id>/', methods=["DELETE"])
+@returns_json
+def delete_activity(id):
+    if request.method == "DELETE":
+        activity = Activity.query.get(id)
+        db.session.delete(activity)
+        db.session.commit()
+    return {'Deleted': id }
+
 
 @api.route('/activity/<int:id>/stats')
 @returns_json
