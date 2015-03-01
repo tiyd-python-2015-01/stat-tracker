@@ -41,6 +41,12 @@ class Enterprise(db.Model):
     user = db.relationship('User',
         backref=db.backref('enterprises', lazy='dynamic'))
 
+    def to_dict(self):
+        return {"id": self.id,
+                "ent_name": self.ent_name,
+                "ent_unit": self.ent_unit,
+                "user_id": self.user_id}
+
     def __repr__(self):
         return "<Enterprise: {}>".format(self.ent_name)
 

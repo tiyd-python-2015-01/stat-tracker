@@ -9,11 +9,14 @@
 <form method="POST" action="{{ post_url }}">
   {{ form.hidden_tag() }}
   <div>
-    {{ enterprise.ent_unit }} {{ form.value(size=40) }}
-
+    {{ form.value(size=20) }} {{ enterprise.ent_unit }}
   </div>
+
+  <br>
+
   <div>
     <input type="submit" value="Create">
+  </div>
   </form>
 
 

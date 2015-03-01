@@ -74,7 +74,7 @@ def edit_stats(id):
         db.session.add(stat)
         db.session.commit()
         flash("The link has been updated.")
-        return redirect(url_for("index"))
+        return redirect(url_for("users.index"))
 
     return render_template("add_stats.html",
                            form=form,
@@ -87,7 +87,7 @@ def delete_stats(id):
     enterprise = Enterprise.query.get(stat.enterprise_id)
     db.session.delete(stat)
     db.session.commit()
-    return redirect(url_for("index"))
+    return redirect(url_for("enterprises.edit_page", id=enterprise.id))
 
 @enterprises.route("/enterprises/<int:id>_clicks.png")
 def enterprise_chart(id):

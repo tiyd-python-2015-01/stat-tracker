@@ -2,7 +2,7 @@
 
 {% block body %}
 
-
+<a href ="{{ url_for('users.index') }}"><button type="button">Return to Index</button></a>
 
 
 <div>
@@ -22,8 +22,8 @@
       <td> {{ stat.recorded_at.date() }} </td>
       <td> {{ stat.value }} </td>
     </tr>
-</table>
   {% endfor %}
+</table>
 
   <img src="{{ url_for('enterprises.enterprise_chart', id=enterprise.id) }}">
 <div>

@@ -2,6 +2,7 @@
 
 {% block body %}
 
+<a href ="{{ url_for('users.index') }}"><button type="button">Return to Index</button></a>
 
 <div>
   <h1>{{ enterprise.ent_name }}</h1>
@@ -24,8 +25,10 @@
     <td> <a href= "{{ url_for('enterprises.edit_stats', id=stat.id) }}">Edit</a>
     <td> <a href= "{{ url_for('enterprises.delete_stats', id=stat.id) }}">Delete</a>
   </tr>
-</table>
+
 {% endfor %}
+
+</table>
 
 <div>
   <br>

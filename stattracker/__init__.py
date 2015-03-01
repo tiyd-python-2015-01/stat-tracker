@@ -17,12 +17,14 @@ SECRET_KEY = 'development-key'
 from . import models
 from .views.users import users
 from .views.enterprises import enterprises
+from .views.api import api
 
 def create_app():
     app = Flask("stattracker")
     app.config.from_object(__name__)
     app.register_blueprint(users)
     app.register_blueprint(enterprises)
+    app.register_blueprint(api, url_prefix="/api/v1")
 
     config.init_app(app)
     db.init_app(app)

@@ -27,3 +27,6 @@ webtest
 
 # Management script
 Flask-Script
+
+matplotlib
+io
