@@ -45,4 +45,3 @@ fake-factory
 
 # Plot data
 plotly
-matplotlib
