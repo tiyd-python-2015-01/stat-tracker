@@ -21,9 +21,9 @@ class RegistrationForm(Form):
 
 
 class TaskForm(Form):
-    name = StringField('Task Name', validators=[DataRequired()])
+    t_name = StringField('Task Name', validators=[DataRequired()])
     t_type = IntegerField('Task Type', validators=[DataRequired()])
-    units = StringField('Units', validators=[DataRequired()])
+    t_units = StringField('Units', validators=[DataRequired()])
 
 class TrackingForm(Form):
     tr_date = DateField('Date', validators =[DataRequired()])
