@@ -39,6 +39,12 @@ class Activity(db.Model):
     def __repr__(self):
         return "<Activity {}>".format(self.title)
 
+    def to_dict(self):
+        return {"id": self.id,
+                "title": self.title,
+                "type": self.activity_type,
+                "created": str(self.date)}
+
 
 class Stat(db.Model):
 
@@ -47,6 +53,11 @@ class Stat(db.Model):
     value = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
 
-
     def __repr__(self):
-        return "<Stat {}>".format(self.stat)
+        return "<Stat {}>".format(self.value)
+
+    def to_dict(self):
+        return {"id": self.id,
+                "activity": self.activity,
+                "value": self.value,
+                "date": str(self.date)}

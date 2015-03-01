@@ -29,5 +29,4 @@ class ActivityForm(Form):
 
 
 class UpdateForm(Form):
-    value = DecimalField("Today's value", validators=[DataRequired()],
-                                                      places=2)
+    value = DecimalField("Stat value", validators=[DataRequired()], places=2)

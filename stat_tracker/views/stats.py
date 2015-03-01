@@ -34,7 +34,7 @@ def add():
     form = ActivityForm()
     if form.validate_on_submit():
         submission = Activity(title=form.title.data,
-                              date=datetime.today(),
+                              date=datetime.today().date(),
                               owner=current_user.id,
                               activity_type=form.activity_type.data)
         db.session.add(submission)
@@ -49,10 +49,12 @@ def add():
 @stats.route("/delete/<int:activity_id>")
 @login_required
 def delete_activity(activity_id):
-    stats = Stat.query.filter_by(id=activity_id).all()
+    stats = Stat.query.filter_by(activity=activity_id).all()
     record = Activity.query.get(activity_id)
+    print(record)
     for stat in stats:
         db.session.delete(stat)
+    db.session.commit()
     db.session.delete(record)
     db.session.commit()
     return redirect(url_for("stats.index"))
@@ -62,10 +64,10 @@ def delete_activity(activity_id):
 @login_required
 def update_activity(activity_id):
     activity = Activity.query.get_or_404(activity_id)
-    stats = Stat.query.filter_by(activity=activity_id).all()
+    stats = Stat.query.filter_by(activity=activity.id).all()
     form = UpdateForm()
     if form.validate_on_submit():
-        if stats and stats[-1].date.date() == datetime.today().date():
+        if stats and stats[-1].date == datetime.today().date():
             updated_stat = Stat.query.get_or_404(stats[-1].id)
             updated_stat.value = form.value.data
             db.session.commit()
@@ -75,17 +77,16 @@ def update_activity(activity_id):
         else:
             new_stat = Stat(activity=activity.id,
                             value=form.value.data,
-                            date=datetime.today())
+                            date=datetime.today().date())
             db.session.add(new_stat)
             db.session.commit()
             flash("New value added for today.")
+            stats = Stat.query.filter_by(activity=activity.id).all()
             return render_template("update.html", activity=activity,
                                    stats=stats, form=form)
     flash_errors(form)
     return render_template("update.html", activity=activity, stats=stats,
                            form=form)
-
-
 
 
 @stats.route("/activity_data/<int:activity_id>")
@@ -95,7 +96,44 @@ def activity_data(activity_id):
     return render_template("activity_data.html", activity=activity)
 
 
-@stats.route("/edit/<int:activity_id>")
+@stats.route("/edit/<int:activity_id>", methods=["GET", "POST"])
 @login_required
 def edit_activity(activity_id):
-    pass
+    activity = Activity.query.get_or_404(activity_id)
+    stats = Stat.query.filter_by(activity=activity.id).all()
+    form = ActivityForm(obj=activity)
+    if form.validate_on_submit():
+        activity.title = form.title.data
+        db.session.commit()
+        flash("Activity updated.")
+        return redirect(url_for("stats.index"))
+    else:
+        flash_errors(form)
+        return render_template("edit_activity.html", activity=activity,
+                               stats=stats, form=form)
+
+
+@stats.route("/editstat/<int:stat_id>", methods=["GET", "POST"])
+@login_required
+def edit_stat(stat_id):
+    stat = Stat.query.get_or_404(stat_id)
+    form = UpdateForm(obj=stat)
+    if form.validate_on_submit():
+        stat.value = form.value.data
+        db.session.commit()
+        flash("Stat updated.")
+        return redirect(url_for("stats.update_activity",
+                                activity_id=stat.activity))
+    else:
+        flash_errors(form)
+        return render_template("edit_stat.html", stat=stat, form=form)
+
+
+@stats.route("/deletestat/<int:stat_id>")
+@login_required
+def delete_stat(stat_id):
+    stat = Stat.query.get_or_404(stat_id)
+    db.session.delete(stat)
+    db.session.commit()
+    return redirect(url_for("stats.update_activity",
+                            activity_id=stat.activity))

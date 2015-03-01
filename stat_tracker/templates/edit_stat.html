@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="row">
+        <div class="large-7 large-centered columns"><h2>Edit your stat:</h2></div>
+    </div>
+    <form method=POST action="{{ url_for('stats.edit_stat', stat_id=stat.id) }}">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="large-1 columns">{{ form.value.label }}</div>
+            <div class="large-11 columns">{{ form.value }}</div>
+        </div>
+            <div class="large-1 large-centered columns">
+                <input type=submit value=Submit>
+            </div>
+        </div>
+    </form>
+{% endblock %}
