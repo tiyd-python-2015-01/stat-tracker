@@ -21,9 +21,9 @@ tasksb = Blueprint("tasksb",__name__)
 def index():
     if current_user.is_authenticated():
         tasks = Task.query.filter_by(t_user=current_user.id).order_by(Task.id.desc())
-        return render_template("tasks.html",tasks=tasks)
+        return render_template("index.html",tasks=tasks)
     else:
-        return render_template("tasks.html",tasks=[])
+        return render_template("index.html",tasks=[])
 
 
 @tasksb.route("/task/<int:id>")
@@ -47,7 +47,7 @@ def add_task():
         db.session.add(new_task)
         db.session.commit()
         return redirect(url_for("tasksb.index"))
-    return render_template("add_task.html",
+    return render_template("task_form.html",
                             form=form,
                             post_url=url_for("tasksb.add_task"),
                             b_label="Add Task")
@@ -60,7 +60,7 @@ def delete_task(id):
     db.session.delete(task)
     db.session.commit()
     tasks = Task.query.filter_by(t_user=current_user.id).order_by(Task.id.desc())
-    return render_template("tasks.html",tasks=tasks)
+    return render_template("index.html",tasks=tasks)
 
 
 @tasksb.route('/task/<int:id>/edit', methods=["GET", "POST"])
@@ -74,7 +74,7 @@ def update_task(id):
         form.populate_obj(task)
         db.session.commit()
         return redirect(url_for("tasksb.index"))
-    return render_template("add_task.html",
+    return render_template("task_form.html",
                             post_url = url_for("tasksb.update_task",id=task.id),
                             form=form, b_label="Update")
 
