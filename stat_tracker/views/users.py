@@ -62,17 +62,11 @@ def register():
             flash('Registration successful! You have been logged in.')
             return redirect(url_for('users.home_view'))
 
-        flash_errors(form)
-        return render_template('register.html', form=form)
+    flash_errors(form)
+    return render_template('register.html', form=form)
 
 
 @users.route('/home')
 def home_view():
-    activities = Activities.query.filter_by(user_id=current_user.id).order_by(Activities.id.desc())
-    return render_template('home_page.html', activities=activities)
-
-
-#@users.route('/home/stats')
-#def stat_table():
-#    links = Links.query.filter_by(user_id=current_user.id).order_by(Links.id.desc())
-#    return render_template('stats.html', user_links=links)
+    ac = Activities.query.filter_by(user_id=current_user.id).order_by(Activities.id.desc())
+    return render_template('home_page.html', ac=ac)

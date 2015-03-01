@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<table>
+  <caption>{{ a.name }}<caption>
+  <thead>
+    <tr>
+      <th width='200'>Date</th>
+      <th width='200'>Ammount</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s in stat %}
+      <tr>
+        <td>{{ s.time }}</td>
+        <td>{{ s.ammount }} <a class='button tiny radius info' href='{{url_for('activities.edit_stat', id=a.id, time=s.time) }}'>Edit</a></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

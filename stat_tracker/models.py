@@ -41,10 +41,9 @@ class Activities(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     name = db.Column(db.String(255), unique=True)
     user = db.relationship('User', backref=db.backref('activities', lazy='dynamic'))
-    unit = db.Column(db.String(255))
 
     @property
-    def activity_stat_total(self):
+    def times_total(self):
         count = 0
         stats = Stat.query.filter_by(activity_id=self.id).all()
         for stat in stats:
@@ -52,23 +51,55 @@ class Activities(db.Model):
         return count
 
 
-    #clicks = property(link_clicks)
+    @property
+    def times_last_7(self):
+        times = (self.times_range(7))
+        count = 0
+        for time in times:
+            count += time[1]
+        return count
 
-    #@property
-    #def clicks_last_30(self):
-    #    return len(self.clicks_per_day())
+    @property
+    def times_last_30(self):
+        times = (self.times_range())
+        count = 0
+        for time in times:
+            count += time[1]
+        return count
 
-    #def clicks_per_day(self, days=30):
-    #    days = timedelta(days=days)
-    #    date_from = date.today() - days
+    @property
+    def times_last_365(self):
+        times = (self.times_range(365))
+        count = 0
+        for time in times:
+            count += time[1]
+        return count
 
 
-    #    click_date = func.cast(Click.timestamp, db.Date)
-    #    return db.session.query(click_date, func.count(Click.id)). \
-    #        group_by(click_date). \
-    #        filter(and_(Click.link_id == self.id,
-    #                    click_date >= str(date_from))). \
-    #        order_by(click_date).all()
+    def times_range(self, days=30):
+        days = timedelta(days=days)
+        date_from = date.today() - days
+
+
+        stat_date = func.cast(Stat.time, db.Date)
+        return db.session.query(stat_date, func.sum(Stat.ammount)). \
+            group_by(stat_date). \
+            filter(and_(Stat.activity_id == self.id,
+                    stat_date >= str(date_from))). \
+            order_by(stat_date).all()
+
+
+    def custom_time(self, stop, start):
+        date_from = date.today() - start
+        date_to = date.today() - stop
+
+        stat_date = func.cast(Stat.time, db.Date)
+        return db.session.query(stat_date, func.sum(Stat.ammount)). \
+            group_by(stat_date). \
+            filter(and_(Stat.activity_id == self.id,
+                stat_date < str(date_to), stat_date > str(date_from))). \
+            order_by(stat_date).all()
+
 
 
     #def to_dict(self):

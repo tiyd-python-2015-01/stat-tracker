@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<fieldset>
+  <h1>{{ a.name }}</h1>
+    <h2>Between {{ start }} and  {{ stop }}</h2>
+
+    <h3>Clicks</h3>
+    <img src="{{ url_for('activities.a_chart', id=link.id, start=start, stop=stop) }}" />
+  </fieldset>
+{% endblock %}

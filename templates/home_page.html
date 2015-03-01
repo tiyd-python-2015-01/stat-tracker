@@ -3,18 +3,33 @@
 {% block body %}
 
 <div class="large-12 columns">
-  <fieldset>
-    <h1 align='center'> Monitored Stats </h1>
-  </fieldset>
-    {% for a in activities %}
-      <fieldset>
-        <div class='generic'>Total {{ a.name }}: {{ a.activity_stat_total }} </div><br>
-        <a class='button tiny radius info' href='{{url_for('activities.edit_activity', id=a.id) }}'>Edit</a>
-        <a class='button tiny radius info' href='{{url_for('activities.delete_activity', id=a.id) }}'>Delete</a>
-        <a class='button tiny radius info' href='{{url_for('activities.add_stat', id=a.id) }}'>Add</a>
-
-      </fieldset>
-    {% endfor %}
+    <img src='/static/img/actives.png'/>
 </div>
-
+<div class ='large-12 columns'>
+    {% if current_user.activities.count() > 0 %}
+      <ul class='small-block-grid-3'>
+        {% for a in ac %}
+          <li>
+            <fieldset style="text-align:center">
+              <legend>{{ a.name }}</legend>
+              Total: {{ a.times_total }}<br>
+              Past 7 Days: {{ a.times_last_7 }}<br>
+              Past 30 Days: {{ a.times_last_30 }}<br>
+              Past Year: {{ a.times_last_365 }}<br>
+            <a class='button tiny radius info' href='{{url_for('activities.stat_table', id=a.id) }}'>Details</a>
+            <a class='button tiny radius info' href='{{url_for('activities.add_stat', id=a.id) }}'>Update</a><br>
+            <a class='button tiny radius info' href='{{url_for('activities.edit_activity', id=a.id) }}'>Change Name</a>
+            <a class='button tiny radius info' href='{{url_for('activities.delete_activity', id=a.id) }}'>Delete</a>
+            <a class='button tiny radius info' href='{{url_for('activities.set_range', id=a.id) }}'>Chart</a>
+            </fieldset>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <fieldset style="text-align:center">
+        <h4 align='center'>You Haven't added any activities yet!</h4>
+          <a class='button round info' href='/add'>Get Started!</a>
+      </fieldset>
+    {% endif %}
+</div>
 {% endblock %}

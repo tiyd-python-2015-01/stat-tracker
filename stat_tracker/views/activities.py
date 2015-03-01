@@ -2,7 +2,7 @@ import random
 from flask import Blueprint, render_template, redirect, flash, url_for, request, send_file
 from flask.ext.login import current_user
 from sqlalchemy import desc
-from ..forms import AddNewAction, EditAction, AddNewStat
+from ..forms import AddNewAction, EditAction, AddNewStat, DateRange, EditStat
 from ..models import Activities, Stat
 from ..extensions import db
 from datetime import datetime
@@ -71,18 +71,80 @@ def delete_activity(id):
 
 @activities.route('/<int:id>/add', methods=['GET', 'POST'])
 def add_stat(id):
-    current = Activities.query.get(id)
+    current = Activities.query.get_or_404(id)
     name = current.name
     form = AddNewStat()
     if form.validate_on_submit():
-        s = Stat(user_id = current_user.id,
-                 activity_id = current.id,
-                 ammount = form.quantity.data,
-                 time = form.date.data)
-        db.session.add(s)
-        db.session.commit()
-        flash('Stats Updated!')
-        return redirect(url_for('users.home_view'))
+        date = Stat.query.filter_by(activity_id=current.id).filter_by(time=form.date.data).first()
+        if date:
+            flash('You have already entered an ammount for that date!'
+                   'Edit the exisiting entry!')
+        else:
+            s = Stat(user_id = current_user.id,
+                     activity_id = current.id,
+                     ammount = form.ammount.data,
+                     time = form.date.data)
+            db.session.add(s)
+            db.session.commit()
+            flash('Stats Updated!')
+            return redirect(url_for('users.home_view'))
     else:
         flash_errors(form)
     return render_template('addstat.html', form=form, name=name)
+
+
+@activities.route('/activity/<int:id>/stats')
+def stat_table(id):
+    a = Activities.query.get_or_404(id)
+    stat = Stat.query.filter_by(activity_id=a.id).order_by(Stat.time.desc())
+    return render_template('activity_data.html', stat=stat, a=a)
+
+
+@activities.route('/activity/<int:id>/stats/<time>/edit', methods=['GET', 'POST'])
+def edit_stat(id, time):
+    s = Stat.query.filter_by(activity_id=id).filter_by(time=time).first()
+    a = Activities.query.get_or_404(id)
+    form = EditStat(obj=s)
+    if form.validate_on_submit():
+        form.populate_obj(s)
+        db.session.commit()
+        flash('Stat Updated')
+        return redirect(url_for('activities.stat_table', stat=s, a=a))
+    else:
+        flash_errors(form)
+    return render_template('edit_stat.html', form=form, a=a, s=s)
+
+@activities.route('/activity/<int:id>/set_range', methods=['GET', 'POST'])
+def set_range(id):
+    form = DateRange()
+    if form.validate_on_submit():
+        redirect(url_for('chart', start = form.start.data, stop = form.stop.data))
+    else:
+        flash_errors(form)
+    return render_template('chart_dates.html', form=form)
+
+
+@activities.route('/activity/<int:id>/chart', methods=['GET'])
+def chart(id):
+    a = Activities.query.get_or_404(id)
+    return render_template('chart.html', a=a)
+
+@activities.route('/activity/<start>/<stop>/<int:id>_chart.png/')
+def a_chart(id, start, stop):
+    a = Activities.query.get_or_404(id)
+    a_data = a.custom_time(stop = stop, start = start)
+    dates = [c[0] for c in a_data]
+    stat_count = [c[1] for c in a_data]
+    date_labels = [d.strftime("%b %d") for d in dates]
+    every_other_date_label = [d if i % 2 else ""
+                              for i, d in enumerate(date_labels)]
+
+
+    fig = BytesIO()
+    plt.plot_date(x=dates, y=click_count, fmt='-')
+    plt.xticks(dates, every_other_date_label,
+               rotation=45, size="x-small")
+    plt.savefig(fig)
+    plt.clf()
+    fig.seek(0)
+    return send_file(fig, mimetype='image/png')
