@@ -64,8 +64,8 @@ def create_task():
     data = json.loads(body)
     form = TaskForm(data=data, formdata=None, csrf_enabled=False)
     if form.validate():
-        task = Task(form.name.data,
-                    form.units.data,
+        task = Task(form.t_name.data,
+                    form.t_units.data,
                     form.t_type.data,
                     user_id)
         db.session.add(task)
@@ -79,12 +79,20 @@ def update_task(id):
     user_id=require_authorization()
     body = request.get_data(as_text=True)
     data = json.loads(body)
-    form = TaskForm(data, formdata=None, csrf_enabled=False)
+    print('************')
+    print(data)
+    form = TaskForm(data=data, formdata=None, csrf_enabled=False)
+    print('************')
+    print(form.t_name.data)
+    print(form.t_type.data)
+    print(form.t_units.data)
     task = Task.query.get(id)
     if task:
-        task.t_name = form.name.data
+        task.t_name = form.t_name.data
         task.t_type = form.t_type.data
-        task.t_units = form.units.data
+        task.t_units = form.t_units.data
+        task.t_user = user_id
+        db.session.add(task)
         db.session.commit()
         return (json.dumps(task.to_dict()), 201, {"Location": url_for(".task", id=task.id)})
     else:
@@ -145,6 +153,8 @@ def update_stat(id):
         user_id=require_authorization()
         body = request.get_data(as_text=True)
         data = json.loads(body)
+        print("*****STAT*******")
+        print(data)
         form = TrackingForm(data=data, formdata=None, csrf_enabled=False)
         stat = Tracking.query.filter(and_(Tracking.tr_task_id==id, Tracking.tr_date==form.tr_date.data)).first()
         if stat:
