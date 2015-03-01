@@ -12,7 +12,7 @@ from .extensions import (
 from . import models
 from .views.users import usersb
 from .views.tasks import tasksb
-#from .views.api import api
+from .views.api import api
 
 SQLALCHEMY_DATABASE_URI = "postgres://localhost/tasker"
 DEBUG = True
@@ -24,12 +24,12 @@ def create_app():
     app.config.from_object(__name__)
     app.register_blueprint(usersb)
     app.register_blueprint(tasksb)
-#    app.register_blueprint(api, url_prefix="/urly_bird/api/V1")
+    app.register_blueprint(api, url_prefix="/tasker/api/v1")
     config.init_app(app)
     db.init_app(app)
     debug_toolbar.init_app(app)
     migrate.init_app(app, db)
     bcrypt.init_app(app)
     login_manager.init_app(app)
-    login_manager.login_view = "users.login"
+    login_manager.login_view = "usersb.login"
     return app

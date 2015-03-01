@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block body %}
+ <div class="row">
+  <div class=" small-12 columns">
+    <strong> {{task.t_name}}:</strong> {{task.t_units}}
+  </div>
+ </div>
+
+ <div class="row">
+  <div class ="small-12 columns">
+        <a class ="submitlink" href="{{ url_for("tasksb.add_daily_value", id=task.id) }}"> Add or Update Values</a>
+        <div>
+          <hr>
+        </div>
+   </div>
+ </div>
+ <div class="row">
+  <div class ="small-12 columns">
+    <img src="{{ url_for("tasksb.stat_chart", id=task.id) }}" />
+  </div>
+</div>
+<div class="large-8 large-offset-2 columns">
+    <table>
+     <thead>
+       <tr>
+         <th width="200">Date</th>
+         <th width="150">Value</th>
+       </tr>
+     </thead>
+     <tbody>
+       <h4>Values</h4>
+ {% for stat in stats %}
+
+  <div class="row">
+   <tr>
+    <td><strong> {{stat.tr_date}}:</strong></td>
+    <td>  {{stat.tr_value}}</td>
+  </tr>
+  </div>
+ {% endfor %}
+</tbody>
+   </table>
+
+
+{% endblock %}

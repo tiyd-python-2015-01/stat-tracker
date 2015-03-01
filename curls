@@ -1,0 +1,5 @@
+curl -v -H "Authorization: Basic ana@ana.com:ana" -X PUT -d '{"name":"walking my dog","t_type":1,"units":"hours"}' http://127.0.0.1:5000/tasker/api/v1/activities/4
+
+curl -v -H "Authorization: Basic ana@ana.com:ana"  http://127.0.0.1:5000/tasker/api/v1/activities/1
+
+curl -v -H "Authorization: Basic ana@ana.com:ana" -X DELETE http://127.0.0.1:5000/tasker/api/v1/activities/4

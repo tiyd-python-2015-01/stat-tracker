@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Ana's Link Shortener</title>
+    <title>Ana's Tasker - Task Management Tool</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <!--<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">-->
@@ -33,20 +33,12 @@
                   <li class="divider"></li>
                   {% endif %}
                 </ul>
-                <!--  <ul class="left">
+                <ul class="left">
                   <li class="divider"></li>
                   <li class="has-form">
-                     <a href='/add_link' class="button">Add Links</a>
+                     <a href="{{ url_for("tasksb.add_task") }}" class="button">Add Task</a>
                   </li>
-                  <li class="divider"></li>
-                  <li class="has-form">
-                     <a href='/all_links' class="button">See All Links</a>
-                  </li>
-                  <li class="divider"></li>
-                  <li class="has-form">
-                     <a href='/stats' class="button">Stats</a>
-                  </li>
-                </ul>-->
+                </ul>
             </section>
             </nav>
             </div>

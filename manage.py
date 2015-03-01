@@ -2,9 +2,7 @@
 import os
 import csv
 import random
-
-from faker import Factory
-from datetime import datetime
+from datetime import date
 
 from flask.ext.script import Manager, Shell, Server
 from flask.ext.migrate import MigrateCommand
@@ -30,9 +28,9 @@ def make_shell_context():
     """
     return dict(app=app,
                 db=db,
-                AppUser=models.AppUser,
-                stat=models.stat,
-                stat_track=models.stat_track
+                user=models.User,
+                task=models.Task,
+                tracking=models.Tracking
                 )
 
 
@@ -42,6 +40,23 @@ def test():
     import pytest
     exit_code = pytest.main([TEST_PATH, '--verbose'])
     return exit_code
+
+@manager.command
+def seed_stats():
+    myusers = models.User.query.order_by(models.User.id.desc()).all()
+    for user in myusers:
+       tasks = models.Task.query.filter_by(t_user=user.id).all()
+       for task in tasks:
+            month = 1
+            days = 31
+            for month in range(1,3):
+                for day in range(1,days):
+                    r_date = date(2015,month,day)
+                    r_value = random.randint(1,100)
+                    stat = models.Tracking(user.id, task.id, r_date, r_value)
+                    db.session.add(stat)
+                days = 28
+       db.session.commit()
 
 
 if __name__ == '__main__':
