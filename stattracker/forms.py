@@ -1,6 +1,6 @@
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, FloatField
-from wtforms.fields.html5 import EmailField
+from wtforms.fields.html5 import EmailField, DateField
 from wtforms.validators import DataRequired, Email, EqualTo, URL
 
 
@@ -25,3 +25,4 @@ class EnterpriseForm(Form):
 
 class StatForm(Form):
     value = FloatField('Value')
+    recorded_at = DateField('Recorded At', validators=[DataRequired()])

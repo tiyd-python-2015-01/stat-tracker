@@ -4,10 +4,14 @@
 
 <a href ="{{ url_for('users.index') }}"><button type="button">Return to Index</button></a>
 
+<br>
+<br>
 
 <div>
-  <h1>{{ enterprise.ent_name }}</h1>
+  <h2>{{ enterprise.ent_name }}</h2>
 </div>
+
+<br>
 
 <table>
   <thead>
@@ -16,7 +20,7 @@
     <th> {{ enterprise.ent_unit }} </th>
   </tr>
   </thead>
-  {% for stat in enterprise.stats[:30] %}
+  {% for stat in stat_list %}
 
     <tr>
       <td> {{ stat.recorded_at.date() }} </td>

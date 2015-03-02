@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-
+<br>
 
 {% if not current_user.is_authenticated() %}
 <div>
@@ -25,17 +25,22 @@
 
 <div>
   <br>
+  <br>
   <a href ="{{ url_for('enterprises.create_enterprise') }}"><button type="button">Add an enterprise!</button></a>
 </div>
 
+<br>
+<br>
+
 <div>
   <h1>Your Enterprises</h1>
+  <br>
 </div>
 
 {% for enterprise in enterprise_list %}
 
 <div>
-  {{ enterprise.ent_name }}
+  <h3>{{ enterprise.ent_name }}</h3>
 </div>
 
 <div>

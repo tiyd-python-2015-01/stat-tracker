@@ -1,15 +1,23 @@
 {% extends "layout.html" %}
 
 {% block body %}
+
+<a href ="{{ url_for('users.index') }}"><button type="button">Return to Index</button></a>
+
 <br>
 <br>
 
-<h3>{{ enterprise.ent_name }}</h3>
+<h2>{{ enterprise.ent_name }}</h2>
+
+<br>
 
 <form method="POST" action="{{ post_url }}">
   {{ form.hidden_tag() }}
   <div>
     {{ form.value(size=20) }} {{ enterprise.ent_unit }}
+  </div>
+  <div>
+    {{ form.recorded_at(size=20) }}
   </div>
 
   <br>
@@ -28,6 +36,5 @@
   <div>
     <br>
     <br>
-    <a href ="{{ url_for('users.index')}}">Nevermind, return to the index.</a>
   </div>
   {% endblock %}

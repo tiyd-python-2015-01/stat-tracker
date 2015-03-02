@@ -38,11 +38,11 @@ def add_stats(id):
     form = StatForm()
     if form.validate_on_submit():
         stat = Stat(value=form.value.data,
-                    recorded_at=datetime.now().date(),
+                    recorded_at=form.recorded_at.data,
                     enterprise_id=enterprise.id)
         db.session.add(stat)
         db.session.commit()
-        return redirect(url_for("users.index"))
+        return redirect(url_for("enterprises.view_stats", ent_id=enterprise.id))
     flash_errors(form)
     return render_template("add_stats.html",
                            form=form,
@@ -53,52 +53,34 @@ def add_stats(id):
 @login_required
 def view_stats(ent_id):
     enterprise = Enterprise.query.get(ent_id)
-    stat_list = Stat.query.filter_by(enterprise_id = ent_id).all()
-    return render_template("enterprise_stats.html", enterprise=enterprise, stat_list=stat_list)
+    stat_list = Stat.query.filter_by(enterprise_id = ent_id).order_by(Stat.recorded_at).all()
+    return render_template("enterprise_stats.html", enterprise=enterprise, stat_list=reversed(stat_list))
 
 @enterprises.route("/editpage/<int:id>", methods=["GET", "POST"])
 @login_required
 def edit_page(id):
     enterprise = Enterprise.query.get(id)
-    stat_list = Stat.query.filter_by(enterprise_id = id).all()
-    return render_template("edit_stats.html", enterprise=enterprise, stat_list=stat_list)
+    stat_list = Stat.query.filter_by(enterprise_id = id).order_by(Stat.recorded_at).all()
+    return render_template("edit_stats.html", enterprise=enterprise, stat_list=reversed(stat_list))
 
 @enterprises.route("/editstat/<int:id>", methods=["GET", "POST"])
 @login_required
 def edit_stats(id):
     stat = Stat.query.get(id)
     enterprise = Enterprise.query.get(stat.enterprise_id)
+    stat_list = Stat.query.filter_by(enterprise_id = ent_id).order_by(Stat.recorded_at).all()
     form = StatForm(obj=stat)
     if form.validate_on_submit():
         form.populate_obj(stat)
         db.session.add(stat)
         db.session.commit()
-        flash("The link has been updated.")
-        return redirect(url_for("users.index"))
+        flash("The stat has been updated.")
+        return redirect(url_for("enterprises.edit_page", id=enterprise.id))
 
-    return render_template("edit_stats.html",
+    return render_template("add_stats.html",
                            form=form,
                            enterprise=enterprise,
                            post_url= url_for('enterprises.edit_stats', id=stat.id))
-
-# @app.route('/edit/<small_link>', methods=["GET", "POST"])
-# @login_required
-# def edit_link(small_link):
-#     note_link = Link.query.filter(Link.short_link == small_link).first()
-#     form = CreateLinkForm(obj=note_link)
-#     if form.validate_on_submit():
-#         form.populate_obj(note_link)
-#         db.session.commit()
-#         flash("Your edits have been made.")
-#         return redirect(url_for('show_links'))
-#     else:
-#         flash_errors(form)
-#
-#     return render_template("edit_link.html", form=form,
-#                            update_url=url_for('edit_link',
-#                                               small_link=note_link.short_link))
-
-
 
 @enterprises.route("/delete/<int:id>", methods = ["GET", "POST"])
 def delete_stats(id):
@@ -106,6 +88,7 @@ def delete_stats(id):
     enterprise = Enterprise.query.get(stat.enterprise_id)
     db.session.delete(stat)
     db.session.commit()
+    flash("The stat has been deleted.")
     return redirect(url_for("enterprises.edit_page", id=enterprise.id))
 
 @enterprises.route("/enterprises/<int:id>_clicks.png")
@@ -115,7 +98,9 @@ def enterprise_chart(id):
     values = [stat.value for stat in enterprise.stats]
 
     fig = BytesIO()
-    plt.plot_date(x=dates, y=values, fmt="-")
+    # plt.plot_date(x=dates, y=values, fmt="-")
+    plt.bar(dates, values)
+    plt.ylabel(enterprise.ent_unit)
     plt.savefig(fig)
     plt.clf()
     fig.seek(0)
