@@ -1,7 +1,6 @@
 from datetime import date
 from io import BytesIO
 import matplotlib.pyplot as plt
-from bokeh.plotting import figure, output_file, show
 
 """Add your views here."""
 
