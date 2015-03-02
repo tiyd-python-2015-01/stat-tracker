@@ -17,13 +17,6 @@
                     <center><input type=submit value="Submit"></center>
                 </div>
         </form>
-        {% if not stats %}
-            <!-- <div class="row">
-                <div class="large-4 large-centered columns">
-                    <h2>No stats recorded for this activity!</h2>
-                </div>
-            </div> -->
-        {% else %}
             <ul>
                 {% for stat in stats %}
                     <div class="row">
@@ -33,6 +26,5 @@
                     </div>
                 {% endfor %}
             </ul>
-        {% endif %}
     </div>
 {% endblock %}

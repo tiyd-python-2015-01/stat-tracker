@@ -34,7 +34,7 @@ class Activity(db.Model):
     title = db.Column(db.String(255), nullable=False)
     owner = db.Column(db.Integer, db.ForeignKey(User.id))
     activity_type = db.Column(db.String(255), nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.Date, nullable=False)
 
     def __repr__(self):
         return "<Activity {}>".format(self.title)
@@ -51,7 +51,7 @@ class Stat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     activity = db.Column(db.Integer, db.ForeignKey(Activity.id))
     value = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.Date, nullable=False)
 
     def __repr__(self):
         return "<Stat {}>".format(self.value)

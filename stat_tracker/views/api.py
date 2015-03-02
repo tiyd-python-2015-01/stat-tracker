@@ -115,17 +115,89 @@ def delete_activity(activity_id):
     return json_response(201, "Deleted Activity")
 
 
-@api.route("/api/v1/activities/<int:activity_id>/data", methods=["GET",
-                                                                 "POST",
+@api.route("/api/v1/activities/<int:activity_id>/data", methods=["POST",
                                                                  "PUT",
                                                                  "DELETE"])
 def modify_stat(activity_id):
     require_authorization()
     if request.method == "POST":
-        add_stat(request, activity_id)
-
+        return add_stat(request, activity_id)
+    elif request.method == "PUT":
+        return update_stat(request, activity_id)
+    elif request.method == "DELETE":
+        return delete_stat(request, activity_id)
 
 def add_stat(request, activity_id):
     body = request.get_data(as_text=True)
     data = json.loads(body)
-    
+    if "date" in data.keys():
+        try:
+            date = datetime.strptime(data["date"], "%Y-%m-%d")
+            stat = Stat.query.filter_by(activity=activity_id).filter_by(
+                date=date).first()
+            if stat:
+                stat.value = data["value"]
+                db.session.commit()
+            else:
+                stat = Stat(activity=activity_id,
+                            date=date,
+                            value=data["value"])
+                db.session.add(stat)
+                db.session.commit()
+            return json_response(201, stat.to_dict())
+        except ValueError:
+            return json_response(400, "Invalid date format.")
+    else:
+        stat = Stat.query.filter_by(activity=activity_id).filter_by(
+            date=datetime.today().date()).first()
+        if stat:
+            stat.value = data["value"]
+            db.session.commit()
+            return json_response(201, stat.to_dict())
+        else:
+            stat = Stat(activity=activity_id,
+                        date=datetime.today().date(),
+                        value=data["value"])
+            db.session.add(stat)
+            db.session.commit()
+            return json_response(201, stat.to_dict())
+
+
+def update_stat(request, activity_id):
+    body = request.get_data(as_text=True)
+    data = json.loads(body)
+    if not "date" in data.keys():
+        return json_response(400, "Date required.")
+    else:
+        try:
+            date = datetime.strptime(data["date"], "%Y-%m-%d")
+            stat = Stat.query.filter_by(activity=activity_id).filter_by(
+                date=date).first()
+            if not stat:
+                return json_response(400, "Stat not found.")
+            else:
+                stat.value = data["value"]
+                db.session.commit()
+                return json_response(201, stat.to_dict())
+        except ValueError:
+            return json_response(400, "Invalid date format.")
+
+
+def delete_stat(request, activity_id):
+    body = request.get_data(as_text=True)
+    data = json.loads(body)
+    if not "date" in data.keys():
+        return json_response(400, "Date required.")
+    else:
+        try:
+            date = datetime.strptime(data["date"], "%Y-%m-%d")
+            stat = Stat.query.filter_by(activity=activity_id).filter_by(
+                date=date).first()
+            if not stat:
+                return json_response(400, "Stat not found.")
+            else:
+                db.session.delete(stat)
+                db.session.commit()
+                return json_response(201, "Activity stat deleted.")
+        except ValueError:
+            return json_response(400, "Invalid date format.")
