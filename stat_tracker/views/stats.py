@@ -89,13 +89,6 @@ def update_activity(activity_id):
                            form=form)
 
 
-@stats.route("/activity_data/<int:activity_id>")
-@login_required
-def activity_data(activity_id):
-    activity = Activity.query.get_or_404(activity_id)
-    return render_template("activity_data.html", activity=activity)
-
-
 @stats.route("/edit/<int:activity_id>", methods=["GET", "POST"])
 @login_required
 def edit_activity(activity_id):
@@ -137,3 +130,42 @@ def delete_stat(stat_id):
     db.session.commit()
     return redirect(url_for("stats.update_activity",
                             activity_id=stat.activity))
+
+
+@stats.route("/activity_data/<int:activity_id>")
+@login_required
+def activity_data(activity_id):
+    activity = Activity.query.get_or_404(activity_id)
+    return render_template("activity_data.html", activity=activity)
+
+
+@stats.route("/activity_data<int:activity_id>.png")
+@login_required
+def activity_data_chart(activity_id):
+    make_chart(activity_id)
+    fig = BytesIO()
+    plt.savefig(fig)
+    plt.clf()
+    fig.seek(0)
+    return send_file(fig, mimetype="image/png")
+
+
+def make_chart(activity_id):
+    data = Stat.query.filter_by(activity=activity_id).all()
+    print(data)
+    dates = [item.date for item in data]
+    date_labels = [date.strftime("%b %d") if i % 2 else ""
+                   for i, date in enumerate(dates)]
+    values = [item.value for item in data]
+    print(dates)
+    print(values)
+    ax = plt.subplot(111)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.get_xaxis().tick_bottom()
+    ax.get_yaxis().tick_left()
+
+    plt.title("Stats by Day")
+    plt.plot_date(x=dates, y=values, fmt="-")
+    plt.xticks(dates, date_labels, rotation=45, size="x-small")
+    plt.tight_layout()
