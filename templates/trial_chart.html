@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<fieldset>
+  <h1>{{ a.name }}</h1>
+  <li>a data: {{ a_data }}<br>
+  <li>dates: {{ dates }}
+  <li>stat_count: {{ stat_count }}
+  <li>date_labels: {{ date_labels }}
+  <li>every_other: {{ every_other_date_label }}
+  </fieldset>
+{% endblock %}

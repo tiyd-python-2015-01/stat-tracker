@@ -3,9 +3,21 @@
 {% block body %}
 <fieldset>
   <h1>{{ a.name }}</h1>
-    <h2>Between {{ start }} and  {{ stop }}</h2>
-
-    <h3>Clicks</h3>
-    <img src="{{ url_for('activities.a_chart', id=link.id, start=start, stop=stop) }}" />
+    <p1>Between {{ start }} and {{ stop }}</p1>
+    <div class="large-12 columns">
+      <fieldset>
+          <form action='{{ set_range }}' method='POST'>
+            {{ form.hidden_tag() }}
+            <div>
+              {{ form.start.label }} {{ form.start(size=100) }}
+              {{ form.stop.label }} {{ form.stop(size=100) }}
+            </div>
+            <div>
+              <input type='Submit' value='Chart It!'>
+            </div>
+          </form>
+        </fieldset>
+    </div>
+    <img src="{{ url_for('activities.a_chart', id=a.id, start=start, stop=stop) }}" />
   </fieldset>
 {% endblock %}

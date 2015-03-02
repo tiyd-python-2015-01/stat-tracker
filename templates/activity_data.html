@@ -2,7 +2,11 @@
 
 {% block body %}
 <table>
-  <caption>{{ a.name }}<caption>
+  <caption>{{ a.name }}<br>
+    Total: {{ a.times_total }}<br>
+    Past 7 Days: {{ a.times_last_7 }}<br>
+    Past 30 Days: {{ a.times_last_30 }}<br>
+    Past Year: {{ a.times_last_365 }}<br><caption>
   <thead>
     <tr>
       <th width='200'>Date</th>
@@ -13,7 +17,8 @@
     {% for s in stat %}
       <tr>
         <td>{{ s.time }}</td>
-        <td>{{ s.ammount }} <a class='button tiny radius info' href='{{url_for('activities.edit_stat', id=a.id, time=s.time) }}'>Edit</a></td>
+        <td>{{ s.ammount }} <a class='button tiny radius info' href='{{url_for('activities.edit_stat', id=a.id, time=s.time) }}'>Edit</a>
+        <a class='button tiny radius info' href='{{url_for('activities.delete_stat', id=a.id, time=s.time) }}'>Delete</a></td>
       </tr>
     {% endfor %}
   </tbody>

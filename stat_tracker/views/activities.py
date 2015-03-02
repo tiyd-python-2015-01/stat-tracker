@@ -8,6 +8,7 @@ from ..extensions import db
 from datetime import datetime
 from io import BytesIO
 import matplotlib.pyplot as plt
+import time
 
 activities = Blueprint("activities", __name__)
 
@@ -93,7 +94,7 @@ def add_stat(id):
     return render_template('addstat.html', form=form, name=name)
 
 
-@activities.route('/activity/<int:id>/stats')
+@activities.route('/activity/<int:id>')
 def stat_table(id):
     a = Activities.query.get_or_404(id)
     stat = Stat.query.filter_by(activity_id=a.id).order_by(Stat.time.desc())
@@ -104,47 +105,77 @@ def stat_table(id):
 def edit_stat(id, time):
     s = Stat.query.filter_by(activity_id=id).filter_by(time=time).first()
     a = Activities.query.get_or_404(id)
+    stat = Stat.query.filter_by(activity_id=a.id).order_by(Stat.time.desc())
     form = EditStat(obj=s)
     if form.validate_on_submit():
         form.populate_obj(s)
         db.session.commit()
         flash('Stat Updated')
-        return redirect(url_for('activities.stat_table', stat=s, a=a))
+        return render_template('activity_data.html', stat=stat, a=a)
     else:
         flash_errors(form)
     return render_template('edit_stat.html', form=form, a=a, s=s)
+
+@activities.route('/activity/<int:id>/stats/<time>/delete', methods=['GET'])
+def delete_stat(id, time):
+    s = Stat.query.filter_by(activity_id=id).filter_by(time=time).first()
+    db.session.delete(s)
+    db.session.commit()
+    a = Activities.query.get_or_404(id)
+    stat = Stat.query.filter_by(activity_id=a.id).order_by(Stat.time.desc())
+    flash('Stat Deleted!!')
+    return render_template('activity_data.html', stat=stat, a=a)
+
 
 @activities.route('/activity/<int:id>/set_range', methods=['GET', 'POST'])
 def set_range(id):
     form = DateRange()
     if form.validate_on_submit():
-        redirect(url_for('chart', start = form.start.data, stop = form.stop.data))
+        redirect(url_for('chart_view', start=form.start.data, stop=form.stop.data))
     else:
         flash_errors(form)
     return render_template('chart_dates.html', form=form)
 
 
-@activities.route('/activity/<int:id>/chart', methods=['GET'])
-def chart(id):
+@activities.route('/activity/<int:id>/chart', methods=['GET', 'POST'])
+def chart_view(id):
     a = Activities.query.get_or_404(id)
-    return render_template('chart.html', a=a)
+    form = DateRange()
+    if form.validate_on_submit():
+        return render_template('chart.html', form=form, a=a, start=form.start.data, stop=form.stop.data)
+    else:
+        flash_errors(form)
+    return render_template('chart_dates.html', a=a, form=form)
 
-@activities.route('/activity/<start>/<stop>/<int:id>_chart.png/')
-def a_chart(id, start, stop):
-    a = Activities.query.get_or_404(id)
-    a_data = a.custom_time(stop = stop, start = start)
+
+def make_chart(a, start, stop):
+    stop = datetime.strptime(stop, '%Y-%m-%d').date()
+    start = datetime.strptime(start, '%Y-%m-%d').date()
+    a_data = a.custom_time(stop, start)
     dates = [c[0] for c in a_data]
     stat_count = [c[1] for c in a_data]
     date_labels = [d.strftime("%b %d") for d in dates]
     every_other_date_label = [d if i % 2 else ""
                               for i, d in enumerate(date_labels)]
 
+    ax = plt.subplot(111)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.get_xaxis().tick_bottom()
+    ax.get_yaxis().tick_left()
+
+    plt.plot_date(x=dates, y=stat_count)
+    plt.xticks(dates, every_other_date_label, rotation=45, size="x-small")
+    plt.tight_layout()
+
+
+@activities.route('/activity/<start>/<stop>/<int:id>_chart.png/')
+def a_chart(id, start, stop):
+    a = Activities.query.get_or_404(id)
+    make_chart(a, start, stop)
 
     fig = BytesIO()
-    plt.plot_date(x=dates, y=click_count, fmt='-')
-    plt.xticks(dates, every_other_date_label,
-               rotation=45, size="x-small")
     plt.savefig(fig)
     plt.clf()
     fig.seek(0)
-    return send_file(fig, mimetype='image/png')
+    return send_file(fig, mimetype="image/png")

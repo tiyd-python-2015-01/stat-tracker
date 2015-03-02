@@ -3,7 +3,7 @@ from flask.ext.login import UserMixin
 from sqlalchemy import func, and_
 from datetime import date, timedelta, datetime
 from stat_tracker import db
-
+from flask import request, url_for
 
 @login_manager.user_loader
 def load_user(id):
@@ -41,6 +41,8 @@ class Activities(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     name = db.Column(db.String(255), unique=True)
     user = db.relationship('User', backref=db.backref('activities', lazy='dynamic'))
+    stat = db.relationship('Stat', backref=db.backref('activities'))
+
 
     @property
     def times_total(self):
@@ -80,7 +82,6 @@ class Activities(db.Model):
         days = timedelta(days=days)
         date_from = date.today() - days
 
-
         stat_date = func.cast(Stat.time, db.Date)
         return db.session.query(stat_date, func.sum(Stat.ammount)). \
             group_by(stat_date). \
@@ -90,23 +91,19 @@ class Activities(db.Model):
 
 
     def custom_time(self, stop, start):
-        date_from = date.today() - start
-        date_to = date.today() - stop
-
         stat_date = func.cast(Stat.time, db.Date)
         return db.session.query(stat_date, func.sum(Stat.ammount)). \
             group_by(stat_date). \
             filter(and_(Stat.activity_id == self.id,
-                stat_date < str(date_to), stat_date > str(date_from))). \
+                stat_date >= str(start), stat_date <= str(stop))). \
             order_by(stat_date).all()
 
 
 
-    #def to_dict(self):
-    #    return {'id': self.id,
-    #            'url': self.url,
-    #            'text': self.text,
-    #            'short': self.short}
+    def to_dict(self):
+        return {'id': self.id,
+                'name': self.name,
+                'url': str(request.url_root)[:-1:]+str(url_for('api.activity', id=self.id))}
 
     def __repr__(self):
         return "Activity: {}".format(self.name)
@@ -118,3 +115,7 @@ class Stat(db.Model):
     activity_id = db.Column(db.Integer, db.ForeignKey('activities.id', ondelete='CASCADE'))
     ammount = db.Column(db.Integer)
     time = db.Column(db.Date)
+
+    def stat_to_dict(self):
+        return {'ammount': self.ammount,
+                'time': str(self.time)}

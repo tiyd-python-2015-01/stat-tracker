@@ -1,9 +1,14 @@
 from flask import Blueprint, jsonify, request, abort, url_for
-from ..models import Links, User
+from ..models import Activities, User, Stat
 from ..extensions import login_manager
 from flask.ext.login import login_user
 
+
 api = Blueprint('api', __name__)
+
+
+def json_response(code, data):
+    return (json.dumps(data), code, {"Content-Type": "application/json"})
 
 @api.app_errorhandler(401)
 def unauthorized(request):
@@ -32,15 +37,18 @@ def require_authorization():
         abort(401)
 
 
-@api.route('/links')
-def links():
+@api.route('/activities')
+def activities():
     #require_authorization()
-    links = Links.query.all()
-    links = [link.to_dict() for link in links]
-    return jsonify({'links': links})
+    activities = Activities.query.all()
+    activities = [a.to_dict() for a in activities]
+    return jsonify({'activities': activities})
 
 
-@api.route('/links/<int:id>')
-def link(id):
-    link = Links.query.get_or_404(id)
-    return jsonify
+@api.route('/activities/<int:id>')
+def activity(id):
+    activities = Activities.query.get_or_404(id)
+    stats = Stat.query.filter_by(activity_id=id).all()
+    stats = [stat.stat_to_dict() for stat in stats]
+    activities = activities.to_dict()
+    return jsonify({'activities': activities, 'stats': stats})

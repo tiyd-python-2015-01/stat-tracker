@@ -28,7 +28,7 @@ class AddNewStat(Form):
     date = DateField('Date YYYY-MM-DD', validators=[DataRequired()])
 
 class EditStat(Form):
-    ammount = IntegerField('Ammount', validators=[DataRequired])
+    ammount = IntegerField('Ammount', validators=[DataRequired()])
 
 class DateRange(Form):
     start = DateField('Start Date', validators=[DataRequired()])

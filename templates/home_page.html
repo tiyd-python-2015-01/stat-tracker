@@ -20,7 +20,7 @@
             <a class='button tiny radius info' href='{{url_for('activities.add_stat', id=a.id) }}'>Update</a><br>
             <a class='button tiny radius info' href='{{url_for('activities.edit_activity', id=a.id) }}'>Change Name</a>
             <a class='button tiny radius info' href='{{url_for('activities.delete_activity', id=a.id) }}'>Delete</a>
-            <a class='button tiny radius info' href='{{url_for('activities.set_range', id=a.id) }}'>Chart</a>
+            <a class='button tiny radius info' href='{{url_for('activities.chart_view', id=a.id) }}'>Chart</a>
             </fieldset>
           </li>
         {% endfor %}
