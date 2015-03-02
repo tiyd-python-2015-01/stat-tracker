@@ -30,8 +30,6 @@ def authorize_user(request):
        api_key = api_key.replace('Basic ', '', 1)
        api_key = api_key.split(":")
        email, password = api_key[0],  api_key[1]
-       #api_key = base64.b64decode(api_key).decode("utf-8")
-       #email, password = api_key.split(":")
        user = User.query.filter_by(email=email).first()
        if user.check_password(password):
             return user
@@ -54,6 +52,8 @@ def activities():
         return create_task()
     tasks = Task.query.all()
     tasks = [task.to_dict() for task in tasks]
+#    for task in tasks:
+#        task['url'] =  str(request.url_root)+url_for('.task', id=task['id'])
     return jsonify({"activities": tasks})
 
 
@@ -105,7 +105,8 @@ def delete_task(id):
 
 
 @api.route("/activities/<int:id>", methods=["GET", "PUT", "DELETE"])
-def task(id):
+def api_task(id):
+    task = Task.query.get(id)
     if request.method == "PUT":
         return update_task(id)
     elif request.method == "DELETE":
@@ -147,8 +148,6 @@ def update_stat(id):
         user_id=require_authorization()
         body = request.get_data(as_text=True)
         data = json.loads(body)
-        print("*****STAT*******")
-        print(data)
         form = TrackingForm(data=data, formdata=None, csrf_enabled=False)
         stat = Tracking.query.filter(and_(Tracking.tr_task_id==id, Tracking.tr_date==form.tr_date.data)).first()
         if stat:
@@ -162,7 +161,7 @@ def update_stat(id):
 
 
 @api.route("/activities/<int:id>/stats", methods=["POST", "PUT", "DELETE"])
-def stat(id):
+def api_stat(id):
     if request.method == "PUT":
         return update_stat(id)
     elif request.method == "DELETE":
