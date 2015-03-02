@@ -18,6 +18,7 @@ DEBUG = True
 SECRET_KEY = 'development key'
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 
+
 def create_app():
     app = Flask("stat_tracker")
     app.config.from_object(__name__)

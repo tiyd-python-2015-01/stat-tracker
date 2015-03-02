@@ -14,9 +14,9 @@ class RegistrationForm(Form):
     name = StringField('Name', validators=[DataRequired()])
     email = EmailField('E-mail', validators=[DataRequired(), Email()])
     password = PasswordField('Password',
-        validators=[DataRequired(),
-                    EqualTo('password_verification',
-                            message="Passwords must match.")])
+                             validators=[DataRequired(),
+                                         EqualTo('password_verification',
+                                         message="Passwords must match.")])
     password_verification = PasswordField('Repeat Password')
 
 

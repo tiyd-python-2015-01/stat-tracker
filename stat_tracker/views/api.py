@@ -50,11 +50,9 @@ def user_activities():
         activities = Activity.query.filter_by(owner=current_user.id)
         activities = [activity.to_dict() for activity in activities]
         for activity in activities:
-            print(activity)
             activity["location"] = url_for(".activity",
-                                           activity_id = activity["id"])
+                                           activity_id=activity["id"])
         return jsonify({"activities": activities})
-
 
 
 def add_activity(request):
@@ -68,8 +66,7 @@ def add_activity(request):
         db.session.add(activity)
         db.session.commit()
         activity = activity.to_dict()
-        activity["location"] = url_for(".activity",
-         activity_id=activity["id"])
+        activity["location"] = url_for(".activity", activity_id=activity["id"])
         return (json.dumps(activity), 201)
     else:
         return json_response(400, form.errors)
@@ -127,6 +124,7 @@ def modify_stat(activity_id):
     elif request.method == "DELETE":
         return delete_stat(request, activity_id)
 
+
 def add_stat(request, activity_id):
     body = request.get_data(as_text=True)
     data = json.loads(body)
@@ -166,7 +164,7 @@ def add_stat(request, activity_id):
 def update_stat(request, activity_id):
     body = request.get_data(as_text=True)
     data = json.loads(body)
-    if not "date" in data.keys():
+    if "date" not in data.keys():
         return json_response(400, "Date required.")
     else:
         try:
@@ -186,7 +184,7 @@ def update_stat(request, activity_id):
 def delete_stat(request, activity_id):
     body = request.get_data(as_text=True)
     data = json.loads(body)
-    if not "date" in data.keys():
+    if "date" not in data.keys():
         return json_response(400, "Date required.")
     else:
         try:
