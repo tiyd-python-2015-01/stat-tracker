@@ -63,6 +63,7 @@ class Tracking(db.Model):
     tr_date = db.Column(db.Date, nullable=False)
     tr_task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     tr_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    task_stats = db.relationship("Task", backref="stats", cascade="all,delete")
 
     def __init__(self,
                  user_id,
