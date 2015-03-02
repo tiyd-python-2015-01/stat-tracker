@@ -3,6 +3,7 @@ from flask.ext.login import UserMixin
 from hashids import Hashids
 from sqlalchemy import func, and_
 from datetime import date, timedelta, datetime
+from flask import request, url_for
 
 @login_manager.user_loader
 def load_user(id):
@@ -50,8 +51,8 @@ class Task(db.Model):
                 'name': self.t_name,
                 'type': self.t_type,
                 'user': self.t_user,
-                'units': self.t_units
-                }
+                'units': self.t_units,
+                'url': str(request.url_root)+url_for('api.api_task', id=self.id)[1:] }
 
 class Tracking(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
