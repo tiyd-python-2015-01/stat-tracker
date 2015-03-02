@@ -45,9 +45,6 @@ six==1.9.0
 Sphinx==1.2.3
 SQLAlchemy==0.9.8
 static3==0.5.1
-statsmodels==0.6.1
-tornado==4.0.2
-waitress==0.8.9
 WebOb==1.4
 WebTest==2.0.18
 Werkzeug==0.10.1
