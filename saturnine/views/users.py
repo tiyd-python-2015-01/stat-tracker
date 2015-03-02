@@ -1,6 +1,9 @@
-from flask import Blueprint, render_template, redirect
+from flask import Blueprint, render_template, flash, redirect, url_for, request
+from flask.ext.login import login_user, logout_user
 from ..models import User
 from ..forms import LoginForm, RegisterUser
+from . import flash_errors
+from .. import db
 
 users = Blueprint("users", __name__)
 
@@ -12,7 +15,7 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user)
             flash("Logged in!")
-            return redirect(request.args.get("next") or url_for('index'))
+            return redirect(request.args.get("next") or url_for('activities.index'))
         else:
             flash("Email or password is not correct.")
     return render_template('login.html', form=form)
@@ -22,7 +25,7 @@ def login():
 def logout():
     logout_user()
     flash('Logged out.')
-    return redirect(url_for('index'))
+    return redirect(url_for('activities.index'))
 
 
 @users.route('/register', methods=['GET', 'POST'])
@@ -40,7 +43,7 @@ def register():
             db.session.commit()
             login_user(user)
             flash("You have been registered and logged in.")
-            return redirect(url_for("index"))
+            return redirect(url_for("activities.index"))
     else:
         flash_errors(form)
     return render_template('register.html',

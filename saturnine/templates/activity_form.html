@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% import "forms.html" as forms %}
+
+{% block body %}
+
+<form method="POST"  action="{{ post_url }}" class="forms">
+  {{ form.hidden_tag() }}
+
+  <input type="submit" value="{{ button }}">
+</form>
+
+{% endblock %}

@@ -5,8 +5,7 @@ from flask.ext.script import Manager, Shell, Server
 from flask.ext.migrate import MigrateCommand
 from flask.ext.script.commands import ShowUrls, Clean
 
-from saturnine import create_app, db
-
+from saturnine import create_app, db, models
 
 app = create_app()
 manager = Manager(app)
@@ -22,7 +21,7 @@ def make_shell_context():
         in the context of the app
     """
 
-    return dict(app=app, db=db)
+    return dict(app=app, db=db, Activity=models.Activity, User=models.User)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+{% import "forms.html" as forms %}
+{% block body %}
+<form action="{{ url_for("users.register") }}" method="post">
+    {{ form.hidden_tag() }}
+    {{ forms.field(form.name, size=20) }}
+    {{ forms.field(form.email, size=20) }}
+    {{ forms.field(form.password, size=20) }}
+    {{ forms.field(form.password_verification, size=20) }}
+  <div> <input type="submit" value="Register"/> </div>
+</form>
+
+{% endblock %}

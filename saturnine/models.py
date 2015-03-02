@@ -2,6 +2,11 @@ from .extensions import db, bcrypt, login_manager
 from flask.ext.login import UserMixin
 
 
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(id)
+
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
@@ -28,4 +33,10 @@ class Activity(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user = db.Column(db.Integer, db.ForeignKey('user.id'))
     name = db.Column(db.String(255))
-    
+
+
+class Datum(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    activity = db.Column(db.Integer, db.ForeignKey('activity.id'))
+    day = db.Column(db.Date)
+    value = db.Column(db.Numeric)

@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+{% block body %}
+Hello, {{ current_user.name }}!
+    <h2> <a href="{{ url_for('activities.add_activity') }}"> Add an activity. </a> </h2>
+    <h2>Your activities</h2>
+    <ul>
+    {{ for activity in activities }}
+        <li> <a href="{{ url_for('activities.view_activity', id=activity.id) }}"> {{ activity.name }} </a></li>
+    {{ endfor }}
+    </ul>
+{% endblock %}
