@@ -80,17 +80,23 @@ def edit_activity(id):
      require_authorization()
      activity = Activity.query.filter_by(id = id).first()
 
-     title = request.json.get('title')
-     unit = request.json.get('unit')
+     if activity.user_id == g.user.id:
 
-     activity.title = title
-     activity.unit = unit
+         title = request.json.get('title')
+         unit = request.json.get('unit')
 
-     db.session.commit()
+         activity.title = title
+         activity.unit = unit
 
-     activity = activity.make_dict()
+         db.session.commit()
 
-     return (jsonify({ 'activity': activity }), 201)
+         activity = activity.make_dict()
+
+         return (jsonify({ 'activity': activity }), 201)
+
+     return "unauthorized"
+
+
 
 
 @api.route('/api/v1.0/delete_activity/<int:id>', methods = ['DELETE'])
@@ -98,11 +104,16 @@ def delete_activity(id):
      require_authorization()
      activity = Activity.query.filter_by(id = id).first()
 
-     db.session.delete(activity)
-     db.session.commit()
-     activity = activity.make_dict()
+     if activity.user_id == g.user.id:
+         instances = Instance.query.filter_by(activity_id = id).all()
+         for instance in instances:
+             db.session.delete(instance)
+         db.session.delete(activity)
+         db.session.commit()
+         activity = activity.make_dict()
+         return (jsonify({ 'DELETED': activity }), 201)
 
-     return (jsonify({ 'activity': activity }), 201)
+     return "unauthorized"
 
 
 @api.route('/api/v1.0/view_activity/<int:id>', methods = ['GET'])
@@ -135,20 +146,21 @@ def add_instance(id):
     else:
         replace.freq = freq
 
-    instances = Instance.query.filter_by(activity_id = id).all()
-    instances = [instance.make_dict() for instance in instances]
-    return jsonify({"Instances": instances})
+    new_instance.make_dict()
+    return jsonify({"ADDED": new_instance})
 
 
 @api.route('/api/v1.0/delete_instance/<int:id>', methods = ['DELETE'])
 def delete_instance(id):
      require_authorization()
+
      instance = Instance.query.filter_by(id = id).first()
+     if instance.user_id == g.user.id:
+         db.session.delete(instance)
+         db.session.commit()
 
-     db.session.delete(instance)
-     db.session.commit()
+         instance.make_dict()
 
-     instances = Instance.query.filter_by(activity_id = instance.activity_id).all()
-     instances = [instance.make_dict() for instance in instances]
+         return (jsonify({ 'DELETED': instance }), 201)
 
-     return (jsonify({ 'Instances': instances }), 201)
+     return "unauthorized"

@@ -7,7 +7,7 @@ from ..models import User, Activity, Instance
 from datetime import datetime
 import plotly.plotly as py
 from plotly.graph_objs import *
-import datetime as dt
+
 
 py.sign_in("dknewell1", "x0oz9ikryp")
 
@@ -83,7 +83,7 @@ def view_activity(id):
     date_labels = [d.strftime("%b %d") for d in dates]
 
 
-    click_chart = Scatter(x= date_labels, y= freqs)
+    click_chart = Bar(x= dates, y= freqs)
     data = Data([click_chart])
     chart_url = py.plot(data, auto_open=False)
 
