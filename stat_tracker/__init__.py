@@ -4,6 +4,7 @@ from .extensions import (db, migrate, bcrypt,
 from . import models
 from .views.users import users
 from .views.stats import stats
+from .views.api import api
 
 
 SQLALCHEMY_DATABASE_URI = "postgres://localhost/stat-tracker"
@@ -16,6 +17,7 @@ def create_app():
 
     app.register_blueprint(users)
     app.register_blueprint(stats)
+    app.register_blueprint(api)
 
     config.init_app(app)
     db.init_app(app)

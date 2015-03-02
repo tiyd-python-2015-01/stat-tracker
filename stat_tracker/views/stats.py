@@ -4,6 +4,12 @@ from flask.ext.login import logout_user
 from ..extensions import db
 from ..forms import ActivityForm, InstanceForm
 from ..models import User, Activity, Instance
+from datetime import datetime
+import plotly.plotly as py
+from plotly.graph_objs import *
+import datetime as dt
+
+py.sign_in("dknewell1", "x0oz9ikryp")
 
 
 stats = Blueprint("stats", __name__)
@@ -67,8 +73,23 @@ def view_activity(id):
         flash("Instance Added!")
         return redirect(url_for("stats.view_activity", id = id))
 
-    return render_template("instance_page.html", form = form, instances = instances,
-                           activity = activity)
+    instance_list= []
+
+    for instance in instances:
+        instance_list.append((instance.date, instance.freq))
+
+    dates = [d[0] for d in instance_list]
+    freqs = [f[1] for f in instance_list]
+    date_labels = [d.strftime("%b %d") for d in dates]
+
+
+    click_chart = Scatter(x= date_labels, y= freqs)
+    data = Data([click_chart])
+    chart_url = py.plot(data, auto_open=False)
+
+    return render_template("instance_page.html", chart_url = chart_url,
+                            form = form, instances = instances,
+                            activity = activity)
 
 
 @stats.route("/user_page/instance/<int:id>", methods=["GET", "POST"])
@@ -86,4 +107,4 @@ def edit_instance(id):
     return render_template("edit_instance.html",
                            form=form,
                            post_url=url_for("stats.edit_instance", id=instance.id),
-                           button="Update Instance")
+                           button= "Update Instance")

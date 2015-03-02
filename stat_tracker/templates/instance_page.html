@@ -34,4 +34,10 @@
 
 {% endfor %}
 </table>
+
+
+<br></br>
+<h1>{{activity.title}} Data </h1>
+{{click_data}}
+<iframe width="550" height="550" frameborder="0" seamless="seamless" scrolling="no" src="{{ chart_url }}"></iframe>
 {% endblock %}

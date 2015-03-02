@@ -36,6 +36,11 @@ class Activity(db.Model):
 
     user = db.relationship('User')
 
+    def make_dict(self):
+        return {"id": self.id,
+                "title": self.title,
+                "unit": self.unit}
+
 
 class Instance(db.Model):
 
@@ -44,6 +49,11 @@ class Instance(db.Model):
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
     date = db.Column(db.DateTime)
     freq = db.Column(db.Integer)
+
+    def make_dict(self):
+        return {"id": self.id,
+                "date": self.date,
+                "freq": self.freq}
 
     user = db.relationship('User')
     activity = db.relationship('Activity')

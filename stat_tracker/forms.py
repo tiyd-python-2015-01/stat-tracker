@@ -21,7 +21,6 @@ class RegistrationForm(Form):
     password_verification = PasswordField('Repeat password')
 
 
-
 class ActivityForm(Form):
     title = StringField('Title', validators=[DataRequired()])
     unit = StringField('Unit', validators=[DataRequired()])
