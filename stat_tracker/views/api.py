@@ -50,8 +50,8 @@ def user_activities():
         activities = Activity.query.filter_by(owner=current_user.id)
         activities = [activity.to_dict() for activity in activities]
         for activity in activities:
-            activity["location"] = url_for(".activity",
-                                           activity_id=activity["id"])
+            activity["location"] = request.url_root + url_for(".activity",
+                                           activity_id=activity["id"])[1:]
         return jsonify({"activities": activities})
 
 

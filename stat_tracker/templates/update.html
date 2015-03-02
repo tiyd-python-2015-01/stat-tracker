@@ -6,22 +6,22 @@
             <button class="tiny" onclick="location.href='{{ url_for('stats.activity_data', activity_id=activity.id)}}'">Data</button>
             <button class="tiny" onclick="location.href='{{ url_for('stats.delete_activity', activity_id=activity.id)}}'">Delete</button>
         </div>
-        <div class="large-11 columns">
+        <div class="large-3 large-centered columns">
             <center><h2>{{ activity.title }}</h2></center>
         </div>
         <form method=POST action="{{ url_for('stats.update_activity', activity_id=activity.id) }}">
-                <div class="large-11 columns">
+                <div class="large-3 large-centered columns">
                     {{ form.hidden_tag() }}
                     <center>{{ form.value.label }}</center>
                     {{ form.value }}
                     <center><input type=submit value="Submit"></center>
                 </div>
         </form>
-            <ul>
+            <ul class="no-bullet">
                 {% for stat in stats %}
                     <div class="row">
-                        <div class="large-11 columns">
-                            <center>{{ stat.date.strftime("%m-%d-%Y")}}: {{ stat.value }}</center>
+                        <div class="large-3 large-centered columns">
+                            <center><li>{{ stat.date.strftime("%m-%d-%Y")}}: {{ stat.value }}</li></center>
                         </div>
                     </div>
                 {% endfor %}
