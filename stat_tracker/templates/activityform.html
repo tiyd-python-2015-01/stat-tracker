@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="small-2 columns"></div>
+        <div class="small-5 columns">
+            <div class="panel">
+                <table>
+                    {% if source == "add" %}
+                        <form method="POST" action="{{ url_for('activity.add', user=user) }}">
+                    {% else %}
+                        <form method="POST" action="{{ url_for('activity.details', user=user, activity_name=activity_name) }}">
+                    {% endif %}
+                    {{ form.hidden_tag() }}
+                    <div>
+                        {{ form.name.label }}{{ form.name(size=20) }}
+                    </div>
+                    <div>
+                        {{ form.type.label }}{{ form.type() }}
+                    </div>
+                    <div>
+                        {{ form.description.label }}{{ form.description }}
+                    </div>
+                    <p></p>
+                    <row>
+                        <div>
+                            {% if source == "add" %}
+                                <input type="submit" value="Add" class="button">
+                                <a href="{{ url_for('activity.list',user=user) }}" class="button">Cancel</a>
+                            {% else %}
+                                <input type="submit" value="Save" class="button">
+                                <a href="{{ url_for('activity.delete',user=user, activity_name=activity_name) }}" class="button">Delete</a>
+                            {% endif %}
+                        </div>
+                    </row>
+                    </form>
+                </table>
+            </div>
+        </div>
+        <div class="small-5 columns"></div>
+    </div>
+
+{% endblock %}
+

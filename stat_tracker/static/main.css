@@ -1,0 +1,45 @@
+* {
+  margin: 0;
+}
+html, body {
+  height: 100%;
+}
+.wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -155px; /* the bottom margin is the negative value of the footer's height */
+}
+.footer, .push {
+    height: 155px; /* .push must be the same height as .footer */
+
+}
+
+.dailyblock {
+     height: 90px;
+    line-height: 90px;
+
+}
+
+.username {
+    box-sizing: border-box;
+    color: white;
+    cursor: auto;
+    font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: normal;
+    height: 45px;
+    line-height: 45px;
+
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 15px;
+    padding-right: 20px;
+    padding-top: 0px;
+
+
+}

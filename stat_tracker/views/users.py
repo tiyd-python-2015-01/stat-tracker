@@ -8,8 +8,8 @@ from ..utils import flash_errors
 users = Blueprint("users", __name__)
 
 
-@users.route("/register", methods=['GET', 'POST'])
-def register():
+@users.route("/join", methods=['GET', 'POST'])
+def join():
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -22,11 +22,11 @@ def register():
             db.session.add(user)
             db.session.commit()
             login_user(user)
-            flash("You have been registered and logged in.")
+            flash("You have been joined and logged in.")
             return redirect(url_for("generic.index"))
     else:
         flash_errors(form)
-    return render_template("register.html", form=form)
+    return render_template("join.html", form=form)
 
 
 @users.route("/logout", methods=['GET', 'POST'])

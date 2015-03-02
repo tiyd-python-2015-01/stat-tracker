@@ -12,7 +12,7 @@ generic = Blueprint("generic", __name__)
 @generic.route("/")
 def index():
     if current_user.is_authenticated():
-        return render_template("index.html")
+        return redirect(url_for("activity.list", user=current_user.id))
     else:
         return redirect(url_for("users.login"))
 
@@ -22,5 +22,5 @@ def flash_errors(form, category="warning"):
     for field, errors in form.errors.items():
         for error in errors:
             flash("{0} - {1}"
-                    .format(getattr(form, field).label.text, error), category)
+                  .format(getattr(form, field).label.text, error), category)
 

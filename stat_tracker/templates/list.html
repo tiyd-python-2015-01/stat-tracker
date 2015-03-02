@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <p></p>
+    <p></p>
+    {% for activity in activities %}
+        <div class="row">
+            <div class="small-2 columns"></div>
+            <div class="small-5 columns">
+                <div class="panel">
+                    <div class="row">
+                        <div class="small-6 columns">
+                            <div class="dailyblock">
+                                <a href="{{ url_for("activity.details",user=user,activity_name=activity.name) }}">{{ activity.name.title() }}</a>
+                            </div>
+                        </div>
+                        <div class="small-6 columns">
+                            {% if activity.activity_type == "Once A Day" %}
+                                {% include "dailyblock.html" %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="small-5 columns"></div>
+        </div>
+    {% endfor %}
+    <p></p>
+    <p></p>
+    {% include "addblock.html" %}
+    <p></p>
+    <p></p>
+{% endblock %}

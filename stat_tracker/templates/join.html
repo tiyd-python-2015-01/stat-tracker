@@ -7,7 +7,7 @@
     <div class="small-2 columns"></div>
     <div class="small-5 columns">
         <div class="panel">
-            <form action="{{ url_for('users.register') }}" method="POST">
+            <form action="{{ url_for('users.join') }}" method="POST">
                 {{ form.hidden_tag() }}
                 <div>
                     {{ form.name.label }} {{ form.name(size=20) }}
@@ -21,7 +21,7 @@
                 <div>
                     {{ form.password_verification.label }} {{ form.password_verification(size=20) }}
                 </div>
-                <input type='submit' value='Register' class="button">
+                <input type='submit' value='Join' class="button">
             </form>
         </div>
     </div>

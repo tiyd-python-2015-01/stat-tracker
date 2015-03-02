@@ -12,7 +12,8 @@ from .extensions import (
 from . import models
 from .views.generic import generic
 from .views.users import users
-
+from .views.api import api
+from .views.activity import activity
 
 SQLALCHEMY_DATABASE_URI = "postgres://localhost/stat_tracker"
 DEBUG = True
@@ -25,6 +26,8 @@ def create_app():
     app.config.from_object(__name__)
     app.register_blueprint(generic)     # Blueprints here!
     app.register_blueprint(users)
+    app.register_blueprint(activity)
+    app.register_blueprint(api, url_prefix='/api/v1')
 
     config.init_app(app)
     db.init_app(app)

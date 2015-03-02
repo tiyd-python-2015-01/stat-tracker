@@ -4,7 +4,7 @@ import os
 from flask.ext.script import Manager, Shell, Server
 from flask.ext.migrate import MigrateCommand
 from flask.ext.script.commands import ShowUrls, Clean
-
+from seed import seed
 from stat_tracker import create_app, db
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -25,6 +25,9 @@ def make_shell_context():
     """
     return dict(app=app, db=db)
 
+@manager.command
+def seed_all():
+    seed(db)
 
 if __name__ == '__main__':
     manager.run()
