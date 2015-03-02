@@ -49,7 +49,5 @@ def seed_users():
                                                      users_updated))
 
 
-
-
 if __name__ == '__main__':
     manager.run()
