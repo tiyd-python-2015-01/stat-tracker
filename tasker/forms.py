@@ -22,13 +22,7 @@ class RegistrationForm(Form):
 
 class TaskForm(Form):
     t_name = StringField('Task Name', validators=[DataRequired()])
-#    t_type = IntegerField('Task Type', validators=[DataRequired()])
-    t_type = SelectField('Task Type',
-                         choices=[(1, 'Input a Daily Value'),
-                                  (2, 'Click button to add 1 to value'),
-                                  (3, 'Time Goal'),
-                                  (4, 'Yes/No'),
-                                  (5, 'Scale')])
+    t_type = IntegerField('Task Type', validators=[DataRequired()])
     t_units = StringField('Units', validators=[DataRequired()])
 
 class TrackingForm(Form):
