@@ -1,6 +1,5 @@
 from . import db, bcrypt, login_manager
 from flask.ext.login import UserMixin
-from hashids import Hashids
 from sqlalchemy import func, and_
 from datetime import date, timedelta, datetime
 from flask import request, url_for
