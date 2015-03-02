@@ -33,3 +33,6 @@ class EditStat(Form):
 class DateRange(Form):
     start = DateField('Start Date', validators=[DataRequired()])
     stop = DateField('Stop Date', validators=[DataRequired()])
+
+class DateSearch(Form):
+    date = DateField('Date', validators=[DataRequired()])

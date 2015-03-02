@@ -148,34 +148,33 @@ def chart_view(id):
     return render_template('chart_dates.html', a=a, form=form)
 
 
-def make_chart(a, start, stop):
-    stop = datetime.strptime(stop, '%Y-%m-%d').date()
-    start = datetime.strptime(start, '%Y-%m-%d').date()
-    a_data = a.custom_time(stop, start)
-    dates = [c[0] for c in a_data]
-    stat_count = [c[1] for c in a_data]
-    date_labels = [d.strftime("%b %d") for d in dates]
-    every_other_date_label = [d if i % 2 else ""
-                              for i, d in enumerate(date_labels)]
-
-    ax = plt.subplot(111)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.get_xaxis().tick_bottom()
-    ax.get_yaxis().tick_left()
-
-    plt.plot_date(x=dates, y=stat_count)
-    plt.xticks(dates, every_other_date_label, rotation=45, size="x-small")
-    plt.tight_layout()
-
-
-@activities.route('/activity/<start>/<stop>/<int:id>_chart.png/')
-def a_chart(id, start, stop):
-    a = Activities.query.get_or_404(id)
-    make_chart(a, start, stop)
-
-    fig = BytesIO()
-    plt.savefig(fig)
-    plt.clf()
-    fig.seek(0)
-    return send_file(fig, mimetype="image/png")
+#def make_chart(a, start, stop):
+#    stop = datetime.strptime(stop, '%Y-%m-%d').date()
+#    start = datetime.strptime(start, '%Y-%m-%d').date()
+#    a_data = a.custom_time(stop, start)
+#    dates = [c[0] for c in a_data]
+#    stat_count = [c[1] for c in a_data]
+#    date_labels = [d.strftime("%b %d") for d in dates]
+#    every_other_date_label = [d if i % 2 else ""
+#                              for i, d in enumerate(date_labels)]
+#
+#    ax = plt.subplot(111)
+#    ax.spines["top"].set_visible(False)
+#    ax.spines["right"].set_visible(False)
+#    ax.get_xaxis().tick_bottom()
+#    ax.get_yaxis().tick_left()
+#
+#    plt.plot_date(x=dates, y=stat_count)
+#    plt.xticks(dates, every_other_date_label, rotation=45, size="x-small")
+#    plt.tight_layout()
+#
+#
+#@activities.route('/activity/<start>/<stop>/<int:id>_chart.png/')
+#def a_chart(id, start, stop):
+#    a = Activities.query.get_or_404(id)
+#    make_chart(a, start, stop)
+#
+#    plt.savefig(fig)
+#    plt.clf()
+#    fig.seek(0)
+#    return send_file(fig, mimetype="image/png")
