@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h1>{{ activity.activity_name }}</h1>
+    <h2>by {{ user.name }}</h2>
+
+    <h3>Stats</h3>
+    <!-- <img src="{{ url_for("books.book_clicks_chart", id=book.id) }}" /> -->
+{% endblock %}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>"Stat Tracker"</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='foundation.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" href=".{{ url_for('static', filename='modernizr.js') }}"></script>
+</head>
+
+<body>
+
+  {% include "foundationnavbar.html" %}
+
+<div id="wrapper">
+    {% block header %}
+        <header>
+            <center>
+            <!-- <h1>Welcome to StatTracker</h1> -->
+            <img src="/static/graph.png", width="200" height="40"  />
+          </center>
+        </header>
+
+        {% for message in get_flashed_messages() %}
+            <div class="flash">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endblock %}
+
+    {% block body %}{% endblock %}
+    {% block activity %}{% endblock %}
+
+
+    {% block footer %}
+        <footer>
+
+        </footer>
+    {% endblock %}
+</div>
+<script type="text/javascript" href=".{{url_for('static', filename='fastclick.js')}}"></script>
+<script type="text/javascript" href=".{{url_for('static', filename='foundation.min.js')}}"></script>
+<script type="text/javascript" href=".{{url_for('static', filename='main.js')}}"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+  {% if current_user.is_authenticated() %}
+
+  <div class="row"
+    <div class="medium-3 columns"><h2>Your Stats</h2></div>
+      <ul>
+        {% for _ in current_user.activity %}
+        <li> <strong>{{activity.activity_name}}</strong> -- {{stat.description}} -- {{stat.value}}</li>
+        <!-- <a href="http://127.0.0.1:5000/b/{{link.shortlink}}">GoToChop</a> -->
+        {% endfor %}
+      </ul
+    </div>
+  </div>
+  {% else %}
+  <!-- <div class="row"
+    <div class="medium-3 columns"><h2>All Stats</h2></div>
+      <ul>
+        {% for link in links %}
+        <li> {{link.description}} -- {{link.shortlink}} </li>
+        <a href="http://127.0.0.1:5000/b/{{link.shortlink}}">Link</a>
+        {% endfor %}
+      </ul
+    </div>
+  </div> -->
+
+  {% endif %}
+
+
+    <!-- {% set block_count = 3 %}
+
+    <ul class="blocks-{{ block_count }}">
+        {% for link in links %}
+            <li class="link {% if loop.index % block_count == 1 %}block-first{% endif %}">
+                <a href="{{ links.shortlinks }}">{{ links.title }}</a>
+                {% if links.description %}
+                    <br/>
+                    {{ links.description }}
+                {% endif %}
+
+                {% if current_user.is_active() %}
+                    <div class="chop-actions">
+                        {% if link in current_user.all_links %}
+                            <em>favorite</em>
+                        {% else %}
+                            <form action="{{ url_for("add_link") }}" method="post">
+                                <input type="hidden" name="links_id" value="{{ links.id }}"/>
+                                <input type="submit" value="IGNORE THIS, NOT CORRECT"/>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+ -->
+{% endblock %}

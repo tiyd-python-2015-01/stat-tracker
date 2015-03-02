@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block activity %}
+    <form method="POST" action="{{ url_for("activities.new_activity") }}">
+        {{ form.hidden_tag() }}
+        <div>
+          {{ form.activity_name.label }} {{ form.activity_name(size=20) }}
+        </div>
+        <div>
+            {{ form.measurement.label }} {{ form.measurement(size=20) }}
+        </div>
+        <button type="submit">Add Activity</button>
+    </form>
+{% endblock %}

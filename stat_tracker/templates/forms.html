@@ -1,0 +1,21 @@
+{% macro field(field) %}
+    <div>
+        {% if field.errors %}
+            {% set field_class = "input-error" %}
+        {% endif %}
+        <label for="{{ field.id }}">
+
+            {% if field.flags.required %}
+                <strong>{{ field.label.text }}</strong>
+            {% else %}
+                {{ field.label.text }}
+            {% endif %}
+            {{ field(class_=field_class, **kwargs) }}
+            {% if field.errors %}
+                {% for e in field.errors %}
+                    <div class="forms-desc error">{{ e }}</div>
+                {% endfor %}
+            {% endif %}
+        </label>
+    </div>
+{% endmacro %}

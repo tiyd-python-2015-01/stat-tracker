@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <form method="POST" action="{{ url_for("users.register") }}">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.name.label }} {{ form.name(size=20) }}
+        </div>
+        <div>
+            {{ form.email.label }} {{ form.email(size=20) }}
+        </div>
+        <div>
+            {{ form.password.label }} {{ form.password(size=20) }}
+        </div>
+        <div>
+            {{ form.password_verification.label }} {{ form.password_verification(size=20) }}
+        </div>
+        <button type="submit">Register</button>
+    </form>
+{% endblock %}

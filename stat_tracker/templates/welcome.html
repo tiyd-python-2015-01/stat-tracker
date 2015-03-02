@@ -1,0 +1,10 @@
+
+{% block welcome %}
+
+<div>
+{% if current_user.is_authenticated() %}
+  Welcome {{ current_user.name }}!
+{% endif %}
+</div>
+
+{% endblock %}
