@@ -1,52 +1,53 @@
-alembic==0.7.4
-dnspython3==1.12.0
-docutils==0.12
-fake-factory==0.5.0
+# Included because many Paas's require a requirements.txt file in the project root
+# Just installs the production requirements.
+
+
+# Everything needed in production
+
+## Flask
 Flask==0.10.1
-flask-appconfig==0.9.1
-Flask-Bcrypt==0.6.2
-Flask-DebugToolbar==0.9.1
-Flask-Login==0.2.11
-Flask-Migrate==1.3.0
-Flask-Script==2.0.5
-Flask-SQLAlchemy==2.0
-Flask-WTF==0.11
-gunicorn==19.2.1
-html2text==2014.12.29
-htmllaundry==2.0
-ipython==2.3.1
-itsdangerous==0.24
-Jinja2==2.7.3
-lxml==3.4.1
-Mako==1.0.1
-Markdown==2.6
 MarkupSafe==0.23
-matplotlib==1.4.2
-numpy==1.9.1
-numpydoc==0.5
-ordereddict==1.1
-pep8==1.5.7
-Pillow==2.7.0
-py==1.4.26
-Pygments==2.0.1
-pyparsing==2.0.3
-pystache==0.5.4
-pytest==2.6.4
-python-bcrypt==0.3.1
-python-dateutil==2.4.0
-python-geoip==1.2
-python-geoip-geolite2==2014.207
-pytz==2013b0
-PyYAML==3.11
-pyzmq==14.4.1
-requests==2.3.0
-simplejson==3.6.5
-six==1.9.0
-Sphinx==1.2.3
-SQLAlchemy==0.9.8
-static3==0.5.1
-WebOb==1.4
-WebTest==2.0.18
 Werkzeug==0.10.1
+Jinja2==2.7.3
+itsdangerous==0.24
+
+## Database
+Flask-SQLAlchemy==2.0
+SQLAlchemy==0.9.8
+
+## Migrations
+Flask-Migrate==1.3.0
+
+## Forms
+Flask-WTF==0.11
 WTForms==2.0.2
-xlrd==0.9.3
+
+## Login and users
+Flask-Login==0.2.11
+Flask-Bcrypt==0.6.2
+
+## Management script
+Flask-Script==2.0.5
+
+## Config
+flask-appconfig==0.9.1
+
+## Heroku
+gunicorn==19.2.1
+psycopg2==2.6
+
+# Everything the developer needs in addition to the production requirements
+
+Flask-DebugToolbar==0.9.1
+
+## Testing
+pytest>=2.6.4
+webtest
+
+
+matplotlib
+
+
+static3==0.5.1
+
+requests==2.3.0
