@@ -81,5 +81,16 @@ def get_stats_by_user(id):
     data = [stat.to_dict() for stat in stats]
     return {'stats': data}
 
-
-
+@api.route('/user/<int:id>/stats', methods=["PUT"])
+@returns_json
+def edit_activity(id):
+    body = request.get_data(as_text='true')
+    data = json.loads(body)
+    form = ActivityForm(data=data, formdata=None, csrf_enabled=False)
+    if form.validate():
+        activity = Activity.query.filter_by(name=form.name.data).first()
+        if activity:
+            activity.title.data = form.title.data
+            activity.unit.data = form.unit.data
+        else:
+            {"Can't find this activity"}
