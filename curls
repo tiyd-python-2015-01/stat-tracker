@@ -12,3 +12,7 @@ curl -v -H "Authorization: Basic ana@ana.com:ana" -X PUT -d '{"tr_date":"2015/02
 
 
 curl -v -H "Authorization: Basic ana@ana.com:ana" -X PUT -d '{"t_name":"calories consumption","t_type":1,"t_units":"calories"}' http://127.0.0.1:5000/tasker/api/v1/activities/1
+
+curl -v -H "Authorization: Basic ana@ana.com:ana" -X POST -d '{"t_name":"cooking","t_type":1,"t_units":"hours"}' http://127.0.0.1:5000/tasker/api/v1/activities
+
+curl -v -H "Authorization: Basic ana@ana.com:ana"  http://127.0.0.1:5000/tasker/api/v1/activities
