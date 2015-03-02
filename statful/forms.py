@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, Email, EqualTo, Optional
 
 
 class LoginForm(Form):
-    name = StringField('Email', validators=[DataRequired()])
+    email = EmailField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
 
 
@@ -27,27 +27,11 @@ class ActivityForm(Form):
     unit = StringField('Unit')
 
 
-class ClickerForm(Form):
-    occurrences = IntegerField('Occurrences', validators=[DataRequired()])
-    date = DateField('DatePicker', format='%Y-%m-%d')
-
-
-class ScaleForm(Form):
-    scale = SelectField('How would you rate this activity?', choices=[(1, 'Bad'), (2, 'Not great'),
-                                                                      (3, 'Okay'), (4, "Good"), (5, "Awesome")],
-                        coerce=int)
-    date = DateField("Date", validators=[DataRequired()])
-
-class SeinfeldForm(Form):
-    yes_no = SelectField("Did you do it today?", choices=[(0, "No"), (1, "Yes")], coerce=int)
-    date = DateField("Date", validators=[DataRequired()])
-
-
 class UpdateForm(Form):
     occurrences = IntegerField('Occurrences')
     scale = SelectField('How would you rate this activity?', choices=[(1, 'Bad'), (2, 'Not great'),
                                                                       (3, 'Okay'), (4, "Good"), (5, "Awesome")],
-                        coerce=int)
+                        coerce=int, validators=[Optional()])
     yes_no = SelectField("Did you do it today?", choices=[(0, "No"), (1, "Yes")], coerce=int,
                          validators=[Optional()])
     date = DateField('DatePicker', format='%Y-%m-%d')

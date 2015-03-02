@@ -4,6 +4,7 @@ from .extensions import db, migrate, debug_toolbar, bcrypt, login_manager, confi
 from . import models
 from .views.users import users
 from .views.stats import stats
+from .views.api import api
 
 
 SQLALCHEMY_DATABASE_URI = "postgres://localhost/stats"
@@ -18,6 +19,7 @@ def create_app():
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     app.register_blueprint(users)
     app.register_blueprint(stats)
+    app.register_blueprint(api, url_prefix="/api/v1")
 
     config.init_app(app)
     db.init_app(app)

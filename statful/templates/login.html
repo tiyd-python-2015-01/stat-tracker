@@ -4,7 +4,7 @@
     <form method="POST" action="{{ url_for('users.login') }}">
         {{ form.hidden_tag() }}
         <div>
-            {{ form.name.label }} {{ form.name(size=20) }}
+            {{ form.email.label }} {{ form.email(size=20) }}
         </div>
         <div>
             {{ form.password.label }} {{ form.password(size=20) }}

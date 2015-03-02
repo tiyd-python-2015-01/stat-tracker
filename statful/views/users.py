@@ -24,13 +24,13 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(name=form.name.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
             flash("Logged in successfully.")
             return redirect(request.args.get('next') or url_for("users.index"))
         else:
-            flash("That user name or password is not correct.")
+            flash("That email or password is not correct.")
     flash_errors(form)
 
     return render_template('login.html', form=form)

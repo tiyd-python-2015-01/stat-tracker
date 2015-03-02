@@ -2,18 +2,10 @@
 
 {% block body %}
     {% for activity in current_user.activity_id %}
-        {% if activity.type == 'clicker' %}
         {{ activity.name }}
-            <li><a href="{{ url_for('stats.update_clicker', id=activity.id) }}">Update</a></li>
-            <li><a href="{{ url_for('stats.update_activity', id=activity.id) }}">Update</a></li>
-        {% elif activity.type == 'yes_no' %}
-         {{ activity.name }}
-            <li><a href="{{ url_for('stats.update_seinfeld', id=activity.id) }}">Update</a></li>
-            <li><a href="{{ url_for('stats.update_activity', id=activity.id) }}">Update</a></li>
-        {% elif activity.type == 'scale' %}
-            {{ activity.name }}
-            <li><a href="{{ url_for('stats.update_scale', id=activity.id) }}">Update</a></li>
-            <li><a href="{{ url_for('stats.update_activity', id=activity.id) }}">Update</a></li>
-        {% endif %}
+        <ul class="button-group">
+      <li><a href="{{ url_for("stats.show_stats", id=activity.id) }}" class="tiny button">show stats</a></li>
+      <li><a href="{{ url_for("stats.update_activity", id=activity.id) }}" class="tiny button">update</a></li>
+    </ul>
     {% endfor %}
 {% endblock %}

@@ -1,11 +1,14 @@
 from flask import render_template, flash, request, url_for, redirect, Blueprint
 from flask.ext.login import login_required, current_user
 import plotly.plotly as py
-from plotly.graph_objs import Data
 import plotly.tools as tls
-from ..forms import ActivityForm, ClickerForm, SeinfeldForm, ScaleForm, UpdateForm
+from plotly.graph_objs import Data, Scatter
+from datetime import datetime
+from ..forms import ActivityForm, UpdateForm
 from ..extensions import db
 from ..models import Activity, Stat
+
+today_date = datetime.today()
 
 stats = Blueprint('stats', __name__)
 
@@ -40,68 +43,6 @@ def create_activity():
 @login_required
 def show_activities():
     return render_template('show_activities.html')
-
-
-
-@stats.route("/activity/clicker/<int:id>", methods=["GET", "POST"])
-@login_required
-def update_clicker(id):
-    activity = Activity.query.get(id)
-    form = ClickerForm()
-    if form.validate_on_submit():
-        stat = Stat(activity_id=activity.id,
-                    occurrences=form.occurrences.data,
-                    when=form.date.data)
-        db.session.add(stat)
-        db.session.commit()
-        flash("You've updated you activity!")
-    else:
-        flash_errors(form)
-
-    return render_template('update_clicker.html', form=form,
-                           update_url=url_for('stats.update_clicker',
-                                              id=activity.id))
-
-
-@stats.route("/activity/scale/<int:id>", methods=["GET", "POST"])
-@login_required
-def update_scale(id):
-    activity = Activity.query.filter(Activity.id == id).first()
-    form = ScaleForm()
-    if form.validate_on_submit():
-        stat = Stat(activity_id=activity.id,
-                    scale=form.scale.data,
-                    when=form.date.data)
-        db.session.add(stat)
-        db.session.commit()
-        flash("You've updated you activity!")
-    else:
-        flash_errors(form)
-
-    return render_template('update_scale.html', form=form,
-                           update_url=url_for('stats.update_scale',
-                                              id=activity.id))
-
-
-@stats.route("/activity/seinfeld/<int:id>", methods=["GET", "POST"])
-@login_required
-def update_seinfeld(id):
-    activity = Activity.query.filter(Activity.id == id).first()
-    form = SeinfeldForm()
-    if form.validate_on_submit():
-        stat = Stat(activity_id=activity.id,
-                    yes_no=form.yes_no.data,
-                    when=form.date.data)
-        db.session.add(stat)
-        db.session.commit()
-        flash("You've updated you activity!")
-    else:
-        flash_errors(form)
-
-    return render_template('update_seinfeld.html', form=form,
-                           update_url=url_for('stats.update_seinfeld',
-                                              id=activity.id))
-
 
 
 @stats.route("/activity/<int:id>", methods=["GET", "POST"])
@@ -143,26 +84,40 @@ def update_activity(id):
         else:
             flash_errors(form)
 
-    return render_template('update_activity.html', form=form, activity=activity,
+    return render_template('update_activity.html', form=form, activity=activity, today=today_date,
                            update_url=url_for('stats.update_activity',
                                               id=activity.id))
 
-
-@stats.route('/activity/chart/<int:id>', methods=['GET'])
+@stats.route("/activity/<int:id>/stats")
 @login_required
 def show_stats(id):
     activity = Activity.query.filter(Activity.id == id).first()
     stat_data = activity.stats_by_day()
     dates = [date[0] for date in stat_data]
     occurrences = [occurrence[1] for occurrence in stat_data]
-    date_labels = [date.str("%b %d") for date in dates]
+    date_labels = [date.strftime("%b %d") for date in dates]
     stat_chart = Scatter(
         x=date_labels,
         y=occurrences)
     data = Data([stat_chart])
     chart_url = py.plot(data, auto_open=False)
-    return render_template('data_chart.html', chart_url=chart_url)
+    return render_template('show_stats.html', activity=activity, chart_url=chart_url)
 
+@stats.route("/activity/edit/stat/<int:id>")
+@login_required
+def edit_stat(id):
+    stat = Stat.query.filter(Stat.id == id).first()
+    activity = Activity.filter(Activity.id == stat.activity_id).first()
+    form = UpdateForm(obj=stat)
+    if form.validate_on_submit():
+        form.populate_obj(stat)
+        db.session.commit()
+        flash("Your edits have been made.")
+        return redirect(url_for('show_stats', id=activity.id))
+    else:
+        flash_errors(form)
+
+    return render_template('update_activity.html', activity=activity)
 
 
 

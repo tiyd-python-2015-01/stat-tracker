@@ -5,21 +5,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='basic.css') }}">
     <div class="page">
-    <h1><a href="{{ url_for('users.index') }}">Statful</a></h1>
+        <h1><a href="{{ url_for('users.index') }}">Statful</a></h1>
         {% block header %}
             <div class="metanav">
-        {% if current_user.is_authenticated() %}
-            <a href="{{ url_for('stats.show_activities') }}">Show Activity</a>
-            <a href="{{ url_for('stats.create_activity') }}">Create Activity</a>
-            <a href="{{ url_for('users.logout') }}">Logout</a>
+            {% if current_user.is_authenticated() %}
+                <a href="{{ url_for('stats.show_activities') }}">Show Activity</a>
+                <a href="{{ url_for('stats.create_activity') }}">Create Activity</a>
+                <a href="{{ url_for('users.logout') }}">Logout</a>
             {% else %}
-            <a href="{{ url_for('users.login') }}">Login</a>
-            <a href="{{ url_for('users.register') }}">Register</a>
+                <a href="{{ url_for('users.login') }}">Login</a>
+                <a href="{{ url_for('users.register') }}">Register</a>
             {% endif %}
         {% endblock %}
         </div>
-    <body>
-    {% block body %}{% endblock %}
+        <body>
+        {% block body %}{% endblock %}
         {% block footer %}
         {% endblock %}
         {% for message in get_flashed_messages() %}
@@ -29,6 +29,6 @@
 
         {% endfor %}
     </div>
-<script type="text/javascript" src="{{ url_for('static', filename=' js/foundation.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename=' js/foundation.js') }}"></script>
 
-</body>
+    </body>
