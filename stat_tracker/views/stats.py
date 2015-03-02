@@ -51,7 +51,6 @@ def add():
 def delete_activity(activity_id):
     stats = Stat.query.filter_by(activity=activity_id).all()
     record = Activity.query.get(activity_id)
-    print(record)
     for stat in stats:
         db.session.delete(stat)
     db.session.commit()
@@ -152,13 +151,10 @@ def activity_data_chart(activity_id):
 
 def make_chart(activity_id):
     data = Stat.query.filter_by(activity=activity_id).all()
-    print(data)
     dates = [item.date for item in data]
     date_labels = [date.strftime("%b %d") if i % 2 else ""
                    for i, date in enumerate(dates)]
     values = [item.value for item in data]
-    print(dates)
-    print(values)
     ax = plt.subplot(111)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
