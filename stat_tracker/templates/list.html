@@ -9,15 +9,17 @@
             <div class="small-5 columns">
                 <div class="panel">
                     <div class="row">
-                        <div class="small-6 columns">
+                        <div class="small-4 columns">
                             <div class="dailyblock">
                                 <a href="{{ url_for("activity.details",user=user,activity_name=activity.name) }}">{{ activity.name.title() }}</a>
                             </div>
                         </div>
-                        <div class="small-6 columns">
-                            {% if activity.activity_type == "Once A Day" %}
-                                {% include "dailyblock.html" %}
-                            {% endif %}
+                        <div class="small-8 columns">
+                                {% if activity.activity_type == "Once A Day" %}
+                                    {% include "dailyblock.html" %}
+                                {% elif activity.activity_type == "Unit Goal" %}
+                                    {% include "unitgoalblock.html" %}
+                                {% endif %}
                         </div>
                     </div>
                 </div>

@@ -54,6 +54,10 @@ class UnitGoal(db.Model):
         date_counts = Counter(dates)
         return date_counts
 
+    def to_dict(self):
+        return {"timestamp": self.timestamp,
+                "units": self.units}
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

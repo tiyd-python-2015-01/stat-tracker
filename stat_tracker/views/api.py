@@ -99,6 +99,7 @@ def update_stats(id):
             timestamp = Timestamp(activity_id=activity_id, actor_id=user, timestamp=date)
         except IOError:
             return json_response(400, "Timestamp Invalid")
+
         db.session.add(timestamp)
         db.session.commit()
         stats = Timestamp.query.filter_by(activity_id=activity_id).all()

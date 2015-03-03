@@ -4,7 +4,7 @@ from io import BytesIO
 from flask import Blueprint, flash, render_template, redirect, url_for, send_file
 from flask.ext.login import current_user, login_required
 from ..forms import ActivityForm
-from ..models import Activity, Timestamp
+from ..models import Activity, Timestamp, UnitGoal
 from ..extensions import db
 
 
@@ -56,14 +56,16 @@ def add(user):
 def list(user):
     activities = Activity.query.filter_by(creator=user).all()
     today = datetime.today().strftime("%Y-%m-%d")
-    checked_in_today = db.session.query(Timestamp.activity_id).filter_by(actor_id=user, timestamp=today).all()
-    checked_in_today = [item[0] for item in checked_in_today]
-    print("Type: ",checked_in_today)
-    print(activities)
+    todays_checkins = db.session.query(Timestamp.activity_id).filter_by(actor_id=user, timestamp=today).all()
+    print(todays_checkins)
+    todays_checkins = [item[0] for item in todays_checkins]
+    todays_values = db.session.query(UnitGoal.activity_id, UnitGoal.units).filter_by(actor_id=user, timestamp=today).all()
+    todays_values = [(item[0],item[1]) for item in todays_values]
     return render_template("list.html",
                            user=user,
                            activities=activities,
-                           checked_in_today=checked_in_today)
+                           todays_checkins=todays_checkins,
+                           todays_values=todays_values)
 
 @activity.route("/<user>/<activity_name>", methods=['GET', 'POST'])
 @login_required
@@ -107,7 +109,7 @@ def create_plot(user, activity_name):
     checkins = sorted([timestamp.timestamp for timestamp in timestamps])
     delta = checkins[len(checkins)-1] - checkins[0]
     dates = [checkins[0] + timedelta(days=day) for day in range(delta.days)]
-    print("Dates:",dates)
+    print("Dates:", dates)
     y_marks = [None] * delta.days
     for index, date in enumerate(dates):
         if date in checkins:

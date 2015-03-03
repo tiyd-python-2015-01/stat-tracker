@@ -1,0 +1,19 @@
+{% block unitgoalblock %}
+
+    <div class="unitblock">
+        <form action="{{ url_for("activity.check", user=user, activity_name=activity.name) }}" method="POST">
+            <row>
+
+                <input type="number" class="number tiny">
+            </row>
+            <row>
+                <div class="small-4 columns">
+                    <input type="submit" class="button tiny" value="Update">
+                </div>
+                <div class="small-7 columns">
+                    <a href="{{ url_for("activity.visualize", user=user, activity_name=activity.name) }}" class="button tiny">Visualize It!</a>
+                </div>
+            </row>
+        </form>
+    </div>
+{% endblock %}
