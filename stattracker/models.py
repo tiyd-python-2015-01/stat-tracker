@@ -57,3 +57,9 @@ class Stat(db.Model):
     enterprise_id = db.Column(db.Integer, db.ForeignKey('enterprise.id'))
     enterprise = db.relationship('Enterprise',
         backref=db.backref('stats', lazy='dynamic'))
+
+    def to_dict(self):
+        return {"id": self.id,
+                "value": self.value,
+                "recorded_at": self.recorded_at,
+                "enterprise_id": self.enterprise_id}
