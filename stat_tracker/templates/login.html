@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<p></p>
+<p></p>
+<div class="row">
+    <div class="small-2 columns"></div>
+    <div class="small-5 columns">
+        <div class="panel">
+            <table>
+                <form method="POST" action='{{ url_for("users.login")}}'>
+                    {{ form.hidden_tag() }}
+                    <div>
+                        {{ form.email.label }} {{ form.email(size=20) }}
+                    </div>
+                    <div>
+                        {{ form.password.label }} {{ form.password(size=20) }}
+                    </div>
+                    <input class='button' type="submit" name="Login">
+                </form>
+            </table>
+        </div>
+    </div>
+    <div class="small-5 columns"></div>
+</div>
+{% endblock %}

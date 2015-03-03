@@ -1,0 +1,14 @@
+{% block dailyblock %}
+
+<div class="dailyblock">
+    <form action="{{ url_for("activity.check", user=user, activity_name=activity.name) }}" method="POST">
+
+        {% if activity.id in todays_checkins %}
+            <input type="submit" class="button tiny disabled" value="Checked In!">
+        {% else %}
+            <input type="submit" class="button tiny" value="Check In Today!">
+        {% endif %}
+        <a href="{{ url_for("activity.visualize", user=user, activity_name=activity.name) }}" class="button tiny">Visualize It!</a>
+    </form>
+</div>
+{% endblock %}
