@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 from io import BytesIO
-from flask import Blueprint, flash, render_template, redirect, url_for, send_file
+from flask import Blueprint, flash, render_template, redirect, url_for, send_file, request
 from flask.ext.login import current_user, login_required
 from ..forms import ActivityForm
 from ..models import Activity, Timestamp, UnitGoal
@@ -34,8 +34,15 @@ def update_value(user, activity_name):
     checked_activity = Activity.query.filter_by(name=activity_name).filter_by(creator=user).first()
     today = datetime.today().strftime("%Y-%m-%d")
     stat = UnitGoal.query.filter_by(activity_id=checked_activity.id, actor_id=user, timestamp=today).first()
-    if checked_activity and not stat:
-        stat = UnitGoal(activity_id=checked_activity.id, actor_id=user, timestamp=today, value=0)
+    if checked_activity:
+        if not stat:
+            print(request.form.get('unit_value'))
+            stat = UnitGoal(activity_id=checked_activity.id,
+                            actor_id=user,
+                            timestamp=today,
+                            value=request.form.get('unit_value'))
+        else:
+            stat.value = request.form.get('unit_value')
         db.session.add(stat)
         db.session.commit()
     return redirect(url_for("activity.list", user=user))
@@ -74,10 +81,11 @@ def list(user):
     todays_unitgoals = db.session.query(UnitGoal.activity_id, UnitGoal.value).filter_by(actor_id=user, timestamp=today).all()
     todays_goals = [item[0] for item in todays_unitgoals]
     todays_values = {}
-    for unit_goal in todays_unitgoals:
-        todays_values[unit_goal] = UnitGoal.query.filter_by(activity_id=unit_goal.activity_id,
-                                                           timestamp=unit_goal.timestamp,
-                                                           actor_id=user).first().value
+    for unit_goal in todays_goals:
+        todays_values[unit_goal] = UnitGoal.query.filter_by(activity_id=unit_goal,
+                                                            timestamp=today,
+                                                            actor_id=user).first().value
+
     return render_template("list.html",
                            user=user,
                            activities=activities,

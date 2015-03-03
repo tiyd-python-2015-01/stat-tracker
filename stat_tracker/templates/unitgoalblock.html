@@ -4,9 +4,9 @@
         <form action="{{ url_for("activity.update_value", user=user, activity_name=activity.name) }}" method="POST">
             <row>
                 {% if activity.id in todays_goals %}
-                <input type="number" class="number tiny" id="unit_value" value="{{ todays_values[activity.id] }}">
+                <input type="number" class="number tiny" name="unit_value" value="{{ todays_values[activity.id] }}">
                 {% else %}
-                <input type="number" class="number tiny" id="unit_value" value="0">
+                <input type="number" class="number tiny" name="unit_value" value="0">
                 {% endif %}
             </row>
             <row>
