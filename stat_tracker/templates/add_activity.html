@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="row">
+        <div class="large-7 large-centered columns"><h2>Please enter a new activity:</h2></div>
+    </div>
+    <form method=POST action="{{ url_for('stats.add') }}">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="large-1 columns">{{ form.title.label }}</div>
+            <div class="large-11 columns">{{ form.title(size=10) }}</div>
+        </div>
+        <div class="row">
+            <div class="large-2 large-centered columns">{{ form.activity_type.label }}
+                                                        {{ form.activity_type }}
+            </div>
+        <div class="row">
+            <div class="large-1 large-centered columns">
+                <input type=submit value=Submit>
+            </div>
+        </div>
+    </form>
+{% endblock %}

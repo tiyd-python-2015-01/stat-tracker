@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class="row">
+        <div class="large-5 large-centered columns">
+            <h1>Activity Data:</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-3 large-centered columns">
+            <h2>{{ activity.title }}</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-8 large-centered columns">
+            <img src="{{ url_for('stats.activity_data_chart', activity_id=activity.id) }}" />
+        </div>
+    </div>
+{% endblock %}

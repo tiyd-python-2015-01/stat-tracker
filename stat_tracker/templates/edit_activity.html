@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="row">
+        <div class="large-7 large-centered columns"><h2>Edit your activity:</h2></div>
+    </div>
+    <form method=POST action="{{ url_for('stats.edit_activity', activity_id=activity.id) }}">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="large-1 columns">{{ form.title.label }}</div>
+            <div class="large-11 columns">{{ form.title }}</div>
+        </div>
+            <div class="large-1 large-centered columns">
+                <input type=submit value=Submit>
+            </div>
+        </div>
+    </form>
+    {% if stats %}
+        {% for stat in stats %}
+            <div class="row">
+                <div class="large-6 large-centered columns">
+                    {{ stat.date.strftime("%m-%d-%Y")}}: {{ stat.value }}
+                    <button class="tiny" onclick="location.href='{{ url_for('stats.edit_stat', stat_id=stat.id)}}'">Edit</button>
+                    <button class="tiny" onclick="location.href='{{ url_for('stats.delete_stat', stat_id=stat.id)}}'">Delete</button>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

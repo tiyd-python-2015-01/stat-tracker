@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row">
+    <div class="large-3 columns"></div>
+    <div class="large-6  large-centered columns">
+        <h2>Your current activities:</h2>
+    </div>
+    <div class="large-3 columns"></div>
+</div>
+<ul class="no-bullet">
+{% for activity in activities.items %}
+    <div class="row">
+        <li><div class="large-3 large-centered columns"><a href="{{ url_for('stats.update_activity', activity_id=activity.id) }}">{{ activity.title }}</a></div></li>
+    </div>
+{% endfor %}
+</ul>
+<div class="row">
+    <div class="large-5 large-centered columns">
+        {% if activities.prev_num > 0 %}
+            <button class="tiny" onclick="location.href='{{ url_for('stats.user_activities', page=activities.prev_num)}}'">Previous</button>
+        {% endif %}
+        {% if activities.next_num <= activities.pages %}
+            <button class="tiny" onclick="location.href='{{ url_for('stats.user_activities', page=activities.next_num)}}'">Next</button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

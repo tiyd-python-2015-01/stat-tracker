@@ -1,0 +1,49 @@
+<!doctype html>
+<head>
+    <title>Stat Tracker</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/normalize.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/foundation.css') }}">
+</head>
+<div class="row">
+    <div class="large-14 columns">
+        <nav class="top-bar">
+            <ul class="title-area">
+                <li class="name">
+                    <h1><a href="{{ url_for('stats.index') }}">Stat Tracker</a></h1>
+                </li>
+            </ul>
+            <section class="top-bar-section">
+            {% if current_user.is_authenticated() %}
+                <ul class="right">
+                    <li class="divider"></li>
+                    <li class="active"><a href="{{ url_for('users.logout') }}">Log Out</a></li>
+                    <li class="divider"></li>
+                </ul>
+                <ul class="left">
+                    <li class="divider"></li>
+                    <li class="active"><a href="{{ url_for('stats.add') }}">Add New Activity</a></li>
+                </ul>
+
+            {% else %}
+                <ul class="right">
+                    <li class="divider"></li>
+                    <li class="active"><a href="{{ url_for('users.create_user') }}">Register</a></li>
+                    <li class="divider"></li>
+                    <li class="active"><a href="{{ url_for('users.login') }}">Log In</a></li>
+                    <li class="divider"></li>
+                </ul>
+            {% endif %}
+            </section>
+        </nav>
+    </div>
+</div>
+<div class="row">
+    <div class="large-9 columns"></div>
+    <div class="large-3 columns">
+        {% if current_user.is_authenticated() %}
+            Welcome Back, {{ current_user.name }}!
+        {% endif %}
+    </div>
+</div>
+{% block body %}
+{% endblock %}
