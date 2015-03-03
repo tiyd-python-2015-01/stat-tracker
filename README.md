@@ -34,7 +34,9 @@ After completing this assignment, you should be able to:
 * No PEP8 or Pyflakes warnings or errors
 * Meets API specifications
 
-## Normal Mode
+## Original Lab
+
+### Normal Mode
 
 You are going to build an application to track personal statistics. A personal statistic is a numerical record for a person in a time series by day. For example, let's say I wanted to track how many flights of stairs I walked up in a day. My last week might look like:
 
@@ -63,7 +65,7 @@ For the chart, you can use whatever you like. Matplotlib is our old friend, but 
 
 You should also have an API. One of the ways people expect to use this application is via their phone, so you'll need a REST API.
 
-### API Specification
+#### API Specification
 
 For your API, I'm specifying the endpoints you'll need and what they should do. The URLs I'm using are not prefixed: yours should be with '/api/' and a version.
 
@@ -82,7 +84,7 @@ DELETE | /activities/{id}/stats | Remove tracked data for a day. You should send
 I am not specifying what the JSON these return should look like, but you should feel free to follow one of the many competing standards. [JSON API](http://jsonapi.org/) is very comprehensive.
 
 
-## Hard Mode
+### Hard Mode
 
 In addition to the requirements from **Normal Mode**:
 
@@ -95,10 +97,19 @@ In addition to the requirements from **Normal Mode**:
 * Make sure your interface [is responsive](https://developers.google.com/web/fundamentals/layouts/rwd-fundamentals/) and works well via mobile.
 
 
-## Nightmare Mode
+### Nightmare Mode
 
 * Give users a way to invite other users to collaborate/compete on a activity with them. Users can only add/edit their own data, but the activity charts will show everyone competing.
 
+## Adding JavaScript
+
+### Normal Mode
+
+Using jQuery, convert your application so that adding a day's value for an activity happens via Ajax and does not require a page reload. This should display a notification on the page that the data has been added. Ideally, this form should be on the same page as the list of stats for an activity and the new record should be added to the list.
+
+One difference between this and class is that you will need to get information from form fields. You can get the value of a form field with [.val()](https://api.jquery.com/val/) but you may find [.serialize()](https://api.jquery.com/serialize/) or [.serializeArray()](https://api.jquery.com/serializeArray/) easier to use.
+
+To bind an event handler to the submission of a form, you can use the [.submit()](https://api.jquery.com/submit/) function.
 
 ## Additional Resources
 
