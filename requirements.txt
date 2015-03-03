@@ -28,5 +28,13 @@ webtest
 # Management script
 Flask-Script
 
+## Heroku
+gunicorn==19.2.1
+psycopg2==2.6
+
+# Login and users
+Flask-Login==0.2.11
+Flask-Bcrypt==0.6.2
+
 matplotlib
 io
