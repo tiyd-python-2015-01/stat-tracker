@@ -21,10 +21,22 @@ def visualize(user, activity_name):
 def check(user, activity_name):
     checked_activity = Activity.query.filter_by(name=activity_name).filter_by(creator=user).first()
     today = datetime.today().strftime("%Y-%m-%d")
-    timestamp = Timestamp.query.filter_by(activity_id=checked_activity.id, actor_id=user, timestamp=today).first()
-    if checked_activity and not timestamp:
-        timestamp = Timestamp(activity_id=checked_activity.id, actor_id=user, timestamp=today)
-        db.session.add(timestamp)
+    stat = Timestamp.query.filter_by(activity_id=checked_activity.id, actor_id=user, timestamp=today).first()
+    if checked_activity and not stat:
+        stat = Timestamp(activity_id=checked_activity.id, actor_id=user, timestamp=today)
+        db.session.add(stat)
+        db.session.commit()
+    return redirect(url_for("activity.list", user=user))
+
+@activity.route("/<user>/<activity_name>/unit", methods=['POST'])
+@login_required
+def update_value(user, activity_name):
+    checked_activity = Activity.query.filter_by(name=activity_name).filter_by(creator=user).first()
+    today = datetime.today().strftime("%Y-%m-%d")
+    stat = UnitGoal.query.filter_by(activity_id=checked_activity.id, actor_id=user, timestamp=today).first()
+    if checked_activity and not stat:
+        stat = UnitGoal(activity_id=checked_activity.id, actor_id=user, timestamp=today, value=0)
+        db.session.add(stat)
         db.session.commit()
     return redirect(url_for("activity.list", user=user))
 
@@ -38,7 +50,6 @@ def add(user):
         if new_activity:
             flash("Activity already exists.")
         else:
-            print("\n\nForm: ", form.type.data)
             new_activity = Activity(name=form.name.data,
                                     description=form.description.data,
                                     activity_type=form.type.data,
@@ -57,14 +68,21 @@ def list(user):
     activities = Activity.query.filter_by(creator=user).all()
     today = datetime.today().strftime("%Y-%m-%d")
     todays_checkins = db.session.query(Timestamp.activity_id).filter_by(actor_id=user, timestamp=today).all()
-    print(todays_checkins)
     todays_checkins = [item[0] for item in todays_checkins]
-    todays_values = db.session.query(UnitGoal.activity_id, UnitGoal.units).filter_by(actor_id=user, timestamp=today).all()
-    todays_values = [(item[0],item[1]) for item in todays_values]
+    # We need a list of unitgoals Activities to iterate through in jinja2
+    # And a dictionary of goals: today's value to lookup
+    todays_unitgoals = db.session.query(UnitGoal.activity_id, UnitGoal.value).filter_by(actor_id=user, timestamp=today).all()
+    todays_goals = [item[0] for item in todays_unitgoals]
+    todays_values = {}
+    for unit_goal in todays_unitgoals:
+        todays_values[unit_goal] = UnitGoal.query.filter_by(activity_id=unit_goal.activity_id,
+                                                           timestamp=unit_goal.timestamp,
+                                                           actor_id=user).first().value
     return render_template("list.html",
                            user=user,
                            activities=activities,
                            todays_checkins=todays_checkins,
+                           todays_goals=todays_goals,
                            todays_values=todays_values)
 
 @activity.route("/<user>/<activity_name>", methods=['GET', 'POST'])

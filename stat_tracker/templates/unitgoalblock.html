@@ -1,10 +1,13 @@
 {% block unitgoalblock %}
 
     <div class="unitblock">
-        <form action="{{ url_for("activity.check", user=user, activity_name=activity.name) }}" method="POST">
+        <form action="{{ url_for("activity.update_value", user=user, activity_name=activity.name) }}" method="POST">
             <row>
-
-                <input type="number" class="number tiny">
+                {% if activity.id in todays_goals %}
+                <input type="number" class="number tiny" id="unit_value" value="{{ todays_values[activity.id] }}">
+                {% else %}
+                <input type="number" class="number tiny" id="unit_value" value="0">
+                {% endif %}
             </row>
             <row>
                 <div class="small-4 columns">

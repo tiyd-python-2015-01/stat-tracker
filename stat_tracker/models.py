@@ -41,7 +41,7 @@ class Timestamp(db.Model):
 
 class UnitGoal(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    units = db.Column(db.DateTime, nullable=False)
+    value = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
     activity_id = db.Column(db.Integer, nullable=False)
     actor_id = db.Column(db.Integer, nullable=False)
@@ -56,7 +56,7 @@ class UnitGoal(db.Model):
 
     def to_dict(self):
         return {"timestamp": self.timestamp,
-                "units": self.units}
+                "value": self.value}
 
 
 class User(db.Model, UserMixin):
