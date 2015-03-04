@@ -14,11 +14,10 @@ class LoginForm(Form):
 class RegistrationForm(Form):
     name = StringField('Name', validators=[DataRequired()])
     email = EmailField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField(
-        'Password',
-        validators=[DataRequired(),
-                    EqualTo('password_verification',
-                            message="Passwords must match")])
+    password = PasswordField('Password',
+                             validators=[DataRequired(),
+                             EqualTo('password_verification',
+                             message="Passwords must match")])
     password_verification = PasswordField('Repeat password')
 
 

@@ -1,21 +1,25 @@
 {% extends "layout.html" %}
 
 {% block body %}
+
+{% if get_flashed_messages() %}
+  {% for message in get_flashed_messages() %}
+    <div data-alert class="alert-box">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
   <div class='row'>
-    {{ form.hidden_tag() }}
+
     <div class="small-8 columns">
       <fieldset>
         <legend>Log Your Progress</legend>
 
-        {% if get_flashed_messages() %}
-          {% for message in get_flashed_messages() %}
-            <div data-alert class="alert-box">
-              {{ message }}
-            </div>
-          {% endfor %}
-        {% endif %}
 
-        <form  method='POST' action="{{ url_for("items.add_log") }}">
+
+        <form id='log_form'  method='POST' action="{{ url_for("items.add_log") }}">
+          {{form.hidden_tag()}}
           <div class="row">
             <div class="small-3 columns">
               <label>{{ form.item_id.label }}</label>
@@ -47,7 +51,7 @@
             </div>
           </div>
 
-          <button type="submit" class='button tiny'>Log This Activity</button>
+          <button id='submit_log' type="submit" class='button tiny'>Log This Activity</button>
         </form>
       </fieldset>
     </div>
@@ -57,28 +61,29 @@
   <div class='row'>
     <div class="small-8 columns">
       <fieldset>
-        <legend>Your Current Activities</legend>
-        <div class="row">
-          <div class="small-8 columns">
-            {% for activity in current_activities %}
-            {% if activity.name %}
-            <ul class="vcard" >
-              <li>Name: {{ activity.name }} </li>
-              {% if activity.description %}
-              <li>Description: {{ activity.description }}</li>
-              {% endif %}
-              {% if activity.goal %}
-              <li>Goal: {{ activity.goal }}</li>
-              {% endif %}
-                <a href='/dashboard/activity/delete/{{ activity.id }}'><img width='15' src='/static/delete.png'></a>
-                <a href='/dashboard/activity/edit/{{ activity.id }}'><img width='15' src='/static/edit.png'></a>
-                <a href='/dashboard/activity/chart/{{ activity.id }}'><img width='15' src='/static/chart.png'></a>
-              </form>
-            </ul>
-            {% endif %}
+      <legend>Most Recent Logs</legend>
+        <table>
+          <thead>
+            <tr>
+              <th>Activity</th>
+              <th>Date</th>
+              <th>Log Value</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in all_logs %}
+            <tr class='logs'>
+              <td>{{ log.item.name }}</td>
+              <td>{{ log.logged_at }}</td>
+              <td>{{ log.value }}</td>
+              <td><a href='/dashboard/log/edit/{{ log.id }}'><i class="fa fa-pencil-square-o editLog"></i></a></td>
+              <td><a href='/dashboard/log/delete/{{ log.id }}'><i class="fa fa-times"></i></a></td>
+            </tr>
             {% endfor %}
-          </div>
-        </div>
+          </tbody>
+        </table>
       </fieldset>
     </div>
   </div>

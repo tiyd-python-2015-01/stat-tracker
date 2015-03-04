@@ -1,8 +1,9 @@
 import json
 
-from flask import Blueprint, jsonify, request, abort, url_for
+from flask import Blueprint, jsonify, request, abort, url_for, g
 from flask.ext.login import login_user
 
+from ..api_helpers import returns_json, APIView, api_form
 from ..models import User, Item, Action
 from ..forms import LoginForm, AddActivity, LogActivity
 from ..extensions import login_manager, db
@@ -11,141 +12,131 @@ from .items import pick_activity
 
 api = Blueprint("api", __name__)
 
-def json_response(code, data):
-    return (json.dumps(data), code, {"Content-Type": "application/json"})
-
-
 @api.app_errorhandler(401)
+@returns_json
 def unauthorized(request):
-    return ("", 401, {"Content-Type": "application/json"})
+    return {"error": "This API call requires authentication."}, 401
 
 
 @login_manager.request_loader
 def authorize_user(request):
-    # Authorization: Basic username:password
-    api_key = request.headers.get('Authorization')
-    if api_key:
-        api_key = api_key.replace('Basic ', '', 1)
-        email, password = api_key.split(":")
+
+    authorization = request.authorization
+    if authorization:
+        email = authorization['username']
+        password = authorization['password']
 
         user = User.query.filter_by(email=email).first()
         if user.check_password(password):
             return user
+
     return None
 
 
 def require_authorization():
-    user = authorize_user(request)
-    if user:
-        login_user(user)
-        return user
-    else:
+    if not current_user.is_authenticated():
         abort(401)
 
+class ActivitiesView(APIView):
 
-@api.route("/activities")
-def activities():
-    user = require_authorization()
-    activities = Item.query.filter_by(user_id=user.id).all()
-    activities = [activity.to_dict() for activity in activities]
-    return jsonify({"activity": activities})
+    def get(self):
+        activities = Item.query.filter_by(user_id=current_user.id).all()
+        activities = [activity.to_dict() for activity in activities]
+        return {'activities': activities}
 
-@api.route("/activities/<int:id>")
-def activity(id):
-    require_authorization()
-    activity = Item.query.get_or_404(id)
-    return jsonify(activity.to_dict())
+    def post(self):
+        require_authorization()
+        form = api_form(AddActivity, data=g.data)
+
+        if form.validate():
+            activity = Item(**form.data)
+            activity.user_id = current_user.id
+            db.session.add(activity)
+            db.session.commit()
+            return activity.to_dict(), 201
+        else:
+            return form.errors, 400
 
 
-@api.route("/activities/add", methods=['POST'])
-def create_activities():
-    user = require_authorization()
-    body = request.get_data(as_text=True)
-    data = json.loads(body)
-    form = AddActivity(data=data, formdata=None, csrf_enabled=False)
+class SingleActView(APIView):
 
-    if form.validate():
-        activity = Item(**form.data)
-        activity.user_id = user.id
-        db.session.add(activity)
+    def get(self, id):
+        activity = Item.query.get_or_404(id)
+        return activity.to_dict()
+
+    def put(self, id):
+        require_authorization()
+        activity = Item.query.get_or_404(id)
+        for key, value in g.data.items():
+            setattr(activity, key, value)
+        form = api_form(AddActivity, obj=activity)
+        if form.validate():
+            form.populate_obj(activity)
+            db.session.commit()
+            return activity.to_dict(), 201
+        else:
+            return form.errors, 400
+
+
+    def delete(self, id):
+        require_authorization()
+        activity = Item.query.get_or_404(id)
+        db.session.delete(activity)
         db.session.commit()
-        return (json.dumps(activity.to_dict()), 201,
-                {"Location": url_for(".activity", id=activity.id)})
-    else:
-        return json_response(400, form.errors)
+        return 201
 
 
-@api.route("/activities/update/<int:id>", methods=['PUT'])
-def update_activities(id):
-    user = require_authorization()
-    body = request.get_data(as_text=True)
-    data = json.loads(body)
-    activity = Item.query.get_or_404(id)
+class LogsView(APIView):
 
-    activity.name = data.get('name')
-    activity.goal = data.get('goal')
-    activity.description = data.get('description')
-    db.session.commit()
-    return (json.dumps(activity.to_dict()), 201,
-            {"Location": url_for(".activity", id=activity.id)})
+    def get(self):
+        logs = Action.query.filter(Action.item.has(user_id=current_user.id))
+        logs = [log.to_dict() for log in logs]
+        return {"logs": logs}
 
-@api.route("/activities/delete/<int:id>", methods=['DELETE'])
-def delete_activities(id):
-    require_authorization()
-    activity = Item.query.get_or_404(id)
-    db.session.delete(activity)
-    db.session.commit()
-    return (json.dumps('deleted item: {}'.format(id)), 200,
-            {"Content-Type": "application/json"})
+    def post(self):
 
-@api.route("/logs")
-def logs():
-    user = require_authorization()
-    logs = Action.query.filter(Action.item.has(user_id=user.id))
-    logs = [log.to_dict() for log in logs]
-    return jsonify({"logs": logs})
+        require_authorization()
+        form = api_form(LogActivity, data=g.data)
+        form.item_id.choices = pick_activity()
 
-@api.route("/logs/<int:id>")
-def log(id):
-    require_authorization()
-    log = Action.query.get_or_404(id)
-    return jsonify(log.to_dict())
+        if form.validate():
+            log = Action(**form.data)
+            db.session.add(log)
+            db.session.commit()
+            return log.to_dict(), 201
+        else:
+            return form.errors, 400
 
-@api.route("/logs/add", methods=['POST'])
-def create_logs():
-    user = require_authorization()
-    body = request.get_data(as_text=True)
-    data = json.loads(body)
-    form = LogActivity(data=data, formdata=None, csrf_enabled=False)
-    form.item_id.choices = pick_activity()
 
-    if form.validate():
-        log = Action(**form.data)
-        db.session.add(log)
+class SingleLogView(APIView):
+
+    def get(self, id):
+        log = Action.query.get_or_404(id)
+        return log.to_dict()
+
+    def put(self, id):
+        require_authorization()
+        log = Action.query.get_or_404(id)
+
+        for key, value in g.data.items():
+            setattr(log, key, value)
+        form = api_form(LogActivity, obj=log)
+        if form.validate():
+            form.populate_obj(log)
+            db.session.commit()
+            return log.to_dict(), 201
+        else:
+            return form.errors, 400
+
+    def delete(self, id):
+        require_authorization()
+        log = Action.query.get_or_404(id)
+        db.session.delete(log)
         db.session.commit()
-        return (json.dumps(log.to_dict()), 201,
-                {"Location": url_for(".log", id=log.id)})
-    else:
-        return json_response(400, form.errors)
+        return 201
 
-@api.route("/logs/update/<int:id>", methods=['PUT'])
-def update_logs(id):
-    user = require_authorization()
-    body = request.get_data(as_text=True)
-    data = json.loads(body)
-    log = Action.query.get_or_404(id)
 
-    log.value = data.get('value')
-    log.logged_at = data.get('logged_at')
-    db.session.commit()
-    return (json.dumps(log.to_dict()), 201,
-            {"Location": url_for(".log", id=log.id)})
-
-@api.route("/logs/delete/<int:id>", methods=['DELETE'])
-def delete_logs(id):
-    require_authorization()
-    log = Action.query.get_or_404(id)
-    db.session.delete(log)
-    db.session.commit()
-    return (json.dumps('deleted item: {}'.format(id)), 200,
-            {"Content-Type": "application/json"})
+api.add_url_rule('/activities', view_func=ActivitiesView.as_view('activities'))
+api.add_url_rule('/activity/<int:id>', view_func=SingleActView.as_view('activity'))
+api.add_url_rule('/logs', view_func=LogsView.as_view('logs'))
+api.add_url_rule('/log/<int:id>', view_func=SingleLogView.as_view('log'))

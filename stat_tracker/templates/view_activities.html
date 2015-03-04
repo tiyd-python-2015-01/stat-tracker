@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+
+<div class='row'>
+  <div class="large-8 columns">
+    <fieldset>
+      <legend>Your Current Activities</legend>
+      <div class="row">
+        <div class="tiny-8 columns">
+          {% for activity in all_activities %}
+          {% if activity.name %}
+          <ul class="vcard" >
+            <li>Name: {{ activity.name }} </li>
+            {% if activity.description %}
+            <li>Description: {{ activity.description }}</li>
+            {% endif %}
+            {% if activity.goal %}
+            <li>Goal: {{ activity.goal }}</li>
+            {% endif %}
+              <a href='/dashboard/activity/delete/{{ activity.id }}'><img width='15' src='/static/delete.png'></a>
+              <a href='/dashboard/activity/edit/{{ activity.id }}'><img width='15' src='/static/edit.png'></a>
+              <a href='/dashboard/activity/chart/{{ activity.id }}'><img width='15' src='/static/chart.png'></a>
+          </ul>
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</div>
+
+{% endblock %}

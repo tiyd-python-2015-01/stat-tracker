@@ -28,10 +28,11 @@ def dashboard():
     form = LogActivity()
     form.item_id.choices = pick_activity()
     user = current_user.name.capitalize()
-    current_activities = Item.query.filter_by(user_id=current_user.id).all()
+    all_logs = Action.query.filter(Action.item.has(user_id=current_user.id))\
+               .order_by(Action.logged_at.desc())
     return render_template("dashboard.html",
                            user=user,
-                           current_activities=current_activities,
+                           all_logs=all_logs,
                            form=form)
 
 @items.route("/add_log", methods=['POST', 'GET'])
@@ -65,7 +66,7 @@ def add_activity():
         db.session.add(item)
         db.session.commit()
         flash("You successfully added an activity")
-        return redirect(url_for('items.dashboard'))
+        return redirect(url_for('items.add_activity'))
     else:
         flash_errors(form)
         return render_template("add_update_activity.html", form=form)
@@ -87,7 +88,7 @@ def delete_log(int_id):
     db.session.delete(deleted_object)
     db.session.commit()
     flash("You successfully removed that log of your activity")
-    return redirect(url_for('items.view_logs'))
+    return redirect(url_for('items.dashboard'))
 
 @items.route('/dashboard/log/edit/<int:int_id>', methods=['POST', 'GET'])
 @login_required
@@ -101,7 +102,7 @@ def edit_log(int_id):
         edited_object.logged_at = form.logged_at.data
         db.session.commit()
         flash("You successfully updated your log")
-        return redirect(url_for('items.view_logs'))
+        return redirect(url_for('items.dashboard'))
     else:
         flash_errors(form)
         return render_template("edit_logs.html",
@@ -127,12 +128,11 @@ def edit_activity(int_id):
                                form=form,
                                edited_object=edited_object)
 
-@items.route('/dashboard/view_logs', methods=['GET'])
+@items.route('/dashboard/view_activities', methods=['GET'])
 @login_required
-def view_logs():
-    all_logs = Action.query.filter(Action.item.has(user_id=current_user.id))\
-               .order_by(Action.logged_at.desc())
-    return render_template("view_logs.html", all_logs=all_logs)
+def view_activities():
+    all_activities = Item.query.filter_by(user_id=current_user.id)
+    return render_template("view_activities.html", all_activities=all_activities)
 
 @items.route('/dashboard/activity/chart/<int:int_id>', methods=['POST', 'GET'])
 @login_required
