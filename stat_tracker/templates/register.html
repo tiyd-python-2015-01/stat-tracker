@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="row">
+    <div class="small-12 medium-8 large-6 center columns">
+        <h2>Register</h2>
+    </div>
+</div>
+
+    <form method="POST" action="{{ url_for("user.register") }}">
+        {{ form.hidden_tag() }}
+        <div class="center row">
+            <div class="small-12 medium-8 large-6 center columns">
+                 {{ form.name.label }} {{ form.name(size=20) }}
+            </div>
+        </div>
+        <div class="center row">
+            <div class="small-12 medium-8 large-6 center columns">
+                 {{ form.email.label }} {{ form.email(size=20) }}
+            </div>
+        </div>
+        <div class="center row">
+            <div class="small-12 medium-8 large-6 center columns">
+                 {{ form.password.label }} {{ form.password(size=20) }}
+            </div>
+        </div>
+        <div class="center row">
+            <div class="small-12 medium-8 large-6 center columns">
+                  {{ form.password_verification.label }} {{ form.password_verification(size=20) }}
+             <input class="round center button"type="submit" value="Register">
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

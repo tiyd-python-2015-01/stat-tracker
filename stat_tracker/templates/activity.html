@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row">
+  <div class="small-10 columns center">
+    <h1>Add Activity</h1>
+      <form method="POST" action="{{ url_for('stats.add_activity') }}">
+          {{ form.hidden_tag() }}
+        <div>
+          {{ form.name.label }} {{ form.name(size=20, placeholder="Running") }}
+        </div>
+        <div>
+          {{ form.unit.label }} {{ form.unit(size=20, placeholder="Miles") }}
+        </div>
+        <input class="round button" type="submit" />
+       </form>
+    </div>
+  </div>
+
+{% endblock %}

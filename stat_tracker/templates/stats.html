@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="row">
+  <div class="small-10 columns center">
+    <h1>Add Statistic</h1>
+       <form method="POST" action="{{ post_url }}">
+          {{ form.hidden_tag() }}
+        <div>
+          {{ form.activity.label }} {{ form.activity }}
+        </div>
+        <div>
+          {{ form.value.label }} {{ form.value(size=20) }}
+        </div>
+        <div>
+            {{ form.date.label }} {{ form.date(class="datepicker") }}
+        </div>
+        <input class="round button" value={{ button }} />
+       </form>
+    </div>
+  </div>
+
+{% endblock %}
