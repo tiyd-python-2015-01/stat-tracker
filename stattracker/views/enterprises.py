@@ -112,9 +112,10 @@ def enterprise_chart(id):
     values = [stat.value for stat in enterprise.stats]
 
     fig = BytesIO()
-    # plt.plot_date(x=dates, y=values, fmt="-")
     plt.bar(dates, values)
     plt.ylabel(enterprise.ent_unit)
+    # xlabels = ['Ticklabel %i' % i for i in range(n)]
+
     plt.savefig(fig)
     plt.clf()
     fig.seek(0)

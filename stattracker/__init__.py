@@ -9,15 +9,16 @@ from .extensions import (db,
                          login_manager)
 # from .views import stattracker
 
+from . import models
+from .views.users import users
+from .views.enterprises import enterprises
+from .views.api import api
+
 
 SQLALCHEMY_DATABASE_URI = "postgres://localhost/stattracker"
 DEBUG = True
 SECRET_KEY = 'development-key'
 
-from . import models
-from .views.users import users
-from .views.enterprises import enterprises
-from .views.api import api
 
 def create_app():
     app = Flask("stattracker")

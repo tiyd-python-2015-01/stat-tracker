@@ -3,6 +3,8 @@ from wtforms import StringField, PasswordField, FloatField
 from wtforms.fields.html5 import EmailField, DateField
 from wtforms.validators import DataRequired, Email, EqualTo, URL
 
+from datetime import datetime
+
 
 class LoginForm(Form):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -25,4 +27,7 @@ class EnterpriseForm(Form):
 
 class StatForm(Form):
     value = FloatField('Value')
-    recorded_at = DateField('Recorded At', validators=[DataRequired()])
+    recorded_at = DateField('Recorded At',
+                            validators=[DataRequired()],
+                            default=datetime.now().date()
+                            )
