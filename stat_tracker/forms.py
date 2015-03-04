@@ -22,6 +22,9 @@ class RegistrationForm(Form):
 class ActivityForm(Form):
     title = StringField('Type of Activity:', validators=[DataRequired()])
     value = StringField('Repetitions/Time Spent:', validators=[DataRequired()])
-#    units = SelectField('Select Units', choices=([("Hours/Day","Hours/Day"),("Min/Day","Min/Day"),("Repetitions/Day","Repetitions/Day")]))
     description = StringField('Brief Description:', validators=[DataRequired()])
+    recorded_at = DateField('Date:', validators=[])
+
+class EditForm(Form):
     recorded_at = DateField('Date:', validators=[DataRequired()])
+    value = StringField('Repetitions/Time Spent:', validators=[DataRequired()])

@@ -11,7 +11,7 @@ from .extensions import (
 from . import models
 from .views.users import users
 from .views.activity import activity
-
+from .views.api import api
 
 SQLALCHEMY_DATABASE_URI = "postgres://localhost/stat_tracker"
 DEBUG = True
@@ -20,11 +20,12 @@ SECRET_KEY = 'development-key'
 #import os
 #tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 # ...
-#app = Flask('myapp', template_folder=tmpl_dir)
+# app = Flask('myapp', template_folder=tmpl_dir)
 app = Flask("stat_tracker")
 app.config.from_object(__name__)
 app.register_blueprint(users)
 app.register_blueprint(activity)
+app.register_blueprint(api, url_prefix="/api/v1")
 
 config.init_app(app)
 db.init_app(app)

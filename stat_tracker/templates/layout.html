@@ -16,6 +16,7 @@
     <!-- Right Nav Section -->
     <ul class="right">
       {% if current_user.is_authenticated() %}
+      <li><a href="/home">Home</a></li>
       <li><a href="/logout">Logout</a></li>
       {% endif %}
       <li><a href="/contact">Contact</a></li>

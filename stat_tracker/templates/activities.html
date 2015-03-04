@@ -51,19 +51,15 @@
       </form>
 
         <div class = "row">
-        <strong><h4><u>Tracked Activities</u></h4></strong>
+        <strong><h2><u>Tracked Activities</u></h2></strong>
         <br>
           <div>
-                <li>checkpoint1</li>
-                {{current_user.user_activity}}
-                {% for activity in current_user.user_activity %}
-                <li>checkpoint2</li>
-                <li>{{ activity.title }}</li>
-                <li>{{ activity.description}}</li>
-                <!-- <li><a href="{{url_for('links.goto_link', id=link.id) }}">Link</a></li> -->
-                <a class='button tiny alert' href='{{url_for("activity.delete_activity", id=Activity.id) }}'>Delete Link</a>
-                <!-- <a class='button tiny' href={{ url_for("links.link_data", id=link.id )}}>Link Data</a>
-                <br><br> -->
+                {% for activity in current_user.activities %}
+                <u><h2><a href ='{{url_for("activity.view_activity", id=activity.id)}}'>
+                {{ activity.title }}
+                </a></h2></u>
+                <a class='button tiny alert' href='{{url_for("activity.delete_activity", id=activity.id) }}'>Delete Activity</a>
+                <a class='button tiny alert' href='{{url_for("activity.edit_activity", id=activity.id) }}'>Edit Activity</a>
                 {% endfor %}
             </div>
           </div>

@@ -33,6 +33,11 @@ def login():
     flash_errors(form)
     return render_template("login.html", form=form)
 
+@users.route('/home')
+@login_required
+def home():
+    form = ActivityForm()
+    return render_template("activities.html", form=form)
 
 @users.route('/logout')
 @login_required

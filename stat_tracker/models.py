@@ -10,6 +10,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), unique=True, nullable=False)
     encrypted_password = db.Column(db.String(60))
     activities = db.relationship('Activity', backref='user')
+    stats = db.relationship('Stats', backref='user')
 
     def get_password(self):
         return getattr(self, "_password", None)
@@ -38,10 +39,17 @@ class Activity(db.Model):
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    statistics = db.relationship('Stats', backref='activity')
+
+    def to_dict(self):
+        return {"id":self.id,
+                "title": self.title,
+                "description": self.description,
+                "user_id": self.user_id}
 
 class Stats(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     value = db.Column(db.String(255), nullable=False)
     recorded_at = db.Column(db.DateTime)
-    activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
+    act_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

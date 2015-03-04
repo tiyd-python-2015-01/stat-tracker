@@ -1,0 +1,38 @@
+<!doctype html>
+{% extends "layout.html" %}
+{% block body %}
+<center><h1>Your stats on {{activity.title}}</h1></center>
+<br>
+<div class = "row">
+<h3>Update Activity</h3>
+<br>
+<form  method="POST" action={{ url_for('activity.view_activity', id = activity.id) }}>
+  {{ form.hidden_tag() }}
+  <div>
+    {{ form.recorded_at.label }} {{ form.recorded_at(size=20) }}
+    {{ form.value.label }} {{ form.value(size=10) }}
+  </div>
+  <input class="button round" type="submit" value="Submit">
+</form>
+
+
+<h3>Statistical Data</h3>
+
+<table>
+
+  <th> Date </th>
+  <th> {{activity.description}} </th>
+
+  {% for stat in activity.statistics %}
+  <tr>
+    <td>{{ stat.recorded_at.date() }} </td>
+    <td> {{ stat.value }} </td>
+    <td><form action = {{url_for("activity.edit_activity", id=activity.id)}}>
+        <input class="button tiny" type=submit value="edit" input/>
+      </form> </td>
+  </tr>
+
+{% endfor %}
+</table>
+</div>
+{% endblock %}
