@@ -9,25 +9,7 @@ from ..forms import EnterpriseForm, StatForm
 from ..extensions import login_manager, db
 
 from functools import wraps
-
-
-# def returns_json(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         retval = f(*args, **kwargs)
-#         if type(retval) is Response:
-#             return retval
-#         elif type(retval) is tuple:
-#             response = jsonify(retval[0])
-#             if len(retval) > 1:
-#                 response.status_code = retval[1]
-#             if len(retval) > 2:
-#                 for key, value in retval[2].items():
-#                     response.headers[key] = value
-#             return response
-#         else:
-#             return jsonify(retval)
-#     return decorated_function
+from datetime import datetime
 
 api = Blueprint('api', __name__)
 
@@ -43,14 +25,15 @@ def unauthorized(request):
 
 @login_manager.request_loader
 def authorize_user(request):
-    api_key = request.headers.get('Authorization')
-    if api_key:
-        api_key = api_key.replace('Basic ', '', 1)
-        api_key = base64.b64decode(api_key).decode("utf-8")
-        email, password = api_key.split(":")
+    authorization = request.authorization
+    if authorization:
+        email = authorization['username']
+        password = authorization['password']
+
         user = User.query.filter_by(email=email).first()
         if user.check_password(password):
             return user
+
     return None
 
 
@@ -74,29 +57,24 @@ def user_activities():
         #                                 enterprise_id=enterprise["id"])
         return jsonify({"activities": enterprises})
 
-
 def add_activity():
-    """Creates a new enterprise from a JSON request."""
     require_authorization()
     body = request.get_data(as_text=True)
     data = json.loads(body)
     form = EnterpriseForm(data=data, formdata=None, csrf_enabled=False)
     if form.validate():
-        enterprise = Enterprise.query.filter_by(url=form.ent_name.data).first()
-        if enterprise:
-            return json_response(400, {"ent_value": "This activity has already been created."})
-        else:
-            enterprise = Enterprise(**form.data)
-            db.session.add(enterprise)
-            db.session.commit()
-            return (json.dumps(enterprise.to_dict()), 201, {"Location": url_for(".create_enterprise", id=enterprise.id)})
+        enterprise = Enterprise(**form.data)
+        enterprise.user_id = current_user.id
+        db.session.add(enterprise)
+        db.session.commit()
+        enterprise = enterprise.to_dict()
+        return (json.dumps(enterprise), 201)
     else:
         return json_response(400, form.errors)
 
-
 @api.route("/activities/<int:id>", methods=["GET"])
 def enterprise(id):
-    # require_authorization()
+    require_authorization()
     enterprise = Enterprise.query.get_or_404(id)
     stats = Stat.query.filter_by(enterprise_id=enterprise.id).all()
     enterprise = enterprise.to_dict()
@@ -104,13 +82,15 @@ def enterprise(id):
     return jsonify(enterprise), 201
 
 @api.route("/activities/<int:id>", methods=["POST"])
-def edit_enterprise(request, id):
+def edit_enterprise(id):
+    require_authorization()
     body = request.get_data(as_text=True)
     data = json.loads(body)
     enterprise = Enterprise.query.get_or_404(id)
     form = EnterpriseForm(data=data, formdata=None, csrf_enabled=False)
     if form.validate():
         enterprise.ent_name = form.ent_name.data
+        enterprise.ent_unit = form.ent_unit.data
         db.session.commit()
         return(json.dumps(enterprise.to_dict()), 201)
     else:
@@ -118,6 +98,7 @@ def edit_enterprise(request, id):
 
 @api.route("/activities/<int:id>", methods=["DELETE"])
 def delete_enterprise(id):
+    require_authorization()
     enterprise = Enterprise.query.get_or_404(id)
     stats = Stat.query.filter_by(enterprise_id=id)
     for stat in stats:
@@ -129,25 +110,25 @@ def delete_enterprise(id):
 
 
 
-@api.route("/api/v1/activities/<int:id>/data", methods=["POST",
+@api.route("/activities/<int:id>/data", methods=["POST",
                                                                  "PUT",
                                                                  "DELETE"])
 def modify_stat(id):
-    # require_authorization()
+    require_authorization()
     if request.method == "POST":
-        return add_stat(request, id)
+        return add_stat(id)
     elif request.method == "PUT":
-        return update_stat(request, id)
+        return update_stat(id)
     elif request.method == "DELETE":
-        return delete_stat(request, id)
+        return delete_stat(id)
 
 
-def add_stat(request, id):
+def add_stat(id):
     body = request.get_data(as_text=True)
     data = json.loads(body)
-    if "date" in data.keys():
+    if "recorded_at" in data.keys():
         try:
-            date = datetime.strptime(data["date"], "%Y-%m-%d")
+            date = datetime.strptime(data["recorded_at"], "%Y-%m-%d")
             stat = Stat.query.filter_by(enterprise_id=id).filter_by(
                 recorded_at=date).first()
             if stat:
@@ -159,7 +140,7 @@ def add_stat(request, id):
                             value=data["value"])
                 db.session.add(stat)
                 db.session.commit()
-            return json_response(201, stat.to_dict())
+            return json_response(201, "Stat added")
         except ValueError:
             return json_response(400, "Invalid date format.")
     else:
@@ -178,14 +159,14 @@ def add_stat(request, id):
             return json_response(201, stat.to_dict())
 
 
-def update_stat(request, id):
+def update_stat(id):
     body = request.get_data(as_text=True)
     data = json.loads(body)
-    if "date" not in data.keys():
+    if "recorded_at" not in data.keys():
         return json_response(400, "Date required.")
     else:
         try:
-            date = datetime.strptime(data["date"], "%Y-%m-%d")
+            date = datetime.strptime(data["recorded_at"], "%Y-%m-%d")
             stat = Stat.query.filter_by(enterprise_id=id).filter_by(
                 recorded_at=date).first()
             if not stat:
@@ -193,19 +174,19 @@ def update_stat(request, id):
             else:
                 stat.value = data["value"]
                 db.session.commit()
-                return json_response(201, stat.to_dict())
+                return json_response(201, "Stat Updated")
         except ValueError:
             return json_response(400, "Invalid date format.")
 
 
-def delete_stat(request, id):
+def delete_stat(id):
     body = request.get_data(as_text=True)
     data = json.loads(body)
-    if "date" not in data.keys():
+    if "recorded_at" not in data.keys():
         return json_response(400, "Date required.")
     else:
         try:
-            date = datetime.strptime(data["date"], "%Y-%m-%d")
+            date = datetime.strptime(data["recorded_at"], "%Y-%m-%d")
             stat = Stat.query.filter_by(enterprise_id=id).filter_by(
                 recorded_at=date).first()
             if not stat:

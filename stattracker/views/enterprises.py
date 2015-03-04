@@ -68,7 +68,7 @@ def edit_page(id):
 def edit_stats(id):
     stat = Stat.query.get(id)
     enterprise = Enterprise.query.get(stat.enterprise_id)
-    stat_list = Stat.query.filter_by(enterprise_id = ent_id).order_by(Stat.recorded_at).all()
+    stat_list = Stat.query.filter_by(enterprise_id = id).order_by(Stat.recorded_at).all()
     form = StatForm(obj=stat)
     if form.validate_on_submit():
         form.populate_obj(stat)
