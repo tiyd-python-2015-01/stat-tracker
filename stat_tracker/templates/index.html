@@ -18,14 +18,14 @@
         <div class="small-6 medium-6 large-6 columns">
             <table>
               <thead>
-                <tr>
+                <tr class="act{{ activity.id }}">
                   <th>Date</th>
                   <th>{{ activity.unit }}</th>
                 </tr>
             </thead>
         {% for stat in activity.stats[:20] %}
             <tbody>
-              <tr>
+              <tr class="stat{{ stat.id }}">
                 <td><a href='/stats/{{ stat.id }}/edit'>{{ stat.date.date() }}</a></td>
                 <td>{{ stat.value }}</td>
               </tr>
@@ -51,7 +51,6 @@
         var barHeight = (d - min + 1) / (max-min) * 100;
         return barHeight + 'px';
                 });
-
     </script>
   {% endfor %}
 

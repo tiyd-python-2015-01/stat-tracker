@@ -123,14 +123,15 @@ def edit_activity(id):
 @api.route('/activities/<int:id>/stats', methods=["PUT", "POST"])
 @returns_json
 def add_stat(id):
-    require_authorization()
-    body = request.get_data(as_text='true')
-    data = json.loads(body)
-    form = APIStatForm(data=data, formdata=None, csrf_enabled=False)
+    #require_authorization()
+    try:
+        body = request.get_data(as_text='true')
+        data = json.loads(body)
+        form = APIStatForm(data=data, formdata=None, csrf_enabled=False)
+    except ValueError:
+        form = APIStatForm()
     activity = Activity.query.get(id)
-    print(activity.name)
     if form.validate():
-        print("form validated")
         stat = Stat.query.filter_by(date=form.date.data).first()
         if stat:
             stat.value = form.value.data
