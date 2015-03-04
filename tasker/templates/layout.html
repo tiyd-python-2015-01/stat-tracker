@@ -7,8 +7,8 @@
     <title>Ana's Tasker - Task Management Tool</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-    <!--<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">-->
-    <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='modernizr.js') }}"></script>
+
   </head>
   <body>
     <div id="wrapper">
@@ -55,10 +55,11 @@
       {% block body %}
       {% endblock %}
 
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='fastclick.js') }}"></script>
 
-    <script src="{{ url_for('static', filename='js/vendor/fastclick.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
+    <script type="text/javascript"src="{{ url_for('static', filename='foundation.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>
     <script>
         $(document).foundation();
     </script>

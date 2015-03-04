@@ -1,19 +1,31 @@
 {% extends "layout.html" %}
 {% block body %}
+{% if current_user.is_authenticated() %}
  <div class="row">
   <div class=" small-12 columns">
     <strong> {{task.t_name}}:</strong> {{task.t_units}}
   </div>
  </div>
 
- <div class="row">
-  <div class ="small-12 columns">
-        <a class ="submitlink" href="{{ url_for("tasksb.add_daily_value", id=task.id) }}"> Add or Update Values</a>
-        <div>
-          <hr>
-        </div>
+ <form id="add_stat_form" method="POST">
+     {{ form.hidden_tag() }}
+     <div class="row">
+       <div class="large-12 columns">
+         Date {{ form.tr_date }}
+       </div>
+     </div>
+     <div class="row">
+       <div class="large-12 columns">
+         Value {{ form.tr_value }}
+       </div>
+     </div>
+     <div class="row">
+       <div class="large-12 columns">
+       <input class ="button tiny add-stat" data-task-id="{{ task.id }}" type="submit" value="Add or Update Data">
+     </div>
    </div>
- </div>
+ </form>
+
  <div class="row">
   <div class ="small-12 columns">
     <img src="{{ url_for("tasksb.stat_chart", id=task.id) }}" />
@@ -31,15 +43,22 @@
        <h4>Values</h4>
  {% for stat in stats %}
 
-  <div class="row">
-   <tr>
-    <td><strong> {{stat.tr_date}}:</strong></td>
+  <div class="stat_rows">
+   <tr class="stat_row">
+    <td <strong> {{stat.tr_date}}:</strong></td>
     <td>  {{stat.tr_value}}</td>
   </tr>
   </div>
  {% endfor %}
 </tbody>
    </table>
+   {% else %}
+   <div class="row">
+     <div class="large-12 columns">
+       Please Login
+     </div>
+   </div>
 
+   {% endif %}
 
 {% endblock %}

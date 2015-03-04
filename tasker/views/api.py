@@ -118,16 +118,17 @@ def api_task(id):
 
 def add_stat(id):
     user_id=require_authorization()
-    body = request.get_data(as_text=True)
-    data = json.loads(body)
-    form = TrackingForm(data=data, formdata=None, csrf_enabled=False)
-    if form.validate():
-        stat = Tracking(user_id, id, form.tr_date.data,form.tr_value.data)
-        db.session.add(stat)
-        db.session.commit()
-        return jsonify({"stat":stat.to_dict()})
-    else:
-        return json_response(400, form.errors)
+    try:
+	    body = request.get_data(as_text='true')
+	    data = json.loads(body)
+	    form = TrackingForm(data=data, formdata=None, csrf_enabled=False)
+    except ValueError:
+	    form = TrackingForm()
+
+    stat = Tracking(current_user.id, id, form.tr_date.data,form.tr_value.data)
+    db.session.add(stat)
+    db.session.commit()
+    return jsonify({"stat":stat.to_dict()})
 
 
 def delete_stat(id):

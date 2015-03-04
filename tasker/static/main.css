@@ -59,11 +59,3 @@ a.submitlink {
     .content{
       height: 450px;
     }
-
-    table {
-      @include grid-row();
-    }
-
-    td, th {
-      @include grid-column(12);
-    }

@@ -1,7 +1,8 @@
 $(document).on('ready', function () {
-        $("add_stat_form").submit(function() {
-        var myformdata = $(this).serializeArray()
-        var id = $(this).data("task-id") }
+      $(".add-stat" ).on ('click', function() {
+          var id = $(this).data("task-id") }
+        $("add_stat_form").submit(function()) {
+        var myformdata = $(this).serializeArray()}
         console.log(myformdata)
         $.ajax({
             type: "POST",

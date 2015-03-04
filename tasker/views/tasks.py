@@ -28,9 +28,25 @@ def index():
 @tasksb.route("/task/<int:id>")
 @login_required
 def show_task(id):
+    form = TrackingForm()
+    if form.validate_on_submit():
+        date_read = form.tr_date.data
+        value_read = form.tr_value.data
+        stat = Tracking.query.filter(and_(Tracking.tr_date==date_read,Tracking.tr_task_id==id)).first()
+        if stat:
+            stat.tr_value = value_read
+        else:
+            stat = Tracking(current_user.id, id, date_read, value_read)
+        db.session.add(stat)
+        db.session.commit()
     task = Task.query.get(id)
     stats = Tracking.query.filter_by(tr_task_id=id).order_by(Tracking.tr_date.desc())
-    return render_template("task_details.html",stats=stats, task=task)
+
+    return render_template("task_details.html", stats = stats, form=form, task=task)
+
+
+
+
 
 
 @tasksb.route("/task/new", methods=["GET", "POST"])
@@ -93,12 +109,13 @@ def add_daily_value(id):
         db.session.add(stat)
         db.session.commit()
         return redirect(url_for("tasksb.show_task",id=id))
-    return render_template("add_value.html", form=form, task_id=id)
+    else:
+        return render_template("task_details.html", form=form, task_id=id)
 
 
 @tasksb.route("/task/<int:id>_stats.png")
 def stat_chart(id):
-    stats = Tracking.query.filter_by(tr_task_id=id).all()
+    stats = Tracking.query.filter_by(tr_task_id=id).order_by(Tracking.tr_date).all()
     values = [stat.tr_value for stat in stats]
     dates = [stat.tr_date for stat in stats]
     date_labels = [d.strftime("%b %d") for d in dates]
