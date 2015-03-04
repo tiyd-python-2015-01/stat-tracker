@@ -28,7 +28,7 @@ class ActivityForm(Form):
 
 
 class UpdateForm(Form):
-    occurrences = IntegerField('Occurrences')
+    occurrences = IntegerField('Occurrences', validators=[Optional()])
     scale = SelectField('How would you rate this activity?', choices=[(1, 'Bad'), (2, 'Not great'),
                                                                       (3, 'Okay'), (4, "Good"), (5, "Awesome")],
                         coerce=int, validators=[Optional()])

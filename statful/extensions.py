@@ -16,6 +16,5 @@ bcrypt = Bcrypt()
 from flask.ext.login import LoginManager
 login_manager = LoginManager()
 
-# Change this to HerokuConfig if using Heroku.
-from flask.ext.appconfig import AppConfig
-config = AppConfig()
+from flask.ext.appconfig import HerokuConfig
+config = HerokuConfig()

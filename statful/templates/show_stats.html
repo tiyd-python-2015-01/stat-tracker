@@ -1,61 +1,39 @@
 {% extends 'layout.html' %}
 {% block body %}
-{% if activity.type == 'clicker' %}
-        <table>
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Occurrences</th>
-            </tr>
-            </thead>
-            <tbody>
-             {% for stat in activity.stat_id[:10] %}
-            <tr>
-                <td><a href="{{  url_for("edit_stat", id=stat.id) }}"> {{ stat.when }}</a></td>
-                <td>{{ stat.occurrences }}</td>
-            </tr>
+    <table class="stat-table">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Occurrences</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody id="stats">
+            {% for stat in stats[:10] %}
+                <tr id="stat-{{ stat.id }}">
+                {% if activity.type == 'clicker' %}
+                    <td> {{ stat.when }}</td>
+                    <td>{{ stat.occurrences }}</td>
+                    <td><a href="{{ url_for('stats.delete_stat', act_id=activity.id, stat_id=stat.id) }}">Delete</a></td>
+                {% elif activity.type == 'yes_no' %}
+                <td> {{ stat.when }}</td>
+                    <td>{{ stat.yes_no }}</td>
+                    <td><a href="{{ url_for('stats.delete_stat', act_id=activity.id, stat_id=stat.id) }}">Delete</a>
+                    </td>
+                {% elif activity.type == 'scale' %}
+                 <td> {{ stat.when }}</td>
+                    <td>{{ stat.scale }}</td>
+                    <td><a href="{{ url_for('stats.delete_stat', act_id=activity.id, stat_id=stat.id) }}">Delete</a>
+                    </td>
+                {% endif %}
+                </tr>
             {% endfor %}
-            </tbody>
-        </table>
-<iframe width="550" height="550" frameborder="0" seamless="seamless" scrolling="no" src="{{ chart_url }}"></iframe>
-
-{% elif activity.type == 'yes_no' %}
-    {% for stat in activity.stat_id %}
-        <table>
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Occurrences</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for stat in activity.stat_id[:10] %}
-            <tr>
-                <td><a href="{{  url_for("edit_stat", id=stat.id) }}"> {{ stat.when }}</a></td>
-                <td>{{ stat.yes_no }}</td>
-            </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endfor %}
-{% elif activity.type == 'scale' %}
-    {% for stat in activity.stat_id %}
-        <table>
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Occurrences</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for stat in activity.stat_id[:10] %}
-            <tr>
-                <td><a href="{{  url_for("edit_stat", id=stat.id) }}"> {{ stat.when }}</a></td>
-                <td>{{ stat.scale }}</td>
-            </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endfor %}
-{% endif %}
+        </tbody>
+    </table>
+    {% if activity.type == 'clicker' %}
+    <iframe width="550" height="550" frameborder="0" seamless="seamless" scrolling="no" src="{{ chart_url }}"></iframe>
+    {% elif activity.type == 'yes_no' %}
+    {% elif activity.type =='scale' %}
+    {% endif %}
+    {% include 'update.html' %}
 {% endblock %}

@@ -11,25 +11,6 @@ from datetime import datetime
 api = Blueprint('api', __name__)
 
 
-def returns_json(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        retval = f(*args, **kwargs)
-        if type(retval) is Response:
-            return retval
-        elif type(retval) is tuple:
-            response = jsonify(retval[0])
-            if len(retval) > 1:
-                response.status_code = retval[1]
-            if len(retval) > 2:
-                for key, value in retval[2].items():
-                    response.headers[key] = value
-            return response
-        else:
-            return jsonify(retval)
-    return decorated_function
-
-
 def json_response(code, data):
     return (json.dumps(data), code, {"Content-Type": 'application/json'})
 
@@ -119,7 +100,7 @@ def delete_activity(id):
     activity = Activity.query.filter(Activity.id == id).first()
     db.session.delete(activity)
     db.session.commit()
-    return  ("Yay")
+    return ("Yay")
 
 
 def change_activity(id):
@@ -140,10 +121,10 @@ def change_activity(id):
 
 @api.route('/activities/<int:id>/stats', methods=["POST", "PUT", "DELETE"])
 def stats(id):
-    require_authorization()
+    # require_authorization()
     activity = Activity.query.filter(Activity.id == id).first()
     if request.method == "POST" or request.method == "PUT":
-        return change_make_stat(activity)
+        return change_make_stat(request, activity)
 
     if request.method == "DELETE":
         return delete_stat(activity)
@@ -151,35 +132,40 @@ def stats(id):
     return
 
 
-def change_make_stat(activity):
-    body = request.get_data(as_text=True)
-    data = json.loads(body)
-    form = UpdateForm(data=data, formdata=None, csrf_enabled=False)
-    if form.validate():
-        stat = Stat.query.filter(Stat.when.strftime('%b %d %Y') == form.date.data.strftime('%b %d %Y')).first()
-        if stat:
-            stat.occurrences = form.occurrences.data
-            stat.scale = form.scale.data
-            stat.yes_no = form.yes_no.data
-            db.session.commit()
-            return (json.dumps(activity.to_dict()), 201, {"Location": url_for(".stat", id=stat.id)})
-        else:
-            stat.occurrences = form.occurrences.data
-            stat.scale = form.scale.data
-            stat.yes_no = form.yes_no.data
-            stat.when = form.date.data
-            stat.activity_id = activity.id
-            db.session.add(stat)
-            db.session.commit()
-            return (json.dumps(activity.to_dict()), 201, {"Location": url_for(".stat", id=stat.id)})
+def change_make_stat(request, activity):
+    try:
+        body = request.get_data(as_text='true')
+        data = json.loads(body)
+        form = UpdateForm(data=data, formdata=None, crsf_enabled=False)
+    except ValueError:
+        form = UpdateForm()
+    stat = Stat.query.filter(Stat.when == form.date.data).filter(Stat.activity_id == activity.id).first()
+    if stat:
+        stat.occurrences = form.occurrences.data
+        stat.scale = form.scale.data
+        stat.yes_no = form.yes_no.data
+        db.session.commit()
+        return json_response(200, "yay")
+    else:
+        stat = Stat(occurrences=form.occurrences.data,
+                    scale=form.scale.data,
+                    yes_no=form.yes_no.data,
+                    when=form.date.data,
+                    activity_id=activity.id
+                    )
+        db.session.add(stat)
+        db.session.commit()
+        return json_response(200, "yay")
     return json_response(400, form.errors)
 
 
-def delete_stat(form, activity):
+def delete_stat(activity):
     body = request.get_data(as_text=True)
     data = json.loads(body)
     form = UpdateForm(data=data, formdata=None, csrf_enabled=False)
-    stat = Stat.query.filter(Stat.activity_id==activity.id).filter(Stat.when.strftime('%b %d %Y') == form.date.data.strftime('%b %d %Y')).first()
-    db.session.delete(stat)
-    db.session.commit()
-    return ("Deleted")
+    stat = Stat.query.filter(Stat.when == form.date.data).filter(Stat.activity_id == activity.id).first()
+    if stat:
+        db.session.commit()
+        return ("Deleted")
+    else:
+        abort(401)

@@ -47,7 +47,7 @@ class Activity(db.Model):
 
     def stats_by_day(self):
         stat_date = func.cast(Stat.when, db.Date)
-        return db.session.query(stat_date, func.count(Stat.occurrences)). \
+        return db.session.query(stat_date, Stat.occurrences). \
             group_by(stat_date).filter_by(activity_id=self.id). \
             order_by(stat_date).all()
 

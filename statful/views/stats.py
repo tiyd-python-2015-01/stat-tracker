@@ -88,36 +88,45 @@ def update_activity(id):
                            update_url=url_for('stats.update_activity',
                                               id=activity.id))
 
+@stats.route('/activity/<int:act_id>/stat/delete/<int:stat_id>', methods=["GET"])
+@login_required
+def delete_stat(act_id, stat_id):
+    stat = Stat.query.filter_by(id=stat_id).first()
+    activity = Activity.query.filter_by(id=act_id).first()
+    db.session.delete(stat)
+    db.session.commit()
+    return redirect(url_for('stats.show_stats', id=activity.id))
+
 @stats.route("/activity/<int:id>/stats")
 @login_required
 def show_stats(id):
+    form = UpdateForm()
     activity = Activity.query.filter(Activity.id == id).first()
-    stat_data = activity.stats_by_day()
-    dates = [date[0] for date in stat_data]
-    occurrences = [occurrence[1] for occurrence in stat_data]
-    date_labels = [date.strftime("%b %d") for date in dates]
+    stat_data = Stat.query.filter(Stat.activity_id == activity.id).order_by(Stat.when.desc())
+    dates = [date.when.strftime("%b %d") for date in stat_data]
+    occurrences = [stat.occurrences for stat in stat_data]
     stat_chart = Scatter(
-        x=date_labels,
+        x=dates,
         y=occurrences)
     data = Data([stat_chart])
     chart_url = py.plot(data, auto_open=False)
-    return render_template('show_stats.html', activity=activity, chart_url=chart_url)
+    return render_template('show_stats.html', activity=activity, chart_url=chart_url, form=form, stats=stat_data)
 
-@stats.route("/activity/edit/stat/<int:id>")
+@stats.route("/activity/edit/stat/<int:id>", methods=['GET', "POST"])
 @login_required
 def edit_stat(id):
     stat = Stat.query.filter(Stat.id == id).first()
-    activity = Activity.filter(Activity.id == stat.activity_id).first()
+    activity = Activity.query.filter(Activity.id == stat.activity_id).first()
     form = UpdateForm(obj=stat)
     if form.validate_on_submit():
         form.populate_obj(stat)
         db.session.commit()
         flash("Your edits have been made.")
-        return redirect(url_for('show_stats', id=activity.id))
+        return redirect(url_for('stats.show_stats', id=activity.id))
     else:
         flash_errors(form)
 
-    return render_template('update_activity.html', activity=activity)
+    return render_template('update_activity.html', activity=activity, form=form)
 
 
 
