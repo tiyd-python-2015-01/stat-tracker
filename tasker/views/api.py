@@ -46,7 +46,7 @@ def require_authorization():
         return None
 
 
-@api.route("/activities", methods=["GET", "POST"])
+@api.route("/stats", methods=["GET", "POST"])
 def activities():
     if request.method == "POST":
         return create_task()
@@ -104,7 +104,7 @@ def delete_task(id):
         abort(404)
 
 
-@api.route("/activities/<int:id>", methods=["GET", "PUT", "DELETE"])
+@api.route("/stats/<int:id>", methods=["GET", "PUT", "DELETE"])
 def api_task(id):
     task = Task.query.get(id)
     if request.method == "PUT":
@@ -126,7 +126,10 @@ def add_stat(id):
         form = TrackingForm()
     date_read = form.tr_date.data
     value_read = form.tr_value.data
-    stat = Tracking(current_user.id, id, date_read, value_read)
+    stat = Tracking(user_id=current_user.id,
+                    task_id=id,
+                    date=date_read,
+                    value= value_read)
     db.session.add(stat)
     db.session.commit()
     return jsonify({"stat":stat.to_dict()})
@@ -162,7 +165,7 @@ def update_stat(id):
             abort(404)
 
 
-@api.route("/activities/<int:id>/stats", methods=["POST", "PUT", "DELETE"])
+@api.route("/stats/<int:id>/data", methods=["GET", "POST", "PUT", "DELETE"])
 def api_stat(id):
     if request.method == "PUT":
         return update_stat(id)
@@ -170,3 +173,7 @@ def api_stat(id):
         return delete_stat(id)
     elif request.method == "POST":
         return add_stat(id)
+    else:
+        stats = Tracking.query.filter_by(tr_task_id=id).order_by(Tracking.tr_date.desc())
+        pairs = [stat.to_dict() for stat in stats]
+        return jsonify({"values":pairs})

@@ -25,7 +25,7 @@ def index():
         return render_template("index.html",tasks=[])
 
 
-@tasksb.route("/task/<int:id>")
+@tasksb.route("/stats/<int:id>/data")
 @login_required
 def show_task(id):
     form = TrackingForm()
@@ -49,7 +49,7 @@ def show_task(id):
 
 
 
-@tasksb.route("/task/new", methods=["GET", "POST"])
+@tasksb.route("/stats", methods=["GET", "POST"])
 @login_required
 def add_task():
     form = TaskForm()
@@ -68,7 +68,7 @@ def add_task():
                             b_label="Add Task")
 
 
-@tasksb.route("/task/<int:id>/delete", methods=["GET", "POST"])
+@tasksb.route("/stats/<int:id>", methods=["DELETE"])
 @login_required
 def delete_task(id):
     task = Task.query.get(id)
@@ -78,7 +78,7 @@ def delete_task(id):
     return render_template("index.html",tasks=tasks)
 
 
-@tasksb.route('/task/<int:id>/edit', methods=["GET", "POST"])
+@tasksb.route('/stats/<int:id>', methods=["PUT"])
 @login_required
 def update_task(id):
     task = Task.query.get(id)
@@ -94,7 +94,7 @@ def update_task(id):
                             form=form, b_label="Update")
 
 
-@tasksb.route('/task/<int:id>/stats', methods=["GET", "POST", "PUT"])
+@tasksb.route('/stats/<int:id>/data', methods=["GET", "POST", "PUT"])
 @login_required
 def add_daily_value(id):
     form = TrackingForm()
@@ -113,7 +113,7 @@ def add_daily_value(id):
         return render_template("task_details.html", form=form, task_id=id)
 
 
-@tasksb.route("/task/<int:id>_stats.png")
+@tasksb.route("/stats/<int:id>_stats.png")
 def stat_chart(id):
     stats = Tracking.query.filter_by(tr_task_id=id).order_by(Tracking.tr_date).all()
     values = [stat.tr_value for stat in stats]

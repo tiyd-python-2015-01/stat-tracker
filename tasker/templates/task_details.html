@@ -8,7 +8,7 @@
  </div>
 
  <form id="add_stat_form" method="POST" data-task-id="{{ task.id }}">
-     {{ form.hidden_tag() }}
+
      <div class="row">
        <div class="large-12 columns">
          Date {{ form.tr_date }}
@@ -21,7 +21,7 @@
      </div>
      <div class="row">
        <div class="large-12 columns">
-       <input class ="button tiny add-stat" data-task-id="{{ task.id }}" type="submit" value="Add or Update Data">
+       <input class ="button tiny" type="submit" value="Add or Update Data">
      </div>
    </div>
  </form>
