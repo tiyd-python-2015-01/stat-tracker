@@ -61,7 +61,21 @@ def view_stats(ent_id):
 def edit_page(id):
     enterprise = Enterprise.query.get(id)
     stat_list = Stat.query.filter_by(enterprise_id = id).order_by(Stat.recorded_at).all()
-    return render_template("edit_stats.html", enterprise=enterprise, stat_list=reversed(stat_list))
+    form = StatForm()
+    if form.validate_on_submit():
+        stat = Stat(value=form.value.data,
+                    recorded_at=form.recorded_at.data,
+                    enterprise_id=enterprise.id)
+        db.session.add(stat)
+        db.session.commit()
+        return redirect(url_for("enterprises.edit_stats", id=enterprise.id), stat_list=reversed(stat_list))
+    flash_errors(form)
+    return render_template("edit_stats.html",
+                           form=form,
+                           enterprise=enterprise,
+                           stat_list=reversed(stat_list),
+                           post_url= url_for('enterprises.add_stats', id=enterprise.id))
+
 
 @enterprises.route("/editstat/<int:id>", methods=["GET", "POST"])
 @login_required

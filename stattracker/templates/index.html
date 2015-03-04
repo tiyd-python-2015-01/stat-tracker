@@ -43,16 +43,14 @@
   <h3>{{ enterprise.ent_name }}</h3>
 </div>
 
-
 <div>
-  <a href = "{{ url_for('enterprises.add_stats', id=enterprise.id) }}"><button type="button"> Add Data </button></a>
+  <a href = "{{ url_for('enterprises.edit_page', id=enterprise.id) }}"><button type="button"> Add/Edit Data </button></a>
 </div>
+
 <div>
   <a href = "{{ url_for('enterprises.view_stats', ent_id=enterprise.id) }}"><button type="button"> View Data </button></a>
 </div>
-<div>
-  <a href = "{{ url_for('enterprises.edit_page', id=enterprise.id) }}"><button type="button"> Edit Data </button></a>
-</div>
+
 
 <div>
   <br>

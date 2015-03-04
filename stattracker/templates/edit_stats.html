@@ -10,6 +10,23 @@
   <h2>{{ enterprise.ent_name }}</h2>
 </div>
 
+<form method="POST" action="{{ post_url }}">
+  {{ form.hidden_tag() }}
+  <div>
+    {{ form.value(size=20) }} {{ enterprise.ent_unit }}
+  </div>
+  <div>
+    {{ form.recorded_at(size=20) }}
+  </div>
+
+  <br>
+
+  <div>
+    <input type="submit" value="Create">
+  </div>
+</form>
+
+
 <br>
 
 <table>
