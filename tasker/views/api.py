@@ -136,7 +136,7 @@ def add_stat(id):
 
 
 def delete_stat(id):
-    user_id=require_authorization()
+    #user_id=require_authorization()
     body = request.get_data(as_text=True)
     data = json.loads(body)
     form = DeleteTrackingForm(data=data, formdata=None, csrf_enabled=False)
@@ -150,7 +150,7 @@ def delete_stat(id):
 
 
 def update_stat(id):
-        user_id=require_authorization()
+        #user_id=require_authorization()
         body = request.get_data(as_text=True)
         data = json.loads(body)
         form = TrackingForm(data=data, formdata=None, csrf_enabled=False)
