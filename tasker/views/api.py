@@ -1,8 +1,8 @@
 import base64
 import json
 
-from flask import Blueprint, jsonify, request, abort, url_for
-from flask.ext.login import login_user
+from flask import Blueprint, jsonify, request, abort, url_for, g
+from flask.ext.login import login_user, current_user
 
 from ..models import User, Task, Tracking
 from ..forms import TaskForm, TrackingForm, DeleteTrackingForm
@@ -117,15 +117,16 @@ def api_task(id):
 
 
 def add_stat(id):
-    user_id=require_authorization()
+    #user_id=require_authorization()
     try:
 	    body = request.get_data(as_text='true')
 	    data = json.loads(body)
 	    form = TrackingForm(data=data, formdata=None, csrf_enabled=False)
     except ValueError:
-	    form = TrackingForm()
-
-    stat = Tracking(current_user.id, id, form.tr_date.data,form.tr_value.data)
+        form = TrackingForm()
+    date_read = form.tr_date.data
+    value_read = form.tr_value.data
+    stat = Tracking(current_user.id, id, date_read, value_read)
     db.session.add(stat)
     db.session.commit()
     return jsonify({"stat":stat.to_dict()})
