@@ -2,7 +2,7 @@ import base64
 import json
 
 from flask import Blueprint, jsonify, abort, request, url_for, g
-from flask.ext.login import login_user
+from flask.ext.login import login_user, current_user
 from flask.ext.httpauth import HTTPBasicAuth
 
 from ..models import Activity, Instance, User
@@ -44,7 +44,7 @@ def require_authorization():
         abort(401)
 
 
-@api.route('/api/v1.0/view_activities', methods = ['GET'])
+@api.route('/api/v1.0/activities', methods = ['GET'])
 def get_activities():
     require_authorization()
 
@@ -55,7 +55,7 @@ def get_activities():
     return jsonify({"activities": activities})
 
 
-@api.route('/api/v1.0/create_activity', methods = ['POST'])
+@api.route('/api/v1.0/activities', methods = ['POST'])
 def create_activity():
      require_authorization()
 
@@ -75,7 +75,7 @@ def create_activity():
 
      return (jsonify({ 'activity': activity }), 201)
 
-@api.route('/api/v1.0/edit_activity/<int:id>', methods = ['PUT'])
+@api.route('/api/v1.0/activities/<int:id>', methods = ['PUT'])
 def edit_activity(id):
      require_authorization()
      activity = Activity.query.filter_by(id = id).first()
@@ -99,7 +99,7 @@ def edit_activity(id):
 
 
 
-@api.route('/api/v1.0/delete_activity/<int:id>', methods = ['DELETE'])
+@api.route('/api/v1.0/activities/<int:id>', methods = ['DELETE'])
 def delete_activity(id):
      require_authorization()
      activity = Activity.query.filter_by(id = id).first()
@@ -116,7 +116,7 @@ def delete_activity(id):
      return "unauthorized"
 
 
-@api.route('/api/v1.0/view_activity/<int:id>', methods = ['GET'])
+@api.route('/api/v1.0/activities/<int:id>', methods = ['GET'])
 def view_activity(id):
     require_authorization()
 
@@ -126,28 +126,30 @@ def view_activity(id):
     return jsonify({"Instances": instances})
 
 
-@api.route('/api/v1.0/add_instance/<int:id>', methods = ['POST'])
+@api.route('/api/v1.0/activities/<int:id>', methods = ['POST'])
 def add_instance(id):
+    try:
+         body = request.get_data(as_text='true')
+         data = json.loads(body)
+         form = APIStatForm(data=data, formdata=None, csrf_enabled=False)
+    except ValueError:
+         form = APIStatForm()
 
-    require_authorization()
+    activity = Activity.query.get(id)
+    if form.validate():
+        instance = Instance.query.filter_by(date =date.today())
+        if instance == None:
+            instance = Instance(user_id = current_user.id,
+                                activity_id = activity.id,
+                                date = date.today(),
+                                freq = form.freq.value)
+            db.session.add(instance)
+            db.sesison.commit()
+        else:
+            instance.freq = form.freq.data
+            db.session.commit()
 
-    freq = request.json.get("freq")
 
-    new_instance = Instance(user_id = g.user.id,
-                            activity_id = id,
-                            date = dt.datetime.today().date(),
-                            freq = freq)
-
-    replace = Instance.query.filter_by(activity_id = id, date = new_instance.date).first()
-
-    if replace == None:
-        db.session.add(new_instance)
-        db.session.commit()
-    else:
-        replace.freq = freq
-
-    new_instance.make_dict()
-    return jsonify({"ADDED": new_instance})
 
 
 @api.route('/api/v1.0/delete_instance/<int:id>', methods = ['DELETE'])

@@ -6,19 +6,18 @@
 <h3>{{activity.title}}</h3>
 <h2>Update Activity</h2>
 <br></br>
-<form  method="POST" action={{ url_for('stats.view_activity', id = activity.id) }}>
+<form  method="POST" class = "submit_instance">
   {{ form.hidden_tag() }}
   <div>
-    {{form.date.label }} {{ form.date(size=20) }}
     {{ form.freq.label }} {{ form.freq(size=10) }}
   </div>
-  <input class="submit_link" type="submit" value="add!">
+  <input class="add_instance" type="submit" value="add!">
 </form>
 
 
 <h3>data</h3>
 
-<table>
+<table class = "stats">
 {% for instance in instances %}
 
   <th> Date </th>

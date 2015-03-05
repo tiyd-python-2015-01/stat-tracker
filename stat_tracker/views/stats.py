@@ -7,7 +7,7 @@ from ..models import User, Activity, Instance
 from datetime import datetime
 import plotly.plotly as py
 from plotly.graph_objs import *
-
+from datetime import *
 
 py.sign_in("dknewell1", "x0oz9ikryp")
 
@@ -64,12 +64,19 @@ def view_activity(id):
     form = InstanceForm()
 
     if form.validate_on_submit():
-        instance = Instance(user = current_user,
+        new_instance = Instance(user = current_user,
                             activity_id = id,
-                            date = form.date.data,
+                            date = date.today(),
                             freq = form.freq.data)
-        db.session.add(instance)
-        db.session.commit()
+
+        replace = Instance.query.filter_by(activity_id = id, date = new_instance.date).first()
+
+        if replace == None:
+            db.session.add(new_instance)
+            db.session.commit()
+        else:
+            replace.freq = form.freq.data
+            db.session.commit()
         flash("Instance Added!")
         return redirect(url_for("stats.view_activity", id = id))
 
@@ -83,7 +90,7 @@ def view_activity(id):
     date_labels = [d.strftime("%b %d") for d in dates]
 
 
-    click_chart = Bar(x= dates, y= freqs)
+    click_chart = Scatter(x= dates, y= freqs)
     data = Data([click_chart])
     chart_url = py.plot(data, auto_open=False)
 

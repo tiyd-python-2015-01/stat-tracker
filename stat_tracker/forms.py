@@ -26,5 +26,4 @@ class ActivityForm(Form):
     unit = StringField('Unit', validators=[DataRequired()])
 
 class InstanceForm(Form):
-    date = DateField('date', validators=[DataRequired()])
     freq = IntegerField('frequency', validators=[DataRequired()])
