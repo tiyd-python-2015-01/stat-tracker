@@ -1,5 +1,12 @@
-# See more documentation in /docs/libraries.md
+Django>1.4,<1.7
+South==0.8.4
+dj-database-url==0.3.0
+django-braces==1.4.0
+django-oauth-toolkit==0.7.2
+oauthlib==0.6.3
+psycopg2==2.5.3
+requests==2.3.0
+six==1.7.3
 
-# This file is here because many Platforms as a Service look for
-# requirements.txt in the root directory of a project.
--r requirements/prod.txt
+# Gunicorn 19.0.0 has a critical bug. Waiting for 19.1.0 release
+git+git://github.com/benoitc/gunicorn.git@26df0651bcf1655ef63ac3b968344d737d3a7bfc#egg=gunicorn
