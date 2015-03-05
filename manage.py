@@ -62,7 +62,7 @@ def seed_activities():
 
 @manager.command
 def seed_stats():
-    for activities_id in range(2, 5):
+    for activities_id in range(1, 4):
         for day in range(30):
             activity_date = datetime.today() - timedelta(days=day)
             clicker_stat = Stat(occurrences=random.randint(1, 10),
