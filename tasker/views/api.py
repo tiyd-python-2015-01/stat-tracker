@@ -46,23 +46,17 @@ def require_authorization():
         return None
 
 
-@api.route("/stats", methods=["GET", "POST"])
-def activities():
-    if request.method == "POST":
-        return create_task()
-    tasks = Task.query.all()
-    tasks = [task.to_dict() for task in tasks]
-#    for task in tasks:
-#        task['url'] =  str(request.url_root)+url_for('.task', id=task['id'])
+@api.route("/stats", methods=["GET"])
+def get_activities():
+    tasks = [task.to_dict() for task in Task.query.all()]
     return jsonify({"activities": tasks})
 
 
-def create_task():
-    """Creates a new task from a JSON request."""
-    user_id=require_authorization()
-    body = request.get_data(as_text=True)
-    data = json.loads(body)
-    form = TaskForm(data=data, formdata=None, csrf_enabled=False)
+@api.route("/stats", methods=["POST"])
+def post_activities():
+    #user_id=require_authorization()
+    stats_data = request.get_json()
+    form = TaskForm(data=stats_data)
     if form.validate():
         task = Task(form.t_name.data,
                     form.t_units.data,
@@ -70,12 +64,23 @@ def create_task():
                     user_id)
         db.session.add(task)
         db.session.commit()
-        return (json.dumps(task.to_dict()), 201, {"Location": url_for(".task", id=task.id)})
+        return jsonify(task.to_dict())
     else:
-        return json_response(400, form.errors)
+        resp = jsonify(form.errors)
+        resp.status_code = 400
+        return resp
 
 
-def update_task(id):
+@api.route("/stats/<int:id>", methods=["GET"])
+def api_task_get(id):
+    task = Task.query.get(id)
+    stats = Tracking.query.filter_by(tr_task_id=id).order_by(Tracking.tr_date.desc())
+    pairs = [stat.to_dict() for stat in stats]
+    return jsonify({"activity": task.to_dict(),"values":pairs})
+
+
+@api.route("/stats/<int:id>", methods=["PUT"])
+def api_task_edit(id):
     user_id=require_authorization()
     body = request.get_data(as_text=True)
     data = json.loads(body)
@@ -93,7 +98,8 @@ def update_task(id):
         return json_response(400, form.errors)
 
 
-def delete_task(id):
+@api.route("/stats/<int:id>", methods=["DELETE"])
+def api_task_del(id):
     user_id=require_authorization()
     task = Task.query.get(id)
     if task:
@@ -104,20 +110,16 @@ def delete_task(id):
         abort(404)
 
 
-@api.route("/stats/<int:id>", methods=["GET", "PUT", "DELETE"])
-def api_task(id):
-    task = Task.query.get(id)
-    if request.method == "PUT":
-        return update_task(id)
-    elif request.method == "DELETE":
-        return delete_task(id)
+@api.route("/stats/<int:id>/data", methods=["GET"])
+def api_stat_get(id):
     stats = Tracking.query.filter_by(tr_task_id=id).order_by(Tracking.tr_date.desc())
     pairs = [stat.to_dict() for stat in stats]
-    return jsonify({"activity": task.to_dict(),"values":pairs})
+    return jsonify({"values":pairs})
 
 
-def add_stat(id):
-    #user_id=require_authorization()
+@api.route("/stats/<int:id>/data", methods=["POST"])
+def api_stat_add(id):
+#user_id=require_authorization()
     try:
 	    body = request.get_data(as_text='true')
 	    data = json.loads(body)
@@ -135,21 +137,8 @@ def add_stat(id):
     return jsonify({"stat":stat.to_dict()})
 
 
-def delete_stat(id):
-    #user_id=require_authorization()
-    body = request.get_data(as_text=True)
-    data = json.loads(body)
-    form = DeleteTrackingForm(data=data, formdata=None, csrf_enabled=False)
-    stat = Tracking.query.filter(and_(Tracking.tr_task_id==id, Tracking.tr_date==form.tr_date.data)).first()
-    if stat:
-        db.session.delete(stat)
-        db.session.commit()
-        return jsonify({'result': True})
-    else:
-        abort(404)
-
-
-def update_stat(id):
+@api.route("/stats/<int:id>/data", methods=["PUT"])
+def api_stat_edit(id):
         #user_id=require_authorization()
         body = request.get_data(as_text=True)
         data = json.loads(body)
@@ -166,14 +155,15 @@ def update_stat(id):
 
 
 @api.route("/stats/<int:id>/data", methods=["GET", "POST", "PUT", "DELETE"])
-def api_stat(id):
-    if request.method == "PUT":
-        return update_stat(id)
-    elif request.method == "DELETE":
-        return delete_stat(id)
-    elif request.method == "POST":
-        return add_stat(id)
+def api_stat_del(id):
+    #user_id=require_authorization()
+    body = request.get_data(as_text=True)
+    data = json.loads(body)
+    form = DeleteTrackingForm(data=data, formdata=None, csrf_enabled=False)
+    stat = Tracking.query.filter(and_(Tracking.tr_task_id==id, Tracking.tr_date==form.tr_date.data)).first()
+    if stat:
+        db.session.delete(stat)
+        db.session.commit()
+        return jsonify({'result': True})
     else:
-        stats = Tracking.query.filter_by(tr_task_id=id).order_by(Tracking.tr_date.desc())
-        pairs = [stat.to_dict() for stat in stats]
-        return jsonify({"values":pairs})
+        abort(404)

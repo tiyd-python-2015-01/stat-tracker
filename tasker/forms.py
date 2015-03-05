@@ -3,6 +3,11 @@ from wtforms import StringField, PasswordField, SelectField
 from wtforms.fields.html5 import EmailField, URLField, IntegerField, DateField
 from wtforms.validators import DataRequired, Email, EqualTo
 
+class APIForm(Form):
+    def __init__(self, *args, **kwargs):
+        default_kwargs = {"formdata": None, "csrf_enabled": False}
+        default_kwargs.update(kwargs)
+        super().__init__(*args, **default_kwargs)
 
 class LoginForm(Form):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -20,14 +25,14 @@ class RegistrationForm(Form):
     password_verification = PasswordField('Repeat password')
 
 
-class TaskForm(Form):
+class TaskForm(APIForm):
     t_name = StringField('Task Name', validators=[DataRequired()])
     t_type = IntegerField('Task Type', validators=[DataRequired()])
     t_units = StringField('Units', validators=[DataRequired()])
 
-class TrackingForm(Form):
+class TrackingForm(APIForm):
     tr_date = DateField('Date', validators =[DataRequired()])
     tr_value = IntegerField("Today's Value", validators=[DataRequired()])
 
-class DeleteTrackingForm(Form):
+class DeleteTrackingForm(APIForm):
     tr_date = DateField('Date', validators =[DataRequired()])

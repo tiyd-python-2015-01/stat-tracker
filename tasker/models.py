@@ -51,7 +51,7 @@ class Task(db.Model):
                 'type': self.t_type,
                 'user': self.t_user,
                 'units': self.t_units,
-                'url': str(request.url_root)+url_for('api.api_task', id=self.id)[1:] }
+                'url': str(request.url_root)+url_for('api.api_task_get', id=self.id)[1:] }
 
 class Tracking(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

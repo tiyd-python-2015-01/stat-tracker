@@ -25,31 +25,7 @@ def index():
         return render_template("index.html",tasks=[])
 
 
-@tasksb.route("/stats/<int:id>/data")
-@login_required
-def show_task(id):
-    form = TrackingForm()
-    if form.validate_on_submit():
-        date_read = form.tr_date.data
-        value_read = form.tr_value.data
-        stat = Tracking.query.filter(and_(Tracking.tr_date==date_read,Tracking.tr_task_id==id)).first()
-        if stat:
-            stat.tr_value = value_read
-        else:
-            stat = Tracking(current_user.id, id, date_read, value_read)
-        db.session.add(stat)
-        db.session.commit()
-    task = Task.query.get(id)
-    stats = Tracking.query.filter_by(tr_task_id=id).order_by(Tracking.tr_date.desc())
-
-    return render_template("task_details.html", stats = stats, form=form, task=task)
-
-
-
-
-
-
-@tasksb.route("/stats", methods=["GET", "POST"])
+@tasksb.route("/stats", methods=["POST"])
 @login_required
 def add_task():
     form = TaskForm()
@@ -67,6 +43,12 @@ def add_task():
                             post_url=url_for("tasksb.add_task"),
                             b_label="Add Task")
 
+
+@tasksb.route("/stats/<int:id>", methods=["GET"])
+@login_required
+def show_one_task(id):
+    tasks = Task.query.filter_by(t_user=current_user.id).order_by(Task.id.desc())
+    return render_template("index.html",tasks=tasks)
 
 @tasksb.route("/stats/<int:id>", methods=["DELETE"])
 @login_required
@@ -94,7 +76,29 @@ def update_task(id):
                             form=form, b_label="Update")
 
 
-@tasksb.route('/stats/<int:id>/data', methods=["GET", "POST", "PUT"])
+
+@tasksb.route("/stats/<int:id>/data", methods=["GET"])
+@login_required
+def show_task(id):
+    form = TrackingForm()
+    if form.validate_on_submit():
+        date_read = form.tr_date.data
+        value_read = form.tr_value.data
+        stat = Tracking.query.filter(and_(Tracking.tr_date==date_read,Tracking.tr_task_id==id)).first()
+        if stat:
+            stat.tr_value = value_read
+        else:
+            stat = Tracking(current_user.id, id, date_read, value_read)
+        db.session.add(stat)
+        db.session.commit()
+    task = Task.query.get(id)
+    stats = Tracking.query.filter_by(tr_task_id=id).order_by(Tracking.tr_date.desc())
+
+    return render_template("task_details.html", stats = stats, form=form, task=task)
+
+
+
+@tasksb.route('/stats/<int:id>/data', methods=["POST", "PUT"])
 @login_required
 def add_daily_value(id):
     form = TrackingForm()
