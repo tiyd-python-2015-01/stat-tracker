@@ -51,20 +51,19 @@ def users():
     return jsonify({"users": users})
 
 
-@api.route("/users", methods=["POST"])
-def add_user():
-    body = request.get_data(as_text=True)
-    data = json.loads(body)
-    form = RegistrationForm(data=data, formdata=None, csrf_enabled=False)
-    return json.dumps(form.data)
-    # if form.validate():
-    #     user = User(**form.data)
-    #     db.session.add(user)
-    #     db.session.commit()
-    #     user = user.to_dict()
-    #     return(json.dumps(user), 201)
-    # else:
-    #     return json_response(400, form.errors)
+# @api.route("/users", methods=["POST"])
+# def add_user():
+#     body = request.get_data(as_text=True)
+#     data = json.loads(body)
+#     form = RegistrationForm(data=data, formdata=None, csrf_enabled=False)
+#     if form.validate():
+#         user = User(**form.data)
+#         db.session.add(user)
+#         db.session.commit()
+#         user = user.to_dict()
+#         return(json.dumps(user), 201)
+#     else:
+#         return json_response(400, form.errors)
 
 
 @api.route("/activities", methods=["GET", "POST"])

@@ -16,7 +16,7 @@ from .views.api import api
 
 
 SQLALCHEMY_DATABASE_URI = "postgres://localhost/stattracker"
-DEBUG = True
+DEBUG = False
 SECRET_KEY = 'development-key'
 
 

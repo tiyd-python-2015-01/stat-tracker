@@ -6,6 +6,7 @@ MarkupSafe==0.23
 Werkzeug==0.10.1
 Jinja2==2.7.3
 itsdangerous==0.24
+Flask-Login==0.2.11
 
 # Database
 Flask-SQLAlchemy==2.0
