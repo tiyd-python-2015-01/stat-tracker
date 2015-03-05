@@ -63,22 +63,22 @@ def view_activity(id):
     instances = Instance.query.filter_by(activity_id = id).all()
     form = InstanceForm()
 
-    if form.validate_on_submit():
-        new_instance = Instance(user = current_user,
-                            activity_id = id,
-                            date = date.today(),
-                            freq = form.freq.data)
-
-        replace = Instance.query.filter_by(activity_id = id, date = new_instance.date).first()
-
-        if replace == None:
-            db.session.add(new_instance)
-            db.session.commit()
-        else:
-            replace.freq = form.freq.data
-            db.session.commit()
-        flash("Instance Added!")
-        return redirect(url_for("stats.view_activity", id = id))
+    # if form.validate_on_submit():
+    #     new_instance = Instance(user = current_user,
+    #                         activity_id = id,
+    #                         date = date.today(),
+    #                         freq = form.freq.data)
+    #
+    #     replace = Instance.query.filter_by(activity_id = id, date = new_instance.date).first()
+    #
+    #     if replace == None:
+    #         db.session.add(new_instance)
+    #         db.session.commit()
+    #     else:
+    #         replace.freq = form.freq.data
+    #         db.session.commit()
+    #     flash("Instance Added!")
+    #     return redirect(url_for("stats.view_activity", id = id))
 
     instance_list= []
 

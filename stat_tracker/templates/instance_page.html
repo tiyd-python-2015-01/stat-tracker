@@ -6,12 +6,11 @@
 <h3>{{activity.title}}</h3>
 <h2>Update Activity</h2>
 <br></br>
-<form  method="POST" class = "submit_instance">
-  {{ form.hidden_tag() }}
+<form  method="POST" class = "submit_instance" data-activity-id="{{ activity.id }}">
   <div>
     {{ form.freq.label }} {{ form.freq(size=10) }}
   </div>
-  <input class="add_instance" type="submit" value="add!">
+  <input class="add_instance" type="submit" value="add!" data-activity-id="{{ activity.id }}">
 </form>
 
 

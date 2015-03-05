@@ -9,7 +9,7 @@ from ..models import Activity, Instance, User
 from .. forms import ActivityForm, InstanceForm
 from ..extensions import login_manager, db
 
-import datetime as dt
+from datetime import *
 
 api = Blueprint("api", __name__)
 
@@ -126,29 +126,31 @@ def view_activity(id):
     return jsonify({"Instances": instances})
 
 
-@api.route('/api/v1.0/activities/<int:id>', methods = ['POST'])
+@api.route('/api/v1.0/activities/<int:id>/instance', methods = ['POST'])
 def add_instance(id):
+    print("step1")
     try:
          body = request.get_data(as_text='true')
          data = json.loads(body)
-         form = APIStatForm(data=data, formdata=None, csrf_enabled=False)
+         form = InstanceForm(data=data, formdata=None, csrf_enabled=False)
     except ValueError:
-         form = APIStatForm()
+         form = InstanceForm()
 
     activity = Activity.query.get(id)
     if form.validate():
+        print("hello")
         instance = Instance.query.filter_by(date =date.today())
         if instance == None:
-            instance = Instance(user_id = current_user.id,
+            instance = Instance(user_id = current_user,
                                 activity_id = activity.id,
                                 date = date.today(),
-                                freq = form.freq.value)
+                                freq = form.freq.data)
             db.session.add(instance)
-            db.sesison.commit()
+            db.session.commit()
         else:
             instance.freq = form.freq.data
             db.session.commit()
-
+    return {"hello"}, 201
 
 
 
