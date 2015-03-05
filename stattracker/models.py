@@ -29,6 +29,11 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return bcrypt.check_password_hash(self.encrypted_password, password)
 
+    def to_dict(self):
+        return {"id": self.id,
+                "name": self.name,
+                "email": self.email}
+
     def __repr__(self):
         return "<User {}>".format(self.email)
 

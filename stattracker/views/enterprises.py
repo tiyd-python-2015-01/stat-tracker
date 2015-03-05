@@ -42,7 +42,7 @@ def add_stats(id):
                     enterprise_id=enterprise.id)
         db.session.add(stat)
         db.session.commit()
-        return redirect(url_for("enterprises.view_stats", ent_id=enterprise.id))
+        return redirect(url_for("enterprises.edit_stats", ent_id=enterprise.id))
     flash_errors(form)
     return render_template("add_stats.html",
                            form=form,
@@ -68,13 +68,15 @@ def edit_page(id):
                     enterprise_id=enterprise.id)
         db.session.add(stat)
         db.session.commit()
-        return redirect(url_for("enterprises.edit_stats", id=enterprise.id), stat_list=reversed(stat_list))
+        flash("The stat has been updated.")
+        return redirect(url_for("enterprises.edit_page", id=enterprise.id))
+        # return redirect(url_for("enterprises.edit_stats", id=enterprise.id), stat_list=reversed(stat_list))
     flash_errors(form)
     return render_template("edit_stats.html",
                            form=form,
                            enterprise=enterprise,
                            stat_list=reversed(stat_list),
-                           post_url= url_for('enterprises.add_stats', id=enterprise.id))
+                           post_url= url_for('enterprises.edit_page', id=enterprise.id))
 
 
 @enterprises.route("/editstat/<int:id>", methods=["GET", "POST"])
@@ -90,7 +92,6 @@ def edit_stats(id):
         db.session.commit()
         flash("The stat has been updated.")
         return redirect(url_for("enterprises.edit_page", id=enterprise.id))
-
     return render_template("add_stats.html",
                            form=form,
                            enterprise=enterprise,
@@ -112,10 +113,21 @@ def enterprise_chart(id):
     values = [stat.value for stat in enterprise.stats]
 
     fig = BytesIO()
-    plt.bar(dates, values)
+    plt.bar(dates, values, align='center')
     plt.ylabel(enterprise.ent_unit)
-    # xlabels = ['Ticklabel %i' % i for i in range(n)]
-
+    def xlabels(dates):
+        if len(dates) < 15:
+            xlabels = [str(date.month) + "/" + str(date.day) for date in dates]
+            return xlabels
+        else:
+            xlabels = []
+            for date in dates:
+                if date.day == 1 or date.day == 15:
+                    xlabels.append(str(date.month) + "/" + str(date.day) + "/" + str(date.year))
+                else:
+                    xlabels.append("")
+            return xlabels
+    plt.xticks(dates, xlabels(dates))
     plt.savefig(fig)
     plt.clf()
     fig.seek(0)

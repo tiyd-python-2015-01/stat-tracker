@@ -1,8 +1,12 @@
 {% extends "layout.html" %}
 
 {% block body %}
-
+<div>
 <a href ="{{ url_for('users.index') }}"><button type="button">Return to Index</button></a>
+</div>
+<div>
+  <a href ="{{ url_for('enterprises.edit_page', id=enterprise.id) }}"><button type="button">Add/Edit Data</button></a>
+</div>
 
 <br>
 <br>
@@ -12,6 +16,9 @@
 </div>
 
 <br>
+<div>
+  <img src="{{ url_for('enterprises.enterprise_chart', id=enterprise.id) }}">
+</div>
 
 <table>
   <thead>
@@ -29,7 +36,7 @@
   {% endfor %}
 </table>
 
-  <img src="{{ url_for('enterprises.enterprise_chart', id=enterprise.id) }}">
+
 <div>
   <br>
   <br>

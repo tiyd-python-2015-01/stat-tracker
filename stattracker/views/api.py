@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, request, abort, url_for, Response, g
 from flask.ext.login import login_user, current_user
 
 from ..models import Enterprise, User, Stat
-from ..forms import EnterpriseForm, StatForm
+from ..forms import EnterpriseForm, StatForm, RegistrationForm
 from ..extensions import login_manager, db
 
 from functools import wraps
@@ -43,6 +43,28 @@ def require_authorization():
         login_user(user)
     else:
         abort(401)
+
+@api.route("/users", methods=["GET"])
+def users():
+    users = User.query.all()
+    users = [user.to_dict() for user in users]
+    return jsonify({"users": users})
+
+
+@api.route("/users", methods=["POST"])
+def add_user():
+    body = request.get_data(as_text=True)
+    data = json.loads(body)
+    form = RegistrationForm(data=data, formdata=None, csrf_enabled=False)
+    return json.dumps(form.data)
+    # if form.validate():
+    #     user = User(**form.data)
+    #     db.session.add(user)
+    #     db.session.commit()
+    #     user = user.to_dict()
+    #     return(json.dumps(user), 201)
+    # else:
+    #     return json_response(400, form.errors)
 
 
 @api.route("/activities", methods=["GET", "POST"])
