@@ -20,9 +20,17 @@ tasksb = Blueprint("tasksb",__name__)
 def index():
     if current_user.is_authenticated():
         tasks = Task.query.filter_by(t_user=current_user.id).order_by(Task.id.desc())
-        return render_template("index.html",tasks=tasks)
+        return render_template("tasks.html",tasks=tasks)
     else:
         return render_template("index.html",tasks=[])
+
+
+@tasksb.route("/stats", methods=["GET"])
+@login_required
+def get_task():
+    if current_user.is_authenticated():
+        tasks = Task.query.filter_by(t_user=current_user.id).order_by(Task.id.desc())
+        return render_template("tasks.html",tasks=tasks)
 
 
 @tasksb.route("/stats", methods=["POST"])
@@ -49,6 +57,7 @@ def add_task():
 def show_one_task(id):
     tasks = Task.query.filter_by(t_user=current_user.id).order_by(Task.id.desc())
     return render_template("index.html",tasks=tasks)
+
 
 @tasksb.route("/stats/<int:id>", methods=["DELETE"])
 @login_required

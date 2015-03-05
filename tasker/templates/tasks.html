@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block body %}
+
+{% if current_user.is_authenticated() %}
+ <div class="row">
+  <div class=" small-12 columns">
+    <h4>All Tasks</h4>
+  </div>
+ </div>
+
+ {% for task in tasks %}
+  <div class="row">
+   <div class=" small-10 columns">
+    <strong> {{task.t_name}}:</strong>  {{task.t_units}}
+   </div>
+  </div>
+  <div class="row">
+   <div class ="small-12 columns">
+      <div class="left">
+         <a class ="submitlink" href="{{ url_for("tasksb.show_task", id=task.id) }}">Details</a>
+         <a class ="submitlink" href="{{ url_for("tasksb.delete_task", id=task.id) }}">Delete</a>
+         <a class = "submitlink" href="{{ url_for("tasksb.update_task", id=task.id) }}">Update</a>
+
+      </div>
+    </div>
+  </div>
+
+ <div class="row">
+  <hr>
+ </div>
+ {% endfor %}
+
+{% endif %}
+{% endblock %}
