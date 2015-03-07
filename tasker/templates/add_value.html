@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{% if current_user.is_authenticated() %}
+
+    <form method="POST" action="{{ url_for("tasksb.add_daily_value",id=task_id)}}">
+        {{ form.hidden_tag() }}
+        <div class="row">
+          <div class="large-12 columns">
+            Date {{ form.tr_date }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+            Value {{ form.tr_value }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-12 columns">
+          <input class ="button tiny" type="submit" value="Add Data">
+        </div>
+      </div>
+    </form>
+{% else %}
+<div class="row">
+  <div class="large-12 columns">
+    Please Login
+  </div>
+</div>
+
+{% endif %}
+{% endblock %}
