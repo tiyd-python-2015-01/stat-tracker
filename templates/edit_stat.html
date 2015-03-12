@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="large-12 columns">
+  <fieldset>
+    <h4>Edit {{ a.name } for {{ s.time }}:</h4>
+      <form action='{{ edit_stat }}' method='POST'>
+        {{ form.hidden_tag() }}
+        <div>
+          {{ form.ammount.label }} {{ form.ammount(size=100) }}
+        </div>
+        <div>
+          <input type='Submit' value='Submit Changes'>
+        </div>
+      </form>
+    </fieldset>
+</div>
+
+{% endblock %}

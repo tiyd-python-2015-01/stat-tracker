@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="large-12 columns">
+  <fieldset>
+    <h4>Edit Activity:</h4>
+      <form action='{{ edit_activity }}' method='POST'>
+        {{ form.hidden_tag() }}
+        <div>
+          {{ form.name.label }} {{ form.name(size=100) }}
+        </div>
+        <div>
+          <input type='Submit' value='Submit Changes'>
+        </div>
+      </form>
+    </fieldset>
+</div>
+
+{% endblock %}

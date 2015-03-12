@@ -1,0 +1,57 @@
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Self dot Qauntify</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script src="{{ url_for('static', filename='js/vendor/modernizr.js') }}"></script>
+</head>
+
+<body>
+  <div class="contain-to-grid">
+    <nav class="top-bar" data-topbar role="navigation">
+      <ul class="title-area">
+        <li class="name">
+          <h2>Measure Active</h2>
+        </li>
+      </ul>
+      <section class="top-bar-section">
+        <ul class="right">
+          <li class="has-dropdown">
+            <div>
+              {% if current_user.is_authenticated() %}
+                <a href="/home">{{ current_user.name }}</a>
+              {% else %}
+                <a href="/register">Register</a>
+              {% endif %}
+            </div>
+            <ul class="dropdown">
+              {% if current_user.is_authenticated() %}
+                <li><a href='/add'>Add New Activity</a></li>
+                <li><a href='/home'>Your Stats</a></li>
+                <li><a href='/logout'>Logout</a></li>
+              {% else %}
+                <li><a href='/login'>Login</a></li>
+              {% endif %}
+            </ul>
+          </li>
+        </ul>
+      </section>
+   </nav>
+ </div>
+<div style="background-color:#006c9e;">
+  {% for message in get_flashed_messages() %}
+    {{ message }}
+  {% endfor %}
+</div>
+{% block body %}{% endblock %}
+{% block chart %}{% endblock %}
+    <script src="{{ url_for('static', filename='js/jquery-1.11.2.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+    $(document).foundation();
+    </script>
+  </body>
+</html>

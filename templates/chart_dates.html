@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="large-12 columns">
+  <fieldset>
+      <form action='{{ set_range }}' method='POST'>
+        {{ form.hidden_tag() }}
+        <div>
+          {{ form.start.label }} {{ form.start(size=100) }}
+          {{ form.stop.label }} {{ form.stop(size=100) }}
+        </div>
+        <div>
+          <input type='Submit' value='Chart It!'>
+        </div>
+      </form>
+    </fieldset>
+</div>
+{% endblock %}

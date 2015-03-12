@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="large-12 columns">
+  <fieldset>
+    <h4>Enter Your New Stats for {{ name }}</h4>
+      <form action='{{ add_stat }}' method='POST'>
+        {{ form.hidden_tag() }}
+        <div>
+          {{ form.ammount.label }} {{ form.ammount(size=100) }}
+          {{ form.date.label }} {{ form.date(size=100) }}
+        </div>
+        <div>
+          <input type='Submit' value='Submit'>
+        </div>
+      </form>
+    </fieldset>
+</div>
+
+{% endblock %}
