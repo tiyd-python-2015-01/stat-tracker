@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, abort, url_for
 from ..models import Activities, User, Stat
 from ..extensions import login_manager, db
-from ..forms import AddNewAction, EditAction, AddNewStat, EditStat, DateSearch
+from ..forms import AddNewAction, EditAction, AddNewStat, EditStat, DateSearch, ApiNewStat
 from flask.ext.login import login_user, current_user
 
 
@@ -111,27 +111,34 @@ def get_stats(id):
 
 @api.route('/activities/<int:id>/stats', methods=['PUT', 'POST'])
 def create_stat(id):
-    require_authorization()
-    body = request.get_data(as_text=True)
-    data = json.loads(body)
+    #require_authorization()
+    try:
+        body = request.get_data(as_text=True)
+        data = json.loads(body)
+        form = AddNewStat(data=data, formdata=None, csrf_enabled=False)
+    except ValueError:
+        form = ApiNewStat()
     act = Activities.query.get_or_404(id)
-    form = AddNewStat(data=data, formdata=None, csrf_enabled=False)
-    if form.validate():
-        check = Stat.query.filter_by(activity_id=act.id).filter_by(time=form.date.data).first()
-        if check:
-            check.ammount = form.ammount.data
-            db.session.commit()
-            return json.dumps(check.stat_to_dict(), 201)
-        else:
-            new = Stat(user_id=current_user.id,
-                       activity_id=act.id,
-                       ammount=form.ammount.data,
-                       time=form.date.data)
-            db.session.add(new)
-            db.session.commit()
-            return json.dumps(new.stat_to_dict(), 201)
+
+    check = Stat.query.filter_by(activity_id=act.id).filter_by(time=form.date.data).first()
+    if check:
+        check.ammount = form.ammount.data
+        db.session.commit()
+        retval = check.stat_to_dict()
+        retval['deleteURL'] = url_for("activities.delete_stat", id=check.activity_id, time=check.time)
+        return json.dumps(retval, 201)
     else:
-        return json_response(400, form.errors)
+        new = Stat(user_id=current_user.id,
+                   activity_id=act.id,
+                   ammount=form.ammount.data,
+                   time=form.date.data)
+        db.session.add(new)
+        db.session.commit()
+        retval = new.stat_to_dict()
+        retval['deleteURL'] = url_for("activities.delete_stat", id=new.activity_id, time=new.time)
+        return json.dumps(retval, 201)
+
+    return jsonify(400, form.errors)
 
 
 @api.route('/activities/<int:id>/stats', methods=['DELETE'])

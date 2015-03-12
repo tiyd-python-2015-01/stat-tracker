@@ -2,9 +2,6 @@
 
 {% block body %}
 
-<div class="large-12 columns">
-    <img src='/static/img/actives.png'/>
-</div>
 <div class ='large-12 columns'>
     {% if current_user.activities.count() > 0 %}
       <ul class='small-block-grid-3'>
@@ -17,10 +14,9 @@
               Past 30 Days: {{ a.times_last_30 }}<br>
               Past Year: {{ a.times_last_365 }}<br>
             <a class='button tiny radius info' href='{{url_for('activities.stat_table', id=a.id) }}'>Details</a>
-            <a class='button tiny radius info' href='{{url_for('activities.add_stat', id=a.id) }}'>Update</a><br>
             <a class='button tiny radius info' href='{{url_for('activities.edit_activity', id=a.id) }}'>Change Name</a>
             <a class='button tiny radius info' href='{{url_for('activities.delete_activity', id=a.id) }}'>Delete</a>
-            <a class='button tiny radius info' href='{{url_for('activities.chart_view', id=a.id) }}'>Chart</a>
+            <!--<a class='button tiny radius info' href='{{url_for('activities.chart_view', id=a.id) }}'>Chart</a>!-->
             </fieldset>
           </li>
         {% endfor %}

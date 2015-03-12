@@ -1,23 +1,39 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<table>
-  <caption>{{ a.name }}<br>
+  <div class="large-12 columns">
+    <fieldset>
+      <h4>Enter Your New Stats for {{ a.name }}</h4>
+      <form id='stat_form' data-a-id='{{ a.id }}' method='POST'>
+        {{ form.hidden_tag() }}
+        <div>
+          {{ form.ammount.label }} {{ form.ammount(size=100) }}
+          {{ form.date.label }} {{ form.date(size=100) }}
+        </div>
+        <div>
+          <input class='addstat' type='Submit' value='Submit'>
+        </div>
+      </form>
+    </fieldset>
+  </div>
+<table class='stat_table'>
+  <caption>
     Total: {{ a.times_total }}<br>
     Past 7 Days: {{ a.times_last_7 }}<br>
     Past 30 Days: {{ a.times_last_30 }}<br>
-    Past Year: {{ a.times_last_365 }}<br><caption>
-  <thead>
+    Past Year: {{ a.times_last_365 }}<br>
+  <caption>
+  <thead id="thead">
     <tr>
       <th width='200'>Date</th>
-      <th width='200'>Ammount</th>
+      <th width='200'>Amount</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody class="table_body">
     {% for s in stat %}
-      <tr>
+      <tr class="rows">
         <td>{{ s.time }}</td>
-        <td>{{ s.ammount }} <a class='button tiny radius info' href='{{url_for('activities.edit_stat', id=a.id, time=s.time) }}'>Edit</a>
+        <td>{{ s.ammount }}
         <a class='button tiny radius info' href='{{url_for('activities.delete_stat', id=a.id, time=s.time) }}'>Delete</a></td>
       </tr>
     {% endfor %}

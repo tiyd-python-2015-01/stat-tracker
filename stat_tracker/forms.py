@@ -1,6 +1,6 @@
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, IntegerField, DateField
-from wtforms.validators import DataRequired, Email, EqualTo, URL
+from wtforms.validators import DataRequired, Email, EqualTo, URL, Optional
 from wtforms.fields.html5 import EmailField
 
 class LoginForm(Form):
@@ -26,6 +26,10 @@ class EditAction(Form):
 class AddNewStat(Form):
     ammount = IntegerField('Quantity', validators=[DataRequired()])
     date = DateField('Date YYYY-MM-DD', validators=[DataRequired()])
+
+class ApiNewStat(Form):
+    date = DateField('Date YYYY-MM-DD', validators=[Optional()])
+    ammount = IntegerField('Quantity', validators=[Optional()])
 
 class EditStat(Form):
     ammount = IntegerField('Ammount', validators=[DataRequired()])

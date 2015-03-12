@@ -1,6 +1,4 @@
-<!doctype html>
 <html class="no-js" lang="en">
-
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -15,9 +13,8 @@
     <nav class="top-bar" data-topbar role="navigation">
       <ul class="title-area">
         <li class="name">
-          <h2><a href="/">Self dot Quantify</a></h2>
+          <h2>Measure Active</h2>
         </li>
-        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
       </ul>
       <section class="top-bar-section">
         <ul class="right">
@@ -26,7 +23,7 @@
               {% if current_user.is_authenticated() %}
                 <a href="/home">{{ current_user.name }}</a>
               {% else %}
-                <a href="#">Login or Sign Up</a>
+                <a href="/register">Register</a>
               {% endif %}
             </div>
             <ul class="dropdown">
@@ -36,7 +33,6 @@
                 <li><a href='/logout'>Logout</a></li>
               {% else %}
                 <li><a href='/login'>Login</a></li>
-                <li><a href='/register'>Sign Up</a></li>
               {% endif %}
             </ul>
           </li>
@@ -44,15 +40,16 @@
       </section>
    </nav>
  </div>
-<div style="background-color:red;">
+<div style="background-color:#006c9e;">
   {% for message in get_flashed_messages() %}
     {{ message }}
   {% endfor %}
 </div>
 {% block body %}{% endblock %}
 {% block chart %}{% endblock %}
-    <script src="{{ url_for('static', filename='js/vendor/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-1.11.2.js') }}"></script>
     <script src="{{ url_for('static', filename='js/foundation.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
     $(document).foundation();
     </script>

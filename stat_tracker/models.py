@@ -49,6 +49,8 @@ class Activities(db.Model):
         count = 0
         stats = Stat.query.filter_by(activity_id=self.id).all()
         for stat in stats:
+            if stat.ammount == None:
+                stat.ammount = 0
             count += stat.ammount
         return count
 
@@ -58,6 +60,8 @@ class Activities(db.Model):
         times = (self.times_range(7))
         count = 0
         for time in times:
+            if time[1] == None:
+                time[1] = 0
             count += time[1]
         return count
 
@@ -66,6 +70,8 @@ class Activities(db.Model):
         times = (self.times_range())
         count = 0
         for time in times:
+            if time[1] == None:
+                time[1] = 0
             count += time[1]
         return count
 
@@ -74,6 +80,8 @@ class Activities(db.Model):
         times = (self.times_range(365))
         count = 0
         for time in times:
+            if time[1] == None:
+                time[1] = 0
             count += time[1]
         return count
 
@@ -117,5 +125,6 @@ class Stat(db.Model):
     time = db.Column(db.Date)
 
     def stat_to_dict(self):
-        return {'ammount': self.ammount,
+        return {'id': self.id,
+                'ammount': self.ammount,
                 'time': str(self.time)}

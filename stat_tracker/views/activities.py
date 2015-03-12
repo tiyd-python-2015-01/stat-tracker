@@ -94,11 +94,31 @@ def add_stat(id):
     return render_template('addstat.html', form=form, name=name)
 
 
-@activities.route('/activity/<int:id>')
+@activities.route('/activity/<int:id>', methods=['GET', 'POST'])
 def stat_table(id):
     a = Activities.query.get_or_404(id)
     stat = Stat.query.filter_by(activity_id=a.id).order_by(Stat.time.desc())
-    return render_template('activity_data.html', stat=stat, a=a)
+    name = a.name
+    form = AddNewStat()
+    if form.validate_on_submit():
+        date = Stat.query.filter_by(activity_id=a.id).filter_by(time=form.date.data).first()
+        if date:
+            date.ammount = form.ammount.data
+            db.session.commit()
+            flash('Stat Updated!')
+            return render_template('activity_data.html', stat=stat, form=form, a=a)
+        else:
+            s = Stat(user_id = current_user.id,
+                     activity_id = a.id,
+                     ammount = form.ammount.data,
+                     time = form.date.data)
+            db.session.add(s)
+            db.session.commit()
+            flash('Stats Updated!')
+            return render_template('activity_data.html', a=a, form=form, stat=stat)
+    else:
+        flash_errors(form)
+    return render_template('activity_data.html', stat=stat, a=a, form=form)
 
 
 @activities.route('/activity/<int:id>/stats/<time>/edit', methods=['GET', 'POST'])
