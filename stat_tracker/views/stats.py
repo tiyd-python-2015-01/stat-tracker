@@ -9,14 +9,15 @@ import plotly.plotly as py
 from plotly.graph_objs import *
 from datetime import *
 
+
 py.sign_in("dknewell1", "x0oz9ikryp")
-
-
 stats = Blueprint("stats", __name__)
+
 
 @stats.route("/")
 def index():
     return render_template("index.html")
+
 
 
 def flash_errors(form, category="warning"):
@@ -40,8 +41,8 @@ def user_page():
         db.session.commit()
         flash("Activity Added")
         return redirect(url_for("stats.user_page"))
-
     return render_template("user_page.html", form = form, activities = activities)
+
 
 @stats.route("/delete", methods = ["GET", "POST"])
 def delete_activity():
@@ -62,38 +63,15 @@ def view_activity(id):
     activity = Activity.query.filter_by(id = id).first()
     instances = Instance.query.filter_by(activity_id = id).all()
     form = InstanceForm()
-
-    # if form.validate_on_submit():
-    #     new_instance = Instance(user = current_user,
-    #                         activity_id = id,
-    #                         date = date.today(),
-    #                         freq = form.freq.data)
-    #
-    #     replace = Instance.query.filter_by(activity_id = id, date = new_instance.date).first()
-    #
-    #     if replace == None:
-    #         db.session.add(new_instance)
-    #         db.session.commit()
-    #     else:
-    #         replace.freq = form.freq.data
-    #         db.session.commit()
-    #     flash("Instance Added!")
-    #     return redirect(url_for("stats.view_activity", id = id))
-
     instance_list= []
-
     for instance in instances:
         instance_list.append((instance.date, instance.freq))
-
     dates = [d[0] for d in instance_list]
     freqs = [f[1] for f in instance_list]
     date_labels = [d.strftime("%b %d") for d in dates]
-
-
-    click_chart = Scatter(x= dates, y= freqs)
+    click_chart = Bar(x= dates, y= freqs)
     data = Data([click_chart])
     chart_url = py.plot(data, auto_open=False)
-
     return render_template("instance_page.html", chart_url = chart_url,
                             form = form, instances = instances,
                             activity = activity)

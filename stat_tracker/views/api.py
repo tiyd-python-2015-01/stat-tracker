@@ -103,7 +103,6 @@ def edit_activity(id):
 def delete_activity(id):
      require_authorization()
      activity = Activity.query.filter_by(id = id).first()
-
      if activity.user_id == g.user.id:
          instances = Instance.query.filter_by(activity_id = id).all()
          for instance in instances:
@@ -129,15 +128,22 @@ def view_activity(id):
 @api.route('/api/v1.0/activities/<int:id>/instance', methods = ['POST'])
 def add_instance(id):
     print("step1")
+    body = request.get_data(as_text='true')
+    data = json.loads(body)
+    print(body)
+    print(data)
     try:
          body = request.get_data(as_text='true')
          data = json.loads(body)
          form = InstanceForm(data=data, formdata=None, csrf_enabled=False)
+         print("step2")
     except ValueError:
-         form = InstanceForm()
+         print("step2a")
+         form = InstanceForm(freq = 0)
 
     activity = Activity.query.get(id)
     if form.validate():
+        print("step3")
         print("hello")
         instance = Instance.query.filter_by(date =date.today())
         if instance == None:
@@ -150,7 +156,7 @@ def add_instance(id):
         else:
             instance.freq = form.freq.data
             db.session.commit()
-    return {"hello"}, 201
+    return {"added"}, 201
 
 
 
