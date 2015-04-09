@@ -51,14 +51,8 @@ def make_activities():
 def make_instances():
     activity_ids = [activity.id for activity in models.Activity.query.all()]
     def get_date(user_id, activity_id):
-        """Checks to see if date already exists in db"""
-        date = fake.date_time_between(start_date="-30d", end_date="now").date()
-        duplicate = models.Instance.query.filter_by(activity_id = activity_id, \
-                                           date = date).first()
-        if duplicate == None:
-            return date
-        else:
-            return get_date(user_id, activity_id)
+        date = str(fake.date_time_between(start_date="-30d", end_date="now").date())
+        return date
     for _ in range(100):
         user_id = randint(1,4)
         activity_id = choice(activity_ids)

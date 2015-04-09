@@ -27,3 +27,4 @@ class ActivityForm(Form):
 
 class InstanceForm(Form):
     freq = IntegerField('frequency', validators=[DataRequired()])
+    date = StringField('date')

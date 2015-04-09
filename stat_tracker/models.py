@@ -28,14 +28,13 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return "<User {}>".format(self.email)
 
+
 class Activity(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     title = db.Column(db.String(60), nullable=False)
     unit = db.Column(db.String(60), nullable=False)
-
     user = db.relationship('User')
-
     def make_dict(self):
         return {"id": self.id,
                 "title": self.title,
@@ -43,17 +42,14 @@ class Activity(db.Model):
 
 
 class Instance(db.Model):
-
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
-    date = db.Column(db.DateTime)
+    date = db.Column(db.String)
     freq = db.Column(db.Integer)
-
     def make_dict(self):
         return {"id": self.id,
                 "date": self.date,
                 "freq": self.freq}
-
     user = db.relationship('User')
     activity = db.relationship('Activity')

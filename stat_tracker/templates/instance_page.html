@@ -2,34 +2,31 @@
 {% extends "layout.html" %}
 {% block body %}
 <br></br>
-<h1>Stats on Your Activity</h1>
-<h3>{{activity.title}}</h3>
-<h2>Update Activity</h2>
-<br></br>
-<form  method="POST" class = "submit_instance" data-activity-id="{{ activity.id }}">
+<h1>Stats on: "{{activity.title}}"</h1>
+
+<div class = addStat>
+  <h2>Update Activity</h2>
+  <form  method="POST" action={{ url_for('stats.view_activity', id = activity.id) }}>
+    {{ form.hidden_tag() }}
   <div>
-    {{ form.freq.label }} {{ form.freq(size=10) }}
+    Frequency {{ form.freq(size=20) }}
+    <input class="btn" type=submit value="Add" input/>
   </div>
-  <input class="add_instance" type="submit" value="add!" data-activity-id="{{ activity.id }}">
-</form>
+</div>
 
-
-<h3>data</h3>
+<h3>Data</h3>
 
 <table class = "stats">
-{% for instance in instances %}
-
   <th> Date </th>
   <th>{{ activity.unit}}</th>
-
+{% for instance in instances %}
   <tr>
     <td>{{ instance.date }} </td>
     <td> {{ instance.freq }} </td>
-    <td><form action = {{url_for("stats.edit_instance", id = instance.id)}}>
-        <input class="button" type=submit value="edit" input/>
-      </form> </td>
+    <td class = editButton> <form action = {{url_for("stats.edit_instance", id = instance.id)}}>
+        <input class="btn" type=submit value="edit" input/>
+      </form></td>
   </tr>
-
 {% endfor %}
 </table>
 

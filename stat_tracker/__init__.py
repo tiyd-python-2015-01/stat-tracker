@@ -14,11 +14,9 @@ SECRET_KEY = "development-2keydd"
 def create_app():
     app = Flask("stat_tracker")
     app.config.from_object(__name__)
-
     app.register_blueprint(users)
     app.register_blueprint(stats)
     app.register_blueprint(api)
-
     config.init_app(app)
     db.init_app(app)
     migrate.init_app(app,db)
