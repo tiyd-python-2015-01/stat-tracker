@@ -1,0 +1,32 @@
+<!doctype html><title>Track Yo' Stats</title>
+<link rel = stylesheet type = text/css href = "{{ url_for('static', filename = 'style.css')}}">
+<div class = page>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    </ul>
+
+  <h1>Track Yo' Stats</h1>
+  {% block nav %}
+  <div class = metanav>
+  {% if current_user.is_authenticated() %}
+  <a href="{{ url_for('users.logoff') }}">Logout</a>
+  <a href="/user_page">User page</a>
+  <a href="{{ url_for('stats.index') }}">Homepage</a>
+  {% else %}
+  <a href = "{{ url_for('users.register') }}">Register</a>
+  <a href="{{ url_for('users.login') }}">Log in</a>
+  {% endif %}
+</div>
+
+  {% endblock %}
+  {% block body %}
+
+  {% endblock %}
+  <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.11.2.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>

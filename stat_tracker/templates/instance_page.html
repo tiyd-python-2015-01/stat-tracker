@@ -1,0 +1,38 @@
+<!doctype html>
+{% extends "layout.html" %}
+{% block body %}
+<br></br>
+<h1>Stats on: "{{activity.title}}"</h1>
+
+<div class = addStat>
+  <h2>Update Activity</h2>
+  <form  method="POST" action={{ url_for('stats.view_activity', id = activity.id) }}>
+    {{ form.hidden_tag() }}
+  <div>
+    Frequency {{ form.freq(size=20) }}
+    <input class="btn" type=submit value="Add" input/>
+  </div>
+</div>
+
+<h3>Data</h3>
+
+<table class = "stats">
+  <th> Date </th>
+  <th>{{ activity.unit}}</th>
+{% for instance in instances %}
+  <tr>
+    <td>{{ instance.date }} </td>
+    <td> {{ instance.freq }} </td>
+    <td class = editButton> <form action = {{url_for("stats.edit_instance", id = instance.id)}}>
+        <input class="btn" type=submit value="edit" input/>
+      </form></td>
+  </tr>
+{% endfor %}
+</table>
+
+
+<br></br>
+<h1>{{activity.title}} Data </h1>
+{{click_data}}
+<iframe width="550" height="550" frameborder="0" seamless="seamless" scrolling="no" src="{{ chart_url }}"></iframe>
+{% endblock %}
