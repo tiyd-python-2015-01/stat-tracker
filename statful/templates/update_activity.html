@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h2>{{ activity.name }}</h2>
+    {% if activity.type == 'clicker' %}
+        {{ form.hidden_tag() }}
+
+    <form method="POST" action="{{ update_url }}">
+        <div>
+            {{ form.hidden_tag() }}
+            {{ form.occurrences.label }}
+            {{ form.occurrences(size=30, placeholder=20) }}
+            {{ form.date.label }}
+            {{ form.date() }}
+        </div>
+        <input type="submit" value="update activity" class="tiny round button">
+    </form>
+
+    {% elif activity.type == 'scale' %}
+
+
+    <form method="POST" action="{{ update_url }}">
+        <div>
+            {{ form.hidden_tag() }}
+            {{ form.scale.label }}
+            {{ form.scale }}
+            {{ form.date.label }}
+            {{ form.date() }}
+        </div>
+        <input type="submit" value="update activity" class="tiny round button">
+    </form>
+
+    {% elif activity.type == 'yes_no' %}
+
+    <form method="POST" action="{{ update_url }}">
+        <div>
+            {{ form.hidden_tag() }}
+            <br>{{ form.yes_no.label }} {{ form.yes_no }}
+            <br>{{ form.date.label }} {{ form.date() }}
+        </div>
+        <input type="submit" value="update activity" class="tiny round button">
+    </form>
+    {% endif %}
+{% endblock %}
+

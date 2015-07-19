@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <form method="POST" action="{{ url_for('stats.create_activity') }}">
+        <div>
+            {{ form.hidden_tag() }}
+            <div class="large
+            {{ form.name.label }}
+            {{ form.name(size=30) }}
+            {{ form.type.label }}
+            {{ form.type }}
+            {{ form.unit.label }}
+            {{ form.unit(size=30) }}
+        </div>
+        <input type="submit" value="create activity" class="button tiny radius">
+    </form>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    {% for activity in current_user.activity_id %}
+        {{ activity.name }}
+        <ul class="button-group">
+      <li><a href="{{ url_for("stats.show_stats", id=activity.id) }}" class="tiny button">show stats</a></li>
+      <li><a href="{{ url_for("stats.update_activity", id=activity.id) }}" class="tiny button">update</a></li>
+    </ul>
+    {% endfor %}
+{% endblock %}
