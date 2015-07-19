@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h3>Edit Statistics</h3>
+<div>
+  <form method="POST" action= "{{ post_url }}" >
+    {{form.hidden_tag()}}
+    {{ form.recorded_at.label }} {{ form.recorded_at(size=20) }}
+    {{ form.value.label }} {{ form.value(size=50) }}
+    <input type="submit" class="button" value="{{ button }}">
+  </form>
+</div>
+{% endblock %}

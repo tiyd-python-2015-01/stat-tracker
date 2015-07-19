@@ -1,0 +1,10 @@
+# Included because many Paas's require a requirements.txt file in the project root
+# Just installs the production requirements.
+-r requirements/prod.txt
+
+flask-appconfig==0.9.1
+
+gunicorn==19.2.1
+psycopg2==2.6
+
+matplotlib
