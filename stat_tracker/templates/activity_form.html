@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% import "forms.html" as forms %}
+
+{% block body %}
+    <form method="POST" action="{{ post_url }}" class="forms">
+        {{ form.hidden_tag() }}
+        {{ forms.field(form.activity_name) }}
+        {{ forms.field(form.description) }}
+        {{ forms.field(form.value) }}
+        {{ forms.field(form.recorded_at) }}
+
+        <button type="submit">Edit Activity</button>
+        <!-- <input type="submit" class="btn btn-blue" value="{{ button }}"> -->
+    </form>
+{% endblock %}
